@@ -1,0 +1,7 @@
+<!--
+  Claude MCP Write Test
+  Timestamp: 2026-05-13 UTC+8
+  This is a non-visible HTML comment added to verify github-pat write capability.
+  It will be reverted in the next commit.
+-->
+TEST_PLACEHOLDER
