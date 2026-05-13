@@ -1,1 +1,229 @@
-[TESTING]
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CD Markets · 香港持牌貴金屬交易商</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  /* 深炭黑系統 — 5 階,像 Bloomberg 終端 */
+  --bg-0: #0A0B0D;       /* 最深,頁面背景 */
+  --bg-1: #0E0F11;       /* 區塊基底 */
+  --bg-2: #15171A;       /* 卡片/表格 */
+  --bg-3: #1F2227;       /* hover / 強調區塊 */
+  --bg-4: #2A2D33;       /* 邊框、分隔 */
+
+  --line-faint: rgba(255,255,255,0.06);
+  --line: rgba(255,255,255,0.10);
+  --line-strong: rgba(255,255,255,0.18);
+
+  /* 文字 5 階 */
+  --t1: #FFFFFF;
+  --t2: #D8DCE0;
+  --t3: #9098A2;
+  --t4: #5C6068;
+  --t5: #3F4248;
+
+  /* 品牌色 — 真正用在「市場意義」 */
+  --bid-up: #54C87D;      /* 漲、買、進場 (LOGO 綠) */
+  --bid-up-soft: rgba(84,200,125,0.12);
+  --bid-down: #F04E4E;    /* 跌、賣 */
+  --bid-down-soft: rgba(240,78,78,0.10);
+  --accent: #FEC949;      /* 強調、CTA (LOGO 黃) */
+  --accent-soft: rgba(254,201,73,0.12);
+
+  --font-sans: 'IBM Plex Sans', 'Noto Sans SC', 'PingFang SC', -apple-system, sans-serif;
+  --font-cn: 'Noto Sans SC', 'PingFang SC', 'IBM Plex Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--t2);
+  background: var(--bg-0);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 防止 iOS 點擊高亮閃黃色 */
+a, button { -webkit-tap-highlight-color: rgba(254,201,73,0.2); }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+img { display: block; max-width: 100%; }
+
+.cn { font-family: var(--font-cn); }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.up { color: var(--bid-up); }
+.down { color: var(--bid-down); }
+.accent { color: var(--accent); }
+
+.container { max-width: 1440px; margin: 0 auto; padding: 0 40px; }
+@media (max-width: 767px) { .container { padding: 0 20px; } }
+
+/* ============================================================
+   標頭欄 — 三段式 + 市場狀態指示器
+   ============================================================ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 11, 13, 0.90);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  height: 56px;
+}
+.topbar-inner {
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 32px;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.topbar-brand img { width: 24px; height: 24px; object-fit: contain; }
+.topbar-brand-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  color: var(--t1);
+}
+.topbar-brand-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--t4);
+  margin-left: 4px;
+  border-left: 1px solid var(--line);
+  padding-left: 12px;
+}
+
+.topbar-nav {
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+}
+.topbar-nav a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t3);
+  padding: 4px 0;
+  transition: color 200ms;
+}
+.topbar-nav a:hover { color: var(--t1); }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.market-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--t3);
+  letter-spacing: 0.05em;
+  padding-right: 20px;
+  border-right: 1px solid var(--line);
+}
+.market-status::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--bid-up);
+  box-shadow: 0 0 8px var(--bid-up);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.topbar-lang {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--t3);
+  letter-spacing: 0.08em;
+}
+.topbar-login {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t2);
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  transition: all 200ms;
+}
+.topbar-login:hover { border-color: var(--line-strong); color: var(--t1); }
+.topbar-signup {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bg-0);
+  background: var(--accent);
+  padding: 7px 16px;
+  border-radius: 4px;
+  transition: all 200ms;
+}
+.topbar-signup:hover { background: #fdd571; transform: translateY(-1px); }
+
+.topbar-menu {
+  display: none;
+  width: 36px; height: 36px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.topbar-menu svg { width: 18px; height: 18px; color: var(--t2); }
+
+@media (max-width: 1023px) {
+  .topbar-nav, .market-status { display: none; }
+}
+@media (max-width: 767px) {
+  .topbar { height: 60px; }
+  .topbar-inner { padding: 0 16px; gap: 12px; }
+  .topbar-brand img { width: 26px; height: 26px; }
+  .topbar-brand-name { font-size: 14px; }
+  .topbar-brand-meta { display: none; }
+  .topbar-login, .topbar-lang { display: none; }
+  .topbar-menu {
+    display: flex;
+    width: 44px; height: 44px;
+    border-color: var(--line);
+  }
+  .topbar-menu svg { width: 22px; height: 22px; }
+  .topbar-signup {
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .topbar-right { gap: 8px; }
+}
+
+
+/* (CSS 內容過長,以下省略 — 實際 push 用完整檔案) */
+</style>
+</head>
+<body>
+<!-- 此佔位內容會在下一步用完整版覆蓋 -->
+</body>
+</html>
