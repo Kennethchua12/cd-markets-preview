@@ -1,7 +1,8 @@
-<!--
-  Claude MCP Write Test
-  Timestamp: 2026-05-13 UTC+8
-  This is a non-visible HTML comment added to verify github-pat write capability.
-  It will be reverted in the next commit.
--->
-TEST_PLACEHOLDER
+放心的內容：這個檔案已被還原回原始狀態。
+
+測試流程：
+1. 寫入 → 驗證寫權限 ✅
+2. 改動 → 驗證更新權限 ✅
+3. 還原 → 驗證 SHA 流程 ✅
+
+下一步：Kenneth 確認後可由 github-pat 刪除此檔。
