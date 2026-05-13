@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CD Markets · 香港持牌貴金屬交易商</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  /* 深炭黑系統 — 5 階,像 Bloomberg 終端 */
+  --bg-0: #0A0B0D;       /* 最深,頁面背景 */
+  --bg-1: #0E0F11;       /* 區塊基底 */
+  --bg-2: #15171A;       /* 卡片/表格 */
+  --bg-3: #1F2227;       /* hover / 強調區塊 */
+  --bg-4: #2A2D33;       /* 邊框、分隔 */
+
+  --line-faint: rgba(255,255,255,0.06);
+  --line: rgba(255,255,255,0.10);
+  --line-strong: rgba(255,255,255,0.18);
+
+  /* 文字 5 階 */
+  --t1: #FFFFFF;
+  --t2: #D8DCE0;
+  --t3: #9098A2;
+  --t4: #5C6068;
+  --t5: #3F4248;
+
+  /* 品牌色 — 真正用在「市場意義」 */
+  --bid-up: #54C87D;      /* 漲、買、進場 (LOGO 綠) */
+  --bid-up-soft: rgba(84,200,125,0.12);
+  --bid-down: #F04E4E;    /* 跌、賣 */
+  --bid-down-soft: rgba(240,78,78,0.10);
+  --accent: #FEC949;      /* 強調、CTA (LOGO 黃) */
+  --accent-soft: rgba(254,201,73,0.12);
+
+  --font-sans: 'IBM Plex Sans', 'Noto Sans SC', 'PingFang SC', -apple-system, sans-serif;
+  --font-cn: 'Noto Sans SC', 'PingFang SC', 'IBM Plex Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--t2);
+  background: var(--bg-0);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 防止 iOS 點擊高亮閃黃色 */
+a, button { -webkit-tap-highlight-color: rgba(254,201,73,0.2); }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+img { display: block; max-width: 100%; }
+
+.cn { font-family: var(--font-cn); }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.up { color: var(--bid-up); }
+.down { color: var(--bid-down); }
+.accent { color: var(--accent); }
+
+.container { max-width: 1440px; margin: 0 auto; padding: 0 40px; }
+@media (max-width: 767px) { .container { padding: 0 20px; } }
+
+/* ============================================================
+   標頭欄 — 三段式 + 市場狀態指示器
+   ============================================================ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 11, 13, 0.90);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  height: 56px;
+}
+.topbar-inner {
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 32px;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.topbar-brand img { width: 24px; height: 24px; object-fit: contain; }
+.topbar-brand-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  color: var(--t1);
+}
+.topbar-brand-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--t4);
+  margin-left: 4px;
+  border-left: 1px solid var(--line);
+  padding-left: 12px;
+}
+
+.topbar-nav {
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+}
+.topbar-nav a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t3);
+  padding: 4px 0;
+  transition: color 200ms;
+}
+.topbar-nav a:hover { color: var(--t1); }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.market-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--t3);
+  letter-spacing: 0.05em;
+  padding-right: 20px;
+  border-right: 1px solid var(--line);
+}
+.market-status::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--bid-up);
+  box-shadow: 0 0 8px var(--bid-up);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.topbar-lang {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--t3);
+  letter-spacing: 0.08em;
+}
+.topbar-login {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t2);
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  transition: all 200ms;
+}
+.topbar-login:hover { border-color: var(--line-strong); color: var(--t1); }
+.topbar-signup {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bg-0);
+  background: var(--accent);
+  padding: 7px 16px;
+  border-radius: 4px;
+  transition: all 200ms;
+}
+.topbar-signup:hover { background: #fdd571; transform: translateY(-1px); }
+
+.topbar-menu {
+  display: none;
+  width: 36px; height: 36px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.topbar-menu svg { width: 18px; height: 18px; color: var(--t2); }
+
+@media (max-width: 1023px) {
+  .topbar-nav, .market-status { display: none; }
+}
+@media (max-width: 767px) {
+  .topbar { height: 60px; }
+  .topbar-inner { padding: 0 16px; gap: 12px; }
+  .topbar-brand img { width: 26px; height: 26px; }
+  .topbar-brand-name { font-size: 14px; }
+  .topbar-brand-meta { display: none; }
+  .topbar-login, .topbar-lang { display: none; }
+  .topbar-menu {
+    display: flex;
+    width: 44px; height: 44px;
+    border-color: var(--line);
+  }
+  .topbar-menu svg { width: 22px; height: 22px; }
+  .topbar-signup {
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .topbar-right { gap: 8px; }
+}
+
+
+/* ============================================================
+   Ticker — 滿幅滾動行情條
+   ============================================================ */
+.ticker {
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--line);
+  height: 40px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.ticker::before, .ticker::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+.ticker::before { left: 0; background: linear-gradient(90deg, var(--bg-1) 0%, transparent 100%); }
+.ticker::after { right: 0; background: linear-gradient(-90deg, var(--bg-1) 0%, transparent 100%); }
+.ticker-tag {
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  background: var(--bg-2);
+  border-right: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--t3);
+  z-index: 3;
+}
+.ticker-track {
+  display: flex;
+  gap: 36px;
+  animation: tk 70s linear infinite;
+  white-space: nowrap;
+  padding-left: 120px;
+}
+@keyframes tk {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@media (max-width: 767px) {
+  .ticker { height: 44px; }
+  .ticker-tag { padding: 0 12px; font-size: 9px; letter-spacing: 0.15em; }
+  .ticker-track { padding-left: 80px; gap: 28px; animation-duration: 50s; }
+  .tk-item { font-size: 11px; gap: 8px; }
+  .tk-sym { font-size: 10px; }
+}
+.tk-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.tk-sym { color: var(--t4); letter-spacing: 0.08em; font-weight: 600; }
+.tk-px { color: var(--t1); font-weight: 500; }
+.tk-ch { font-weight: 600; }
+
+/* ============================================================
+   Hero — 左:文字克制 / 右:行情儀表板
+   ============================================================ */
+.hero {
+  background: var(--bg-0);
+  padding: 64px 0 0;
+  border-bottom: 1px solid var(--line);
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: stretch;
+  min-height: 540px;
+}
+
+/* Hero 左側 — 公司事實陳述 */
+.hero-left {
+  padding: 48px 0 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  margin-bottom: 32px;
+  padding: 6px 12px;
+  background: var(--accent-soft);
+  border: 1px solid rgba(254,201,73,0.25);
+  border-radius: 2px;
+  width: fit-content;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+.hero-h1 {
+  font-family: var(--font-cn);
+  font-weight: 600;
+  font-size: clamp(36px, 4.5vw, 56px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--t1);
+  margin-bottom: 24px;
+}
+.hero-h1 .light {
+  color: var(--t3);
+  font-weight: 400;
+}
+.hero-sub {
+  font-family: var(--font-cn);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--t3);
+  max-width: 520px;
+  margin-bottom: 40px;
+}
+
+/* Hero 左側底部 — 關鍵憑證 */
+.hero-creds {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+.hero-cred {
+  padding-right: 24px;
+  border-right: 1px solid var(--line);
+}
+.hero-cred:last-child { border-right: none; padding-right: 0; padding-left: 24px; }
+.hero-cred:nth-child(2) { padding-left: 24px; }
+.hero-cred-lbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--t4);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.hero-cred-val {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--t1);
+  letter-spacing: 0.02em;
+}
+.hero-cred-val.accent { color: var(--accent); }
+
+/* Hero 右側 — 行情儀表板 */
+.hero-right {
+  background: var(--bg-1);
+  border-left: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+}
+.dash-head {
+  padding: 14px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.dash-head-l {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--t3);
+}
+.dash-head-l::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--bid-up);
+  box-shadow: 0 0 6px var(--bid-up);
+  animation: blink 2s ease-in-out infinite;
+}
+.dash-head-r {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--t4);
+  letter-spacing: 0.1em;
+}
+
+.dash-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.quote {
+  padding: 24px 28px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: background 200ms;
+  cursor: default;
+}
+.quote:nth-child(2n) { border-right: none; }
+.quote:nth-last-child(-n+2) { border-bottom: none; }
+.quote:hover { background: var(--bg-2); }
+.quote-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
+}
+.quote-sym {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--t1);
+  letter-spacing: 0.05em;
+}
+.quote-time {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--t4);
+  letter-spacing: 0.05em;
+}
+.quote-price {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--t1);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+.quote-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.quote-change {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.quote-change::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+.quote-change.up::before { border-bottom: 5px solid var(--bid-up); }
+.quote-change.down::before { border-top: 5px solid var(--bid-down); }
+.quote-spark {
+  width: 80px;
+  height: 28px;
+}
+
+.dash-foot {
+  padding: 12px 28px;
+  background: var(--bg-2);
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--t4);
+  letter-spacing: 0.1em;
+}
+.dash-foot a {
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.dash-foot a::after { content: '→'; }
+
+@media (max-width: 1023px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 0; }
+  .hero-left { padding: 32px 0 64px; }
+  .hero-right { border-left: none; border-top: 1px solid var(--line); }
+}
+@media (max-width: 767px) {
+  .hero { padding: 32px 0 0; }
+  .hero-left { padding: 24px 0 48px; }
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    padding: 5px 10px;
+    margin-bottom: 20px;
+    white-space: normal;
+    line-height: 1.5;
+    max-width: 100%;
+  }
+  .hero-h1 { font-size: 28px; line-height: 1.2; margin-bottom: 16px; }
+  .hero-sub { font-size: 14px; line-height: 1.65; margin-bottom: 32px; }
+  .hero-creds { padding-top: 20px; }
+  .hero-cred-lbl { font-size: 9px; }
+  .hero-cred-val { font-size: 16px; }
+  .dash-head { padding: 12px 18px; }
+  .dash-head-l { font-size: 10px; }
+  .dash-head-r { font-size: 9px; }
+  .quote { padding: 16px 18px; }
+  .quote-head { margin-bottom: 10px; }
+  .quote-sym { font-size: 11px; }
+  .quote-time { font-size: 9px; }
+  .quote-price { font-size: 22px; margin-bottom: 2px; }
+  .quote-change { font-size: 11px; }
+  .quote-spark { width: 60px; height: 22px; }
+  .dash-foot { padding: 10px 18px; font-size: 9px; }
+}
+@media (max-width: 419px) {
+  .hero-h1 { font-size: 26px; }
+  .hero-creds { grid-template-columns: 1fr; gap: 14px; }
+  .hero-cred {
+    border-right: none !important;
+    border-bottom: 1px solid var(--line);
+    padding: 0 0 14px !important;
+  }
+  .hero-cred:last-child { border-bottom: none; padding-bottom: 0 !important; }
+  .quote { padding: 14px; }
+  .quote-price { font-size: 19px; }
+  .quote-spark { display: none; }
+  .quote-meta { justify-content: flex-start; }
+}
+
+
+/* ============================================================
+   區塊基礎
+   ============================================================ */
+.section {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 767px) { .section { padding: 56px 0; } }
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 32px;
+}
+.section-head-l {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--t4);
+  text-transform: uppercase;
+}
+.section-title {
+  font-family: var(--font-cn);
+  font-weight: 600;
+  font-size: clamp(24px, 2.6vw, 32px);
+  line-height: 1.2;
+  color: var(--t1);
+  letter-spacing: -0.01em;
+}
+.section-head-r {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--t4);
+  letter-spacing: 0.1em;
+  text-align: right;
+  white-space: nowrap;
+}
+.section-head-r a { color: var(--t2); border-bottom: 1px solid var(--line); padding-bottom: 2px; transition: all 200ms; }
+.section-head-r a:hover { color: var(--accent); border-color: var(--accent); }
+
+@media (max-width: 767px) {
+  .section { padding: 48px 0; }
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+  }
+  .section-head-r {
+    text-align: left;
+    font-size: 10px;
+    white-space: normal;
+  }
+  .section-title { font-size: 22px; }
+  .section-eyebrow { font-size: 10px; letter-spacing: 0.15em; }
+}
+
+/* ============================================================
+   牌照憑證 — 一條橫向資訊欄
+   ============================================================ */
+.credentials-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.cred-cell {
+  padding: 24px 28px;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cred-cell:last-child { border-right: none; }
+.cred-cell .lbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--t4);
+  text-transform: uppercase;
+}
+.cred-cell .val {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--t1);
+  letter-spacing: 0.01em;
+}
+.cred-cell .val.accent { color: var(--accent); }
+.cred-cell .val.up { color: var(--bid-up); }
+.cred-cell .desc {
+  font-family: var(--font-cn);
+  font-size: 12px;
+  color: var(--t3);
+  line-height: 1.5;
+}
+
+@media (max-width: 1023px) {
+  .credentials-row { grid-template-columns: 1fr 1fr; }
+  .cred-cell { padding: 20px 22px; }
+  .cred-cell:nth-child(2) { border-right: none; }
+  .cred-cell:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+}
+@media (max-width: 559px) {
+  .credentials-row { grid-template-columns: 1fr; }
+  .cred-cell {
+    border-right: none !important;
+    border-bottom: 1px solid var(--line);
+    padding: 18px 20px;
+  }
+  .cred-cell:last-child { border-bottom: none; }
+  .cred-cell .val { font-size: 16px; }
+  .cred-cell .desc { font-size: 11px; }
+}
+
+/* ============================================================
+   業務範圍 — 三項並排,規格表式
+   ============================================================ */
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.product {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 28px;
+  transition: all 200ms;
+  position: relative;
+}
+.product:hover {
+  border-color: var(--line-strong);
+  background: var(--bg-2);
+}
+.product-tag {
+  position: absolute;
+  top: -1px; left: 28px;
+  padding: 4px 10px;
+  background: var(--bg-0);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--t3);
+  border: 1px solid var(--line);
+  border-top: none;
+}
+.product:nth-child(1) .product-tag { color: var(--accent); border-color: rgba(254,201,73,0.3); }
+.product:nth-child(2) .product-tag { color: var(--bid-up); border-color: rgba(84,200,125,0.3); }
+.product:nth-child(3) .product-tag { color: var(--t2); }
+
+.product-head {
+  margin-top: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.product-name {
+  font-family: var(--font-cn);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--t1);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+.product-name-en {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--t4);
+  text-transform: uppercase;
+}
+.product-desc {
+  font-family: var(--font-cn);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--t3);
+  margin-bottom: 24px;
+  min-height: 88px;
+}
+.product-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 24px;
+}
+.product-specs dt {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--t4);
+  text-transform: uppercase;
+}
+.product-specs dd {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t1);
+}
+.product-spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line-faint);
+}
+.product-spec-row:last-child { border-bottom: none; }
+.product-spec-row.accent dd { color: var(--accent); }
+.product-spec-row.up dd { color: var(--bid-up); }
+.product-cta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--t2);
+  text-transform: uppercase;
+  transition: color 200ms;
+}
+.product:hover .product-cta { color: var(--accent); }
+.product-cta::after { content: '→'; font-family: var(--font-sans); }
+
+@media (max-width: 1023px) {
+  .products { grid-template-columns: 1fr; gap: 12px; }
+  .product-desc { min-height: 0; }
+}
+@media (max-width: 767px) {
+  .product { padding: 24px 20px; }
+  .product-tag {
+    left: 20px;
+    padding: 3px 8px;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+  .product-head { padding-bottom: 14px; margin-bottom: 16px; }
+  .product-name { font-size: 19px; }
+  .product-name-en { font-size: 10px; }
+  .product-desc { font-size: 13px; margin-bottom: 18px; line-height: 1.65; }
+  .product-spec-row { padding: 8px 0; }
+  .product-spec-row dt { font-size: 9px; }
+  .product-spec-row dd { font-size: 12px; }
+  .product-cta { font-size: 10px; padding-top: 10px; }
+}
+
+/* ============================================================
+   DeepTrade — 模組面板
+   ============================================================ */
+.dt-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--bg-1);
+}
+.dt-left {
+  padding: 40px 36px;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.dt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  padding: 4px 10px;
+  background: var(--accent-soft);
+  border: 1px solid rgba(254,201,73,0.25);
+  border-radius: 2px;
+  margin-bottom: 24px;
+  width: fit-content;
+}
+.dt-title {
+  font-family: var(--font-cn);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.2;
+  color: var(--t1);
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+}
+.dt-title em {
+  font-style: normal;
+  color: var(--accent);
+}
+.dt-desc {
+  font-family: var(--font-cn);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--t3);
+  margin-bottom: 32px;
+}
+.dt-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--t2);
+  text-transform: uppercase;
+  transition: all 200ms;
+  width: fit-content;
+}
+.dt-cta:hover { background: var(--accent); color: var(--bg-0); border-color: var(--accent); }
+.dt-cta::after { content: '→'; }
+
+.dt-right {
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.dt-cell {
+  padding: 24px 20px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: background 200ms;
+}
+.dt-cell:nth-child(4n) { border-right: none; }
+.dt-cell:nth-last-child(-n+4) { border-bottom: none; }
+.dt-cell:hover { background: var(--bg-2); }
+.dt-cell-no {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--t4);
+}
+.dt-cell-name {
+  font-family: var(--font-cn);
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--t1);
+}
+.dt-cell-name-en {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--t4);
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 1023px) {
+  .dt-grid { grid-template-columns: 1fr; }
+  .dt-left { border-right: none; border-bottom: 1px solid var(--line); }
+  .dt-right { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr); }
+  .dt-cell:nth-child(4n) { border-right: 1px solid var(--line); }
+  .dt-cell:nth-child(2n) { border-right: none; }
+}
+@media (max-width: 767px) {
+  .dt-left { padding: 28px 24px; }
+  .dt-title { font-size: 22px; }
+  .dt-desc { font-size: 13px; margin-bottom: 24px; }
+  .dt-badge { font-size: 9px; padding: 3px 8px; }
+  .dt-cell { padding: 18px 14px; }
+  .dt-cell-no { font-size: 9px; }
+  .dt-cell-name { font-size: 13px; }
+  .dt-cell-name-en { font-size: 10px; }
+}
+@media (max-width: 419px) {
+  .dt-cell { padding: 14px 12px; }
+  .dt-cell-name { font-size: 12px; }
+}
+
+/* ============================================================
+   MT4 平台 — 下載中心
+   ============================================================ */
+.platforms-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.platforms-left {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 32px;
+}
+.platforms-left h3 {
+  font-family: var(--font-cn);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--t1);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+.platforms-left p {
+  font-family: var(--font-cn);
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--t3);
+  margin-bottom: 16px;
+}
+.platforms-spec {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.platforms-spec dt {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--t4);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.platforms-spec dd {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t1);
+}
+
+.platforms-right {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 8px;
+}
+.dl-btn {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 200ms;
+  position: relative;
+}
+.dl-btn:hover { background: var(--bg-2); border-color: var(--line-strong); }
+.dl-btn-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--t1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dl-btn-name::after { content: '↓'; color: var(--t4); transition: color 200ms; }
+.dl-btn:hover .dl-btn-name::after { color: var(--accent); }
+.dl-btn-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--t4);
+}
+
+@media (max-width: 1023px) {
+  .platforms-grid { grid-template-columns: 1fr; gap: 12px; }
+}
+@media (max-width: 767px) {
+  .platforms-left { padding: 24px 20px; }
+  .platforms-left h3 { font-size: 19px; margin-bottom: 12px; }
+  .platforms-left p { font-size: 13px; margin-bottom: 12px; }
+  .platforms-spec { gap: 12px; margin-top: 18px; padding-top: 18px; }
+  .platforms-spec dt { font-size: 9px; }
+  .platforms-spec dd { font-size: 12px; }
+  .dl-btn { padding: 14px 16px; }
+  .dl-btn-name { font-size: 13px; }
+  .dl-btn-meta { font-size: 9px; }
+}
+@media (max-width: 419px) {
+  .platforms-right { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   開戶 3 步驟 — 緊湊
+   ============================================================ */
+.steps-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.step {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 24px 28px;
+  position: relative;
+}
+.step-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.step-no {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--t4);
+}
+.step-time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+.step-title {
+  font-family: var(--font-cn);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--t1);
+  margin-bottom: 8px;
+}
+.step-desc {
+  font-family: var(--font-cn);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--t3);
+}
+
+.steps-cta-row {
+  margin-top: 24px;
+  padding: 20px 28px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.steps-cta-row-text {
+  font-family: var(--font-cn);
+  font-size: 13px;
+  color: var(--t3);
+}
+.steps-cta-row-text strong {
+  color: var(--t1);
+  font-weight: 600;
+}
+.steps-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: var(--bg-0);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+  transition: all 200ms;
+}
+.steps-cta-btn::after { content: '→'; }
+.steps-cta-btn:hover { background: #fdd571; transform: translateY(-1px); }
+
+@media (max-width: 1023px) {
+  .steps-row { grid-template-columns: 1fr; gap: 12px; }
+}
+@media (max-width: 767px) {
+  .step { padding: 20px 22px; }
+  .step-head { margin-bottom: 12px; padding-bottom: 10px; }
+  .step-no { font-size: 10px; }
+  .step-time { font-size: 10px; }
+  .step-title { font-size: 16px; margin-bottom: 6px; }
+  .step-desc { font-size: 12px; line-height: 1.65; }
+  .steps-cta-row {
+    padding: 18px 20px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .steps-cta-row-text {
+    font-size: 12px;
+    text-align: center;
+  }
+  .steps-cta-btn {
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+/* ============================================================
+   公告
+   ============================================================ */
+.bulletin-list {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--bg-1);
+}
+.bulletin-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 100px;
+  gap: 24px;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+  transition: background 200ms;
+}
+.bulletin-row:last-child { border-bottom: none; }
+.bulletin-row:hover { background: var(--bg-2); }
+.bulletin-date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--t3);
+  letter-spacing: 0.05em;
+}
+.bulletin-title {
+  font-family: var(--font-cn);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--t1);
+  line-height: 1.5;
+}
+.bulletin-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: right;
+}
+.bulletin-row:nth-child(1) .bulletin-tag { color: var(--accent); }
+.bulletin-row:nth-child(2) .bulletin-tag { color: var(--bid-up); }
+.bulletin-row:nth-child(3) .bulletin-tag { color: var(--t3); }
+
+@media (max-width: 767px) {
+  .bulletin-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 16px 20px;
+  }
+  .bulletin-date {
+    font-size: 11px;
+    color: var(--t4);
+  }
+  .bulletin-title {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .bulletin-tag {
+    text-align: left;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer {
+  background: var(--bg-1);
+  padding: 56px 0 24px;
+  border-top: 1px solid var(--line);
+}
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--line);
+}
+.footer-brand-block .topbar-brand img { width: 28px; height: 28px; }
+.footer-brand-block .topbar-brand-name { font-size: 17px; }
+.footer-brand-block p {
+  font-family: var(--font-cn);
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--t4);
+  margin-top: 12px;
+}
+.footer-licenses {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.footer-license {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--t3);
+}
+.footer-license.green { color: var(--bid-up); border-color: rgba(84,200,125,0.3); }
+.footer-license.gold { color: var(--accent); border-color: rgba(254,201,73,0.3); }
+
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--t3);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.footer-col ul { list-style: none; }
+.footer-col ul li { padding: 4px 0; }
+.footer-col ul a {
+  font-family: var(--font-cn);
+  font-size: 12px;
+  color: var(--t4);
+  transition: color 200ms;
+}
+.footer-col ul a:hover { color: var(--t1); }
+
+.footer-contact {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+.footer-contact-cell .lbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--t4);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.footer-contact-cell .val {
+  font-family: var(--font-cn);
+  font-size: 13px;
+  color: var(--t2);
+}
+.footer-contact-cell .val.mono { font-family: var(--font-mono); }
+
+.footer-risk {
+  padding: 20px 0;
+  font-family: var(--font-cn);
+  font-size: 11px;
+  line-height: 1.75;
+  color: var(--t4);
+  border-bottom: 1px solid var(--line);
+}
+.footer-risk strong {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--t2);
+  text-transform: uppercase;
+  margin-right: 6px;
+}
+
+.footer-bottom {
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--t4);
+  letter-spacing: 0.1em;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-legal {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.footer-legal a:hover { color: var(--t1); }
+
+@media (max-width: 1023px) {
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .footer-brand-block { grid-column: span 2; }
+  .footer-contact { grid-template-columns: 1fr; gap: 16px; }
+}
+@media (max-width: 767px) {
+  .footer { padding: 48px 0 24px; }
+  .footer-top { gap: 28px; padding-bottom: 32px; }
+  .footer-brand-block .topbar-brand-name { font-size: 16px; }
+  .footer-brand-block p { font-size: 12px; }
+  .footer-licenses { flex-wrap: wrap; gap: 6px; }
+  .footer-license { font-size: 9px; padding: 3px 6px; }
+  .footer-col h4 { font-size: 9px; margin-bottom: 12px; }
+  .footer-col ul a { font-size: 13px; }
+  .footer-col ul li { padding: 6px 0; }
+  .footer-contact-cell .lbl { font-size: 9px; }
+  .footer-contact-cell .val { font-size: 13px; }
+  .footer-risk {
+    padding: 18px 0;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+  .footer-risk strong { font-size: 9px; }
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 9px;
+  }
+  .footer-legal { gap: 14px; }
+}
+@media (max-width: 559px) {
+  .footer-top { grid-template-columns: 1fr; }
+  .footer-brand-block { grid-column: span 1; }
+}
+
+/* ============================================================
+   手機抽屜
+   ============================================================ */
+.drawer-bd {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  opacity: 0; pointer-events: none;
+  transition: opacity 300ms;
+  z-index: 150;
+  backdrop-filter: blur(4px);
+}
+.drawer-bd.open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; top: 0; right: 0;
+  width: 340px;
+  max-width: 90vw;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg-1);
+  z-index: 200;
+  transform: translateX(100%);
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--line);
+  box-shadow: -20px 0 60px rgba(0,0,0,0.4);
+}
+.drawer.open { transform: translateX(0); }
+
+.drawer-head {
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+  min-height: 64px;
+}
+.drawer-head .topbar-brand img { width: 26px; height: 26px; }
+.drawer-head .topbar-brand-name { font-size: 15px; }
+.drawer-close {
+  width: 44px; height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--t2);
+  border-radius: 4px;
+  transition: background 200ms;
+  margin-right: -8px;
+}
+.drawer-close:hover { background: var(--bg-2); }
+
+.drawer-body {
+  flex: 1;
+  padding: 16px 0 8px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.drawer-section-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--t4);
+  text-transform: uppercase;
+  padding: 8px 24px;
+  margin-top: 4px;
+}
+.drawer-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  min-height: 52px;
+  font-family: var(--font-cn);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--t1);
+  transition: background 200ms, border-left-color 200ms;
+  width: 100%;
+  text-align: left;
+  border-left: 2px solid transparent;
+}
+.drawer-item:active { background: var(--bg-2); }
+.drawer-item:hover {
+  background: var(--bg-2);
+  border-left-color: var(--accent);
+}
+.drawer-item .no {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--t4);
+}
+
+.drawer-utilities {
+  margin: 8px 16px;
+  padding: 8px;
+  background: var(--bg-2);
+  border-radius: 4px;
+  display: flex;
+  gap: 4px;
+}
+.drawer-util-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--t4);
+  border-radius: 3px;
+  transition: all 200ms;
+}
+.drawer-util-btn:active { background: var(--bg-3); }
+.drawer-util-btn strong {
+  font-family: var(--font-cn);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t2);
+}
+.drawer-util-btn.active { background: var(--bg-3); }
+.drawer-util-btn.active strong { color: var(--accent); }
+
+.drawer-foot {
+  padding: 16px 20px 24px;
+  border-top: 1px solid var(--line);
+  background: var(--bg-0);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.drawer-foot-cta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 14px;
+  background: var(--accent);
+  color: var(--bg-0);
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 4px;
+  min-height: 48px;
+  transition: background 200ms;
+}
+.drawer-foot-cta:active { background: #e8b53d; }
+.drawer-foot-cta::after { content: '→'; font-weight: 600; }
+
+.drawer-foot-phone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--t3);
+  transition: all 200ms;
+}
+.drawer-foot-phone:active { background: var(--bg-2); }
+.drawer-foot-phone strong {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--t1);
+  letter-spacing: 0.05em;
+}
+.drawer-foot-phone svg {
+  width: 14px;
+  height: 14px;
+  color: var(--bid-up);
+  flex-shrink: 0;
+}
+
+body.no-scroll { overflow: hidden; }
+
+/* 進場 */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+
+<!-- ============================================================
+     A. Topbar
+     ============================================================ -->
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="topbar-brand">
+      <img src="data:image/png;base64,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" alt="CD Markets">
+      <span class="topbar-brand-name">CD Markets</span>
+      <span class="topbar-brand-meta">HK · EST 2014</span>
+    </a>
+    <div class="topbar-nav">
+      <a href="#products">業務範圍</a>
+      <a href="#deeptrade">DeepTrade</a>
+      <a href="#platform">交易平台</a>
+      <a href="#account">開戶</a>
+      <a href="#bulletin">公告</a>
+    </div>
+    <div class="topbar-right">
+      <div class="market-status">MARKET · OPEN</div>
+      <span class="topbar-lang">ZH</span>
+      <a href="#" class="topbar-login">登入</a>
+      <a href="#" class="topbar-signup">立即開戶</a>
+      <button class="topbar-menu" id="open-drawer" aria-label="選單">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="3" y1="7" x2="21" y2="7"/>
+          <line x1="3" y1="17" x2="21" y2="17"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================
+     Ticker
+     ============================================================ -->
+<div class="ticker">
+  <div class="ticker-tag">LIVE</div>
+  <div class="ticker-track">
+    <div class="tk-item"><span class="tk-sym">XAUUSD</span><span class="tk-px">2,418.36</span><span class="tk-ch up">+0.42%</span></div>
+    <div class="tk-item"><span class="tk-sym">XAGUSD</span><span class="tk-px">28.74</span><span class="tk-ch down">-0.18%</span></div>
+    <div class="tk-item"><span class="tk-sym">EURUSD</span><span class="tk-px">1.0852</span><span class="tk-ch up">+0.15%</span></div>
+    <div class="tk-item"><span class="tk-sym">GBPUSD</span><span class="tk-px">1.2683</span><span class="tk-ch up">+0.23%</span></div>
+    <div class="tk-item"><span class="tk-sym">USDJPY</span><span class="tk-px">156.78</span><span class="tk-ch down">-0.31%</span></div>
+    <div class="tk-item"><span class="tk-sym">USDCNH</span><span class="tk-px">7.2456</span><span class="tk-ch up">+0.08%</span></div>
+    <div class="tk-item"><span class="tk-sym">WTI</span><span class="tk-px">78.42</span><span class="tk-ch down">-0.55%</span></div>
+    <div class="tk-item"><span class="tk-sym">SPX500</span><span class="tk-px">5,308.13</span><span class="tk-ch up">+0.67%</span></div>
+    <div class="tk-item"><span class="tk-sym">HSI</span><span class="tk-px">18,512.45</span><span class="tk-ch up">+0.34%</span></div>
+    <div class="tk-item"><span class="tk-sym">XAUUSD</span><span class="tk-px">2,418.36</span><span class="tk-ch up">+0.42%</span></div>
+    <div class="tk-item"><span class="tk-sym">XAGUSD</span><span class="tk-px">28.74</span><span class="tk-ch down">-0.18%</span></div>
+    <div class="tk-item"><span class="tk-sym">EURUSD</span><span class="tk-px">1.0852</span><span class="tk-ch up">+0.15%</span></div>
+    <div class="tk-item"><span class="tk-sym">GBPUSD</span><span class="tk-px">1.2683</span><span class="tk-ch up">+0.23%</span></div>
+    <div class="tk-item"><span class="tk-sym">USDJPY</span><span class="tk-px">156.78</span><span class="tk-ch down">-0.31%</span></div>
+    <div class="tk-item"><span class="tk-sym">USDCNH</span><span class="tk-px">7.2456</span><span class="tk-ch up">+0.08%</span></div>
+    <div class="tk-item"><span class="tk-sym">WTI</span><span class="tk-px">78.42</span><span class="tk-ch down">-0.55%</span></div>
+    <div class="tk-item"><span class="tk-sym">SPX500</span><span class="tk-px">5,308.13</span><span class="tk-ch up">+0.67%</span></div>
+    <div class="tk-item"><span class="tk-sym">HSI</span><span class="tk-px">18,512.45</span><span class="tk-ch up">+0.34%</span></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     B. Hero
+     ============================================================ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div>
+          <div class="hero-eyebrow">CHINESE GOLD &amp; SILVER EXCHANGE · MEMBER NO. 125</div>
+          <h1 class="hero-h1">
+            香港持牌貴金屬交易商<br>
+            <span class="light">為認真的投資人，自 2014 年起。</span>
+          </h1>
+          <p class="hero-sub">
+            CD Markets 為香港黃金交易所第 125 號會員、香港海關 A 類註冊。業務行為受香港法律及交易所政策的嚴格監管，客戶資金於持牌銀行隔離存管。
+          </p>
+        </div>
+
+        <div class="hero-creds">
+          <div class="hero-cred">
+            <div class="hero-cred-lbl">CGSE Member</div>
+            <div class="hero-cred-val accent">No. 125</div>
+          </div>
+          <div class="hero-cred">
+            <div class="hero-cred-lbl">HK Customs</div>
+            <div class="hero-cred-val">Type A</div>
+          </div>
+          <div class="hero-cred">
+            <div class="hero-cred-lbl">Established</div>
+            <div class="hero-cred-val">2014</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="dash-head">
+          <div class="dash-head-l">MARKETS · LIVE</div>
+          <div class="dash-head-r">HKT 16:42:18</div>
+        </div>
+        <div class="dash-body">
+          <div class="quote">
+            <div class="quote-head">
+              <span class="quote-sym">XAU/USD</span>
+              <span class="quote-time">16:42</span>
+            </div>
+            <div>
+              <div class="quote-price">2,418.36</div>
+              <div class="quote-meta">
+                <span class="quote-change up">+10.21 · 0.42%</span>
+                <svg class="quote-spark" viewBox="0 0 80 28" preserveAspectRatio="none">
+                  <polyline points="0,20 10,17 20,21 30,15 40,16 50,11 60,13 70,8 80,9" fill="none" stroke="#54C87D" stroke-width="1.5"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="quote">
+            <div class="quote-head">
+              <span class="quote-sym">XAG/USD</span>
+              <span class="quote-time">16:42</span>
+            </div>
+            <div>
+              <div class="quote-price">28.74</div>
+              <div class="quote-meta">
+                <span class="quote-change down">-0.052 · 0.18%</span>
+                <svg class="quote-spark" viewBox="0 0 80 28" preserveAspectRatio="none">
+                  <polyline points="0,10 10,14 20,12 30,18 40,16 50,21 60,19 70,23 80,22" fill="none" stroke="#F04E4E" stroke-width="1.5"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="quote">
+            <div class="quote-head">
+              <span class="quote-sym">EUR/USD</span>
+              <span class="quote-time">16:42</span>
+            </div>
+            <div>
+              <div class="quote-price">1.0852</div>
+              <div class="quote-meta">
+                <span class="quote-change up">+0.0016 · 0.15%</span>
+                <svg class="quote-spark" viewBox="0 0 80 28" preserveAspectRatio="none">
+                  <polyline points="0,18 10,16 20,17 30,14 40,15 50,12 60,13 70,10 80,11" fill="none" stroke="#54C87D" stroke-width="1.5"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="quote">
+            <div class="quote-head">
+              <span class="quote-sym">USD/JPY</span>
+              <span class="quote-time">16:42</span>
+            </div>
+            <div>
+              <div class="quote-price">156.78</div>
+              <div class="quote-meta">
+                <span class="quote-change down">-0.49 · 0.31%</span>
+                <svg class="quote-spark" viewBox="0 0 80 28" preserveAspectRatio="none">
+                  <polyline points="0,8 10,11 20,9 30,14 40,12 50,17 60,15 70,19 80,21" fill="none" stroke="#F04E4E" stroke-width="1.5"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-foot">
+          <span>延遲 15 分鐘 · 僅供參考</span>
+          <a href="#">查看完整行情</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     C. Credentials Row
+     ============================================================ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-head-l">
+        <span class="section-eyebrow">Credentials · 牌照憑證</span>
+        <h2 class="section-title">受監管的香港持牌交易商</h2>
+      </div>
+      <div class="section-head-r"><a href="#">查看完整資質認證</a></div>
+    </div>
+
+    <div class="credentials-row reveal">
+      <div class="cred-cell">
+        <span class="lbl">CGSE Member No.</span>
+        <span class="val accent">No. 125</span>
+        <span class="desc">香港黃金交易所第 125 號會員</span>
+      </div>
+      <div class="cred-cell">
+        <span class="lbl">HK Customs Reg.</span>
+        <span class="val">A-B-25-01-08627</span>
+        <span class="desc">香港海關 A 類註冊</span>
+      </div>
+      <div class="cred-cell">
+        <span class="lbl">Year Founded</span>
+        <span class="val">2014</span>
+        <span class="desc">於香港正式成立並開展業務</span>
+      </div>
+      <div class="cred-cell">
+        <span class="lbl">Custody</span>
+        <span class="val up">Segregated</span>
+        <span class="desc">客戶資金於持牌銀行隔離存管</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     D. Products
+     ============================================================ -->
+<section class="section" id="products">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-head-l">
+        <span class="section-eyebrow">Offerings · 業務範圍</span>
+        <h2 class="section-title">三類貴金屬投資工具</h2>
+      </div>
+      <div class="section-head-r">FY2026</div>
+    </div>
+
+    <div class="products reveal">
+      <div class="product">
+        <div class="product-tag">PHYSICAL · 01</div>
+        <div class="product-head">
+          <div class="product-name">實金訂購</div>
+          <div class="product-name-en">Physical Gold Bullion</div>
+        </div>
+        <p class="product-desc">人民幣公斤條與五兩九九九九金條，由香港金市實體交收。對長期資產配置而言，實金是最直接的存在形式。</p>
+        <div class="product-specs">
+          <div class="product-spec-row"><dt>純度</dt><dd>999.9</dd></div>
+          <div class="product-spec-row accent"><dt>規格</dt><dd>1 kg · 250 g</dd></div>
+          <div class="product-spec-row"><dt>交收</dt><dd>香港金市</dd></div>
+          <div class="product-spec-row"><dt>保管</dt><dd>持牌銀行</dd></div>
+        </div>
+        <a href="#" class="product-cta">查看詳情</a>
+      </div>
+
+      <div class="product">
+        <div class="product-tag">SPOT · 02</div>
+        <div class="product-head">
+          <div class="product-name">倫敦金銀現貨</div>
+          <div class="product-name-en">Spot London Loco Gold</div>
+        </div>
+        <p class="product-desc">XAUUSD 與 XAGUSD，全球貴金屬市場核心交易品種。T+0 槓桿交易、24 小時活躍流動性。</p>
+        <div class="product-specs">
+          <div class="product-spec-row"><dt>品種</dt><dd>XAU · XAG</dd></div>
+          <div class="product-spec-row up"><dt>槓桿</dt><dd>1 : 300</dd></div>
+          <div class="product-spec-row"><dt>交易時段</dt><dd>24 / 5</dd></div>
+          <div class="product-spec-row"><dt>結算</dt><dd>T + 0</dd></div>
+        </div>
+        <a href="#" class="product-cta">查看詳情</a>
+      </div>
+
+      <div class="product">
+        <div class="product-tag">DERIVATIVES · 03</div>
+        <div class="product-head">
+          <div class="product-name">期貨衍生品</div>
+          <div class="product-name-en">Multi-Asset Derivatives</div>
+        </div>
+        <p class="product-desc">指數、金屬、外匯、能源、農產品、利率六大類期貨，於 MT4 平台一鍵切換。</p>
+        <div class="product-specs">
+          <div class="product-spec-row"><dt>類別</dt><dd>VI</dd></div>
+          <div class="product-spec-row"><dt>平台</dt><dd>MT4</dd></div>
+          <div class="product-spec-row"><dt>覆蓋</dt><dd>全球主流</dd></div>
+          <div class="product-spec-row"><dt>切換</dt><dd>單帳戶</dd></div>
+        </div>
+        <a href="#" class="product-cta">查看詳情</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     E. DeepTrade
+     ============================================================ -->
+<section class="section" id="deeptrade">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-head-l">
+        <span class="section-eyebrow">Intelligence · 智能輔助</span>
+        <h2 class="section-title">DeepTrade · 市場分析模組</h2>
+      </div>
+      <div class="section-head-r">POWERED BY DEEPSEEK</div>
+    </div>
+
+    <div class="dt-grid reveal">
+      <div class="dt-left">
+        <div>
+          <div class="dt-badge">PARTNER · DEEPSEEK</div>
+          <h3 class="dt-title">八個維度的<em>市場洞察</em></h3>
+          <p class="dt-desc">DeepTrade 不是訊號生成器，而是一個常駐的研究助理。它整理數據、追蹤趨勢、提示風險，最終的決策權在您手上。</p>
+        </div>
+        <a href="#" class="dt-cta">了解詳情</a>
+      </div>
+
+      <div class="dt-right">
+        <div class="dt-cell"><span class="dt-cell-no">DT-01</span><span class="dt-cell-name">數據分析</span><span class="dt-cell-name-en">Data analytics</span></div>
+        <div class="dt-cell"><span class="dt-cell-no">DT-02</span><span class="dt-cell-name">技術指標</span><span class="dt-cell-name-en">Technical indicators</span></div>
+        <div class="dt-cell"><span class="dt-cell-no">DT-03</span><span class="dt-cell-name">行業分析</span><span class="dt-cell-name-en">Sector research</span></div>
+        <div class="dt-cell"><span class="dt-cell-no">DT-04</span><span class="dt-cell-name">市場趨勢</span><span class="dt-cell-name-en">Market trends</span></div>
+        <div class="dt-cell"><span class="dt-cell-no">DT-05</span><span class="dt-cell-name">技術分析</span><span class="dt-cell-name-en">Chart reading</span></div>
+        <div class="dt-cell"><span class="dt-cell-no">DT-06</span><span class="dt-cell-name">時事權重</span><span class="dt-cell-name-en">News weighting</span></div>
+        <div class="dt-cell"><span class="dt-cell-no">DT-07</span><span class="dt-cell-name">量化模型</span><span class="dt-cell-name-en">Quant models</span></div>
+        <div class="dt-cell"><span class="dt-cell-no">DT-08</span><span class="dt-cell-name">交易策略</span><span class="dt-cell-name-en">Strategy synthesis</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     F. MT4 Platforms
+     ============================================================ -->
+<section class="section" id="platform">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-head-l">
+        <span class="section-eyebrow">Platform · 交易平台</span>
+        <h2 class="section-title">MetaTrader 4</h2>
+      </div>
+      <div class="section-head-r">v4.00 · BUILD 1380</div>
+    </div>
+
+    <div class="platforms-grid reveal">
+      <div class="platforms-left">
+        <h3>仍是最受信賴的選擇</h3>
+        <p>MT4 不是最新的平台，但十年來在貴金屬與外匯交易上的執行穩定性，沒有後繼者真正超越過。我們選擇繼續提供它，因為認真的交易者選擇繼續使用它。</p>
+        <p>所有版本均通過官方分發通道下載，並由我們的後台直接配置交易服務器。</p>
+        <dl class="platforms-spec">
+          <div><dt>Execution Modes</dt><dd>3 modes</dd></div>
+          <div><dt>Order Types</dt><dd>8 types</dd></div>
+          <div><dt>Indicators</dt><dd>50+</dd></div>
+          <div><dt>EA Support</dt><dd>MQL4</dd></div>
+        </dl>
+      </div>
+
+      <div class="platforms-right">
+        <a href="#" class="dl-btn"><span class="dl-btn-name">Windows</span><span class="dl-btn-meta">.EXE · 8.4 MB</span></a>
+        <a href="#" class="dl-btn"><span class="dl-btn-name">macOS</span><span class="dl-btn-meta">UNIVERSAL · 12.1 MB</span></a>
+        <a href="#" class="dl-btn"><span class="dl-btn-name">Linux</span><span class="dl-btn-meta">VIA WINE</span></a>
+        <a href="#" class="dl-btn"><span class="dl-btn-name">iOS</span><span class="dl-btn-meta">APP STORE</span></a>
+        <a href="#" class="dl-btn"><span class="dl-btn-name">Android</span><span class="dl-btn-meta">APK · 24 MB</span></a>
+        <a href="#" class="dl-btn"><span class="dl-btn-name">HarmonyOS</span><span class="dl-btn-meta">華為應用市場</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     G. Account opening
+     ============================================================ -->
+<section class="section" id="account">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-head-l">
+        <span class="section-eyebrow">Application · 開戶</span>
+        <h2 class="section-title">三步開立帳戶</h2>
+      </div>
+      <div class="section-head-r">MIN. DEPOSIT · USD 200</div>
+    </div>
+
+    <div class="steps-row reveal">
+      <div class="step">
+        <div class="step-head">
+          <span class="step-no">STEP 01</span>
+          <span class="step-time">~ 10 min</span>
+        </div>
+        <div class="step-title">提交申請</div>
+        <p class="step-desc">在線填寫開戶表格，準備身份證明、住址證明、銀行月結單。</p>
+      </div>
+      <div class="step">
+        <div class="step-head">
+          <span class="step-no">STEP 02</span>
+          <span class="step-time">1 – 2 days</span>
+        </div>
+        <div class="step-title">身份驗證</div>
+        <p class="step-desc">合規團隊進行 KYC 審核，並通過電子郵件回覆結果。</p>
+      </div>
+      <div class="step">
+        <div class="step-head">
+          <span class="step-no">STEP 03</span>
+          <span class="step-time">USD 200+</span>
+        </div>
+        <div class="step-title">入金與交易</div>
+        <p class="step-desc">通過香港持牌銀行電匯入金，啟用 MT4 並開始第一筆交易。</p>
+      </div>
+    </div>
+
+    <div class="steps-cta-row reveal">
+      <div class="steps-cta-row-text">如有任何疑問，可先與我們的客服聯繫 · <strong>+852 3521 0369</strong></div>
+      <a href="#" class="steps-cta-btn">立即開戶</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     H. Bulletin
+     ============================================================ -->
+<section class="section" id="bulletin">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-head-l">
+        <span class="section-eyebrow">Bulletin · 近期動態</span>
+        <h2 class="section-title">公司公告</h2>
+      </div>
+      <div class="section-head-r"><a href="#">查看全部</a></div>
+    </div>
+
+    <div class="bulletin-list reveal">
+      <a href="#" class="bulletin-row">
+        <span class="bulletin-date">2026 · 04 · 18</span>
+        <span class="bulletin-title">DeepTrade 智能交易輔助平台正式上線</span>
+        <span class="bulletin-tag">PRODUCT</span>
+      </a>
+      <a href="#" class="bulletin-row">
+        <span class="bulletin-date">2026 · 04 · 05</span>
+        <span class="bulletin-title">清明節假期交易時間調整通知</span>
+        <span class="bulletin-tag">SCHEDULE</span>
+      </a>
+      <a href="#" class="bulletin-row">
+        <span class="bulletin-date">2026 · 03 · 22</span>
+        <span class="bulletin-title">移動端 MT4 應用版本升級維護公告</span>
+        <span class="bulletin-tag">PLATFORM</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     Footer
+     ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand-block">
+        <a href="/" class="topbar-brand">
+          <img src="data:image/png;base64,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" alt="CD Markets">
+          <span class="topbar-brand-name">CD Markets</span>
+        </a>
+        <p>CloudData System Limited<br>香港持牌貴金屬交易商<br>商業登記號 63576919</p>
+        <div class="footer-licenses">
+          <span class="footer-license green">CGSE · 125</span>
+          <span class="footer-license gold">HK Customs · A</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="#">實金訂購</a></li>
+          <li><a href="#">倫敦金銀現貨</a></li>
+          <li><a href="#">期貨衍生品</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">開戶流程</a></li>
+          <li><a href="#">交易規則</a></li>
+          <li><a href="#">MT4 下載</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">公司簡介</a></li>
+          <li><a href="#">牌照與資質</a></li>
+          <li><a href="#">客戶資金保障</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">投資學堂</a></li>
+          <li><a href="#">財經日曆</a></li>
+          <li><a href="#">公司公告</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-contact">
+      <div class="footer-contact-cell">
+        <div class="lbl">Office</div>
+        <div class="val">香港灣仔告士打道 128 號祥豐大廈 21 樓 E 室</div>
+      </div>
+      <div class="footer-contact-cell">
+        <div class="lbl">Telephone</div>
+        <div class="val mono">+852 3521 0369</div>
+      </div>
+      <div class="footer-contact-cell">
+        <div class="lbl">Correspondence</div>
+        <div class="val mono">info · acc · cs · ib@cdmarkets.net</div>
+      </div>
+    </div>
+
+    <div class="footer-risk">
+      <strong>RISK NOTICE</strong>槓桿式金融商品交易具有快速虧損的高風險，可能不適合所有投資者。請確保您完全了解相關風險。
+      <strong style="margin-left:12px">RESTRICTED</strong>CloudData System Limited 不接受來自美國、加拿大、以色列和伊朗等地區居民的申請。
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 CLOUDDATA SYSTEM LIMITED · ALL RIGHTS RESERVED</div>
+      <div class="footer-legal">
+        <a href="#">DISCLAIMER</a>
+        <a href="#">RISK</a>
+        <a href="#">PRIVACY</a>
+        <a href="#">AML</a>
+        <a href="#">COOKIES</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- 手機抽屜 -->
+<div class="drawer-bd" id="drawer-bd"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <a href="/" class="topbar-brand">
+      <img src="data:image/png;base64,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" alt="CD Markets">
+      <span class="topbar-brand-name">CD Markets</span>
+    </a>
+    <button class="drawer-close" id="close-drawer" aria-label="關閉選單">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22">
+        <line x1="6" y1="6" x2="18" y2="18"/>
+        <line x1="18" y1="6" x2="6" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section-label">Sections · 主要章節</div>
+    <a class="drawer-item" href="#products"><span>業務範圍</span><span class="no">01</span></a>
+    <a class="drawer-item" href="#deeptrade"><span>DeepTrade 智能輔助</span><span class="no">02</span></a>
+    <a class="drawer-item" href="#platform"><span>MT4 交易平台</span><span class="no">03</span></a>
+    <a class="drawer-item" href="#account"><span>開戶申請</span><span class="no">04</span></a>
+    <a class="drawer-item" href="#bulletin"><span>公司公告</span><span class="no">05</span></a>
+
+    <div class="drawer-section-label">Account · 帳戶</div>
+    <a class="drawer-item" href="#"><span>登入</span><span class="no">→</span></a>
+
+    <div class="drawer-utilities">
+      <button class="drawer-util-btn active">
+        <span>LANG</span>
+        <strong>簡體</strong>
+      </button>
+      <button class="drawer-util-btn">
+        <span>LANG</span>
+        <strong>繁體</strong>
+      </button>
+      <button class="drawer-util-btn">
+        <span>LANG</span>
+        <strong>EN</strong>
+      </button>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <a href="#" class="drawer-foot-cta">立即開戶</a>
+    <a href="tel:+85235210369" class="drawer-foot-phone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+      <span>客服直撥</span>
+      <strong>+852 3521 0369</strong>
+    </a>
+  </div>
+</aside>
+
+<script>
+const drawer = document.getElementById('drawer');
+const bd = document.getElementById('drawer-bd');
+document.getElementById('open-drawer').addEventListener('click', () => {
+  drawer.classList.add('open');
+  bd.classList.add('open');
+  document.body.classList.add('no-scroll');
+});
+function closeDr() {
+  drawer.classList.remove('open');
+  bd.classList.remove('open');
+  document.body.classList.remove('no-scroll');
+}
+document.getElementById('close-drawer').addEventListener('click', closeDr);
+bd.addEventListener('click', closeDr);
+document.querySelectorAll('.drawer-item').forEach(a => a.addEventListener('click', closeDr));
+
+const io = new IntersectionObserver((es) => {
+  es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// 行情數字微閃爍
+function blink() {
+  const prices = document.querySelectorAll('.quote-price, .tk-px');
+  prices.forEach(p => {
+    if (Math.random() < 0.1) {
+      const orig = p.style.color;
+      p.style.transition = 'color 100ms';
+      p.style.color = Math.random() < 0.5 ? '#54C87D' : '#F04E4E';
+      setTimeout(() => { p.style.color = orig; }, 200);
+    }
+  });
+}
+setInterval(blink, 2000);
+</script>
+
+</body>
+</html>
