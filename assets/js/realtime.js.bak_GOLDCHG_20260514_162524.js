@@ -118,45 +118,21 @@
     dashTime.textContent = ok ? ('LIVE · ' + hh + ':' + mm + ':' + ss) : ('OFFLINE · ' + hh + ':' + mm + ':' + ss);
   }
 
-  // ---- gold-api 自算當日漲跌 ---- //
-  // 用 localStorage 存「當日首次抓到的價格」當基準，日期切換時重置
-  function getTodayBaseline(symId, currentPrice) {
-    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-    const key = 'cdmkt_base_' + symId;
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw) {
-        const obj = JSON.parse(raw);
-        if (obj && obj.date === today && typeof obj.price === 'number') {
-          return obj.price;
-        }
-      }
-      // 沒有或日期過期 → 用當前價當基準
-      localStorage.setItem(key, JSON.stringify({ date: today, price: currentPrice }));
-      return currentPrice;
-    } catch (e) {
-      // localStorage 不可用 → 用當前價當基準（每次重整都重置，可接受）
-      return currentPrice;
-    }
-  }
-
   async function fetchGold(symCfg) {
     const url = 'https://api.gold-api.com/price/' + symCfg.tdSym + '?_t=' + Date.now();
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
-      const price = parseFloat(data.price);
-      if (isNaN(price)) {
-        console.warn('[realtime] gold-api ' + symCfg.id + ' unexpected format:', data);
-        return false;
+      const price = parseFloat(data.price != null ? data.price : (data.close != null ? data.close : data.value));
+      const change = parseFloat(data.ch != null ? data.ch : (data.change != null ? data.change : (data.priceChange != null ? data.priceChange : 0)));
+      const pct = parseFloat(data.chp != null ? data.chp : (data.change_percent != null ? data.change_percent : (data.percent_change != null ? data.percent_change : (data.priceChangePercent != null ? data.priceChangePercent : 0))));
+      if (!isNaN(price)) {
+        updateSymbol(symCfg, price, change, pct);
+        return true;
       }
-      // gold-api 只給 price,沒有 change/pct → 自己算
-      const baseline = getTodayBaseline(symCfg.id, price);
-      const change = price - baseline;
-      const pct = baseline !== 0 ? (change / baseline) * 100 : 0;
-      updateSymbol(symCfg, price, change, pct);
-      return true;
+      console.warn('[realtime] gold-api ' + symCfg.id + ' unexpected format:', data);
+      return false;
     } catch (err) {
       console.warn('[realtime] gold-api ' + symCfg.id + ' failed:', err.message);
       return false;
