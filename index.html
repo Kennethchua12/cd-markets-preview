@@ -127,7 +127,7 @@ img { display: block; max-width: 100%; }
   padding: 4px 0;
   transition: color 200ms;
 }
-.topbar-nav a:hover { color: var(--t1); }
+.topbar-nav a:hover { color: var(--accent); }
 
 .topbar-right {
   display: flex;
@@ -1304,7 +1304,7 @@ img { display: block; max-width: 100%; }
   color: var(--t3);
   transition: color 200ms;
 }
-.footer-col ul a:hover { color: var(--t1); }
+.footer-col ul a:hover { color: var(--accent); }
 
 .footer-contact {
   display: grid;
@@ -1361,7 +1361,8 @@ img { display: block; max-width: 100%; }
   gap: 16px;
   flex-wrap: wrap;
 }
-.footer-legal a:hover { color: var(--t1); }
+.footer-legal a { transition: color 200ms; }
+.footer-legal a:hover { color: var(--accent); }
 
 @media (max-width: 1023px) {
   .footer-top {
@@ -2694,7 +2695,7 @@ body.no-scroll { overflow: hidden; }
           <img src="data:image/png;base64,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" alt="CD Markets">
           <span class="topbar-brand-name">CD Markets</span>
         </a>
-        <p>CloudData System Limited<br>香港持牌貴金屬交易商<br>商業登記號 63576919</p>
+        <p>CloudData System Limited<br>香港持牌貴金屬交易商<br>商業登記號 63576919<br>Established 2014 · Hong Kong</p>
         <div class="footer-licenses">
           <span class="footer-license green">CGSE · 125</span>
           <span class="footer-license gold">HK Customs · A</span>
