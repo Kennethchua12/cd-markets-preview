@@ -1,26 +1,20 @@
 /* ============================================================
- *  CD Markets · Real-time Quote Module (v4)
- *  Source: min-api.cryptocompare.com (single API, no key, batch fetch)
- *
- *  9 symbols: XAU(XAUT) / XPT / EUR / GBP / JPY / AUD / CHF / BTC / ETH
- *    - XAU/USD via XAUT (Tether Gold)
- *    - XPT/USD via XPT  (Platinum, replacement for XAG which CC doesn't have)
- *    - USD/JPY and USD/CHF inverted (CC gives 1 JPY/CHF = X USD)
- *
- *  Features:
- *    1. Price + 24h % change (秒開, batch)
- *    2. Sparkline: real 24h hourly closes (histohour endpoint)
- *
- *  Refresh strategy:
- *    - Prices: every 60s (pricemultifull, 1 batch call)
- *    - Sparklines: every 5min (histohour, 9 calls, but cheap and rarely needed)
+ *  CD Markets · Real-time Quote Module (v3 - CryptoCompare)
+ *  Source: min-api.cryptocompare.com /data/pricemultifull
+ *    - 一次 fetch 拿 9 個 symbol 全部資料 (秒開)
+ *    - 無 API key、無額度限制
+ *    - 自帶 24h 漲跌 (CHANGEPCT24HOUR)
+ *  Refresh: 60 秒一次
  * ============================================================ */
 (function () {
   'use strict';
 
+  // 顯示 ID → CryptoCompare symbol / 是否 invert / 小數位 / 千分位
+  // XAUT = Tether Gold (錨定 XAU)
+  // XAG 在 CryptoCompare 無對應代幣 → 改用 gold-api.com 單獨拉 (見 fetchXagFromGoldApi)
+  // USD/JPY、USD/CHF 因 CC 給的是 1 JPY/CHF = X USD,需 invert
   const SYMBOLS = [
     { id: 'XAU/USD', cc: 'XAUT', invert: false, dp: 2, comma: true  },
-    { id: 'XPT/USD', cc: 'XPT',  invert: false, dp: 2, comma: true  },
     { id: 'EUR/USD', cc: 'EUR',  invert: false, dp: 4, comma: false },
     { id: 'GBP/USD', cc: 'GBP',  invert: false, dp: 4, comma: false },
     { id: 'USD/JPY', cc: 'JPY',  invert: true,  dp: 2, comma: true  },
@@ -30,12 +24,13 @@
     { id: 'ETH/USD', cc: 'ETH',  invert: false, dp: 2, comma: true  },
   ];
 
-  const PRICE_REFRESH_MS = 60 * 1000;
-  const SPARK_REFRESH_MS = 5 * 60 * 1000;
-  const FLASH_MS = 600;
-  const SPARK_POINTS = 24;  // 24 小時, 每小時 1 點
+  // XAG/USD 獨立來源 (gold-api 真實白銀現貨價, 不推算)
+  const XAG_CFG = { id: 'XAG/USD', dp: 2, comma: true };
 
-  // ===== 格式化 ===== //
+  const REFRESH_MS = 60 * 1000;
+  const FLASH_MS = 600;
+
+  // ===== 格式化工具 ===== //
   function fmt(num, dp, comma) {
     if (num === null || num === undefined || isNaN(num)) return '—';
     const fixed = Number(num).toFixed(dp);
@@ -67,11 +62,13 @@
     }, FLASH_MS);
   }
 
-  // ===== DOM 更新: 價格 + 漲跌 ===== //
+  // ===== DOM 更新 ===== //
   const lastPriceMap = {};
 
   function updateSymbol(symCfg, price, pct) {
     if (isNaN(price)) return;
+
+    // pct 是 24h 漲跌百分比, change 反推 = price * pct / 100
     const change = price * pct / 100;
     const isUp = pct >= 0;
     const priceStr = fmt(price, symCfg.dp, symCfg.comma);
@@ -103,7 +100,7 @@
       }
     }
 
-    // Ticker
+    // Ticker 跑馬燈 (9×2 同步)
     document.querySelectorAll('.tk-item[data-sym="' + symCfg.id + '"]').forEach(function (item) {
       const pxEl = item.querySelector('.tk-px');
       const chEl = item.querySelector('.tk-ch');
@@ -129,8 +126,9 @@
     dashTime.textContent = ok ? ('LIVE · ' + hh + ':' + mm + ':' + ss) : ('OFFLINE · ' + hh + ':' + mm + ':' + ss);
   }
 
-  // ===== 價格 Fetch ===== //
-  async function fetchPrices() {
+  // ===== Fetch ===== //
+  async function fetchAll() {
+    // 一次拉所有 symbol (批次)
     const fsyms = SYMBOLS.map(function (s) { return s.cc; }).join(',');
     const url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms=' + fsyms + '&tsyms=USD';
 
@@ -146,6 +144,7 @@
         if (u && typeof u.PRICE === 'number') {
           let price = u.PRICE;
           let pct = typeof u.CHANGEPCT24HOUR === 'number' ? u.CHANGEPCT24HOUR : 0;
+          // invert: CC 給 1 JPY = X USD, 需倒數變 1 USD = X JPY,且 pct 反向
           if (symCfg.invert) {
             price = 1 / price;
             pct = -pct;
@@ -158,106 +157,112 @@
       });
 
       updateStatus(okCount > 0);
-      console.log('[realtime] Prices · ' + okCount + '/' + SYMBOLS.length);
+      console.log('[realtime] Batch done · ' + okCount + '/' + SYMBOLS.length + ' symbols');
     } catch (err) {
-      console.warn('[realtime] Price fetch failed:', err.message);
+      console.warn('[realtime] Fetch failed:', err.message);
       updateStatus(false);
     }
   }
 
-  // ===== Sparkline 繪製 ===== //
-  // 在 .quote[data-sym] 內找 .quote-spark <svg>,重畫 polyline
-  function drawSparkline(symCfg, closes) {
-    if (!closes || closes.length < 2) return;
-
-    const heroQuote = document.querySelector('.quote[data-sym="' + symCfg.id + '"]');
-    if (!heroQuote) return;
-    const svg = heroQuote.querySelector('.quote-spark');
-    if (!svg) return;
-
-    // viewBox 80 x 28: 左右各留 0.5 邊距
-    const W = 80;
-    const H = 28;
-    const padY = 2;
-
-    // 如果是 invert symbol (USD/JPY、USD/CHF),要倒數每個點
-    let series = closes.slice();
-    if (symCfg.invert) {
-      series = series.map(function (v) { return v > 0 ? 1 / v : v; });
+  // ===== XAG 獨立 Fetch (gold-api, 真實白銀現貨價) ===== //
+  // gold-api 只給 price 無 change, 用 localStorage 存當日基準自算漲跌
+  function getTodayBaselineXag(currentPrice) {
+    const today = new Date().toISOString().slice(0, 10);
+    const key = 'cdmkt_base_XAG/USD';
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        const obj = JSON.parse(raw);
+        if (obj && obj.date === today && typeof obj.price === 'number') {
+          return obj.price;
+        }
+      }
+      localStorage.setItem(key, JSON.stringify({ date: today, price: currentPrice }));
+      return currentPrice;
+    } catch (e) {
+      return currentPrice;
     }
-
-    const min = Math.min.apply(null, series);
-    const max = Math.max.apply(null, series);
-    const range = max - min || 1;  // 避免除零
-
-    const step = series.length > 1 ? W / (series.length - 1) : W;
-    const points = series.map(function (v, i) {
-      const x = (i * step).toFixed(2);
-      // y 軸反向 (SVG 上為 0)
-      const y = (H - padY - ((v - min) / range) * (H - 2 * padY)).toFixed(2);
-      return x + ',' + y;
-    }).join(' ');
-
-    // 漲跌色: 比較第一個和最後一個
-    const isUp = series[series.length - 1] >= series[0];
-    const stroke = isUp ? '#54C87D' : '#F04E4E';
-
-    // 清空 <svg> 內容,重畫
-    while (svg.firstChild) svg.removeChild(svg.firstChild);
-    const NS = 'http://www.w3.org/2000/svg';
-    const polyline = document.createElementNS(NS, 'polyline');
-    polyline.setAttribute('points', points);
-    polyline.setAttribute('fill', 'none');
-    polyline.setAttribute('stroke', stroke);
-    polyline.setAttribute('stroke-width', '1.5');
-    polyline.setAttribute('stroke-linecap', 'round');
-    polyline.setAttribute('stroke-linejoin', 'round');
-    svg.appendChild(polyline);
   }
 
-  // ===== Sparkline Fetch (歷史 24 小時) ===== //
-  async function fetchSparkline(symCfg) {
-    const url = 'https://min-api.cryptocompare.com/data/v2/histohour'
-      + '?fsym=' + symCfg.cc
-      + '&tsym=USD'
-      + '&limit=' + SPARK_POINTS;
+  async function fetchXag() {
     try {
-      const res = await fetch(url);
+      const res = await fetch('https://api.gold-api.com/price/XAG');
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
-      if (data.Response !== 'Success' || !data.Data || !data.Data.Data) {
-        console.warn('[realtime] spark ' + symCfg.id + ' bad response:', data.Message || data);
+      const price = parseFloat(data.price);
+      if (isNaN(price)) {
+        console.warn('[realtime] XAG/USD unexpected format:', data);
         return false;
       }
-      const closes = data.Data.Data.map(function (d) { return d.close; }).filter(function (v) { return typeof v === 'number' && v > 0; });
-      if (closes.length < 2) {
-        console.warn('[realtime] spark ' + symCfg.id + ' insufficient data');
-        return false;
-      }
-      drawSparkline(symCfg, closes);
+      const baseline = getTodayBaselineXag(price);
+      const change = price - baseline;
+      const pct = baseline !== 0 ? (change / baseline) * 100 : 0;
+      // 跟 updateSymbol 一樣的更新邏輯,但 XAG_CFG 不在 SYMBOLS 陣列裡
+      updateSymbolDirect(XAG_CFG, price, change, pct);
       return true;
     } catch (err) {
-      console.warn('[realtime] spark ' + symCfg.id + ' failed:', err.message);
+      console.warn('[realtime] XAG/USD failed:', err.message);
       return false;
     }
   }
 
-  // 9 個 symbol 並行拉 sparkline
-  async function fetchAllSparklines() {
-    const tasks = SYMBOLS.map(function (s) { return fetchSparkline(s); });
-    const results = await Promise.all(tasks);
-    const ok = results.filter(Boolean).length;
-    console.log('[realtime] Sparklines · ' + ok + '/' + SYMBOLS.length);
+  // updateSymbol 從 pct 反推 change,XAG 已自算 change,需另一個函數直接接收 change
+  function updateSymbolDirect(symCfg, price, change, pct) {
+    if (isNaN(price)) return;
+    const isUp = change >= 0;
+    const priceStr = fmt(price, symCfg.dp, symCfg.comma);
+    const changeStr = fmtChange(change, symCfg.dp);
+    const pctStr = fmtPct(pct);
+
+    const prevPrice = lastPriceMap[symCfg.id];
+    const priceFlashDir = prevPrice !== undefined ? (price >= prevPrice) : isUp;
+    lastPriceMap[symCfg.id] = price;
+
+    const heroQuote = document.querySelector('.quote[data-sym="' + symCfg.id + '"]');
+    if (heroQuote) {
+      const priceEl = heroQuote.querySelector('.quote-price');
+      const changeEl = heroQuote.querySelector('.quote-change');
+      const timeEl = heroQuote.querySelector('.quote-time');
+      if (priceEl && priceEl.textContent !== priceStr) {
+        priceEl.textContent = priceStr;
+        flashEl(priceEl, priceFlashDir);
+      }
+      if (changeEl) {
+        changeEl.textContent = changeStr + ' · ' + pctStr;
+        changeEl.classList.remove('up', 'down');
+        changeEl.classList.add(isUp ? 'up' : 'down');
+      }
+      if (timeEl) {
+        const now = new Date();
+        timeEl.textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      }
+    }
+
+    document.querySelectorAll('.tk-item[data-sym="' + symCfg.id + '"]').forEach(function (item) {
+      const pxEl = item.querySelector('.tk-px');
+      const chEl = item.querySelector('.tk-ch');
+      if (pxEl && pxEl.textContent !== priceStr) {
+        pxEl.textContent = priceStr;
+        flashEl(pxEl, priceFlashDir);
+      }
+      if (chEl) {
+        chEl.textContent = (isUp ? '+' : '-') + fmtPct(pct);
+        chEl.classList.remove('up', 'down');
+        chEl.classList.add(isUp ? 'up' : 'down');
+      }
+    });
   }
 
   // ===== 啟動 ===== //
-  function start() {
-    // 立即各拉一次 (並行,秒開)
-    fetchPrices();
-    fetchAllSparklines();
+  function refreshAll() {
+    // 並行,兩個 API 同時打,秒開
+    fetchAll();
+    fetchXag();
+  }
 
-    setInterval(fetchPrices, PRICE_REFRESH_MS);
-    setInterval(fetchAllSparklines, SPARK_REFRESH_MS);
+  function start() {
+    refreshAll();
+    setInterval(refreshAll, REFRESH_MS);
   }
 
   if (document.readyState === 'loading') {
