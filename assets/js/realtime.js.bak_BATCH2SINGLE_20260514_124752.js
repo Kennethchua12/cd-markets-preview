@@ -136,61 +136,45 @@
   }
 
   // ===== Fetch ===== //
-  // 單一 symbol 的請求
-  async function fetchOne(symCfg) {
-    const url = `${CONFIG.endpoint}?symbol=${encodeURIComponent(symCfg.td)}&apikey=${CONFIG.apiKey}`;
+  async function fetchQuotes() {
+    const symStr = CONFIG.symbols.map(s => s.td).join(',');
+    const url = `${CONFIG.endpoint}?symbol=${encodeURIComponent(symStr)}&apikey=${CONFIG.apiKey}`;
+
     try {
       const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
 
+      // 多 symbol 回傳：{ "XAU/USD": {...}, "EUR/USD": {...}, ... }
+      // 單 symbol 回傳：{ symbol: "...", close: "...", ... }
+      // 錯誤回傳：{ code: 429, message: "..." } 或 { status: "error" }
       if (data.status === 'error' || data.code) {
-        console.warn(`[realtime] ${symCfg.id} error:`, data.message || data);
-        return false;
+        console.warn('[realtime] API error:', data.message || data);
+        updateStatus(false);
+        return;
       }
 
-      if (data && data.close) {
-        updateSymbol(symCfg, data);
-        return true;
-      }
-      console.warn(`[realtime] ${symCfg.id} no close field`);
-      return false;
+      let updatedCount = 0;
+      CONFIG.symbols.forEach(symCfg => {
+        const symData = data[symCfg.td] || (CONFIG.symbols.length === 1 ? data : null);
+        if (symData && symData.close) {
+          updateSymbol(symCfg, symData);
+          updatedCount++;
+        }
+      });
+
+      updateStatus(updatedCount > 0);
+      console.log(`[realtime] Updated ${updatedCount}/${CONFIG.symbols.length} symbols`);
     } catch (err) {
-      console.warn(`[realtime] ${symCfg.id} fetch failed:`, err.message);
-      return false;
+      console.warn('[realtime] Fetch failed:', err.message);
+      updateStatus(false);
     }
-  }
-
-  // 一輪：9 個 symbol 錯開打，每 10 秒 1 個，總共 ~90 秒打完
-  let successInRound = 0;
-  let roundActive = false;
-
-  async function runRound() {
-    if (roundActive) return;             // 避免重疊
-    roundActive = true;
-    successInRound = 0;
-    const stagger = Math.floor(CONFIG.intervalMs / CONFIG.symbols.length); // 10000ms = 10s
-
-    for (let i = 0; i < CONFIG.symbols.length; i++) {
-      const symCfg = CONFIG.symbols[i];
-      const ok = await fetchOne(symCfg);
-      if (ok) successInRound++;
-      updateStatus(successInRound > 0);
-
-      // 最後一個不用等
-      if (i < CONFIG.symbols.length - 1) {
-        await new Promise(r => setTimeout(r, stagger));
-      }
-    }
-
-    console.log(`[realtime] Round done · ${successInRound}/${CONFIG.symbols.length} symbols updated`);
-    roundActive = false;
   }
 
   // ===== 啟動 ===== //
   function start() {
-    runRound();                                  // 立即跑一輪
-    setInterval(runRound, CONFIG.intervalMs);    // 之後每 90s 一輪（一輪內 9 個 symbol 錯開 10s 打）
+    fetchQuotes();                              // 立即拉一次
+    setInterval(fetchQuotes, CONFIG.intervalMs); // 之後每 90s 一次
   }
 
   if (document.readyState === 'loading') {
