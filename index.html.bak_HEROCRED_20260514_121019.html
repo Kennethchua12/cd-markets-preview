@@ -1700,9 +1700,11 @@ body.no-scroll { overflow: hidden; }
   .hero-cred {
     padding: 0 12px !important;
     border-right: 1px solid var(--line) !important;
-    text-align: center !important;
   }
+  .hero-cred:first-child { padding-left: 0 !important; }
   .hero-cred:last-child {
+    padding-right: 0 !important;
+    padding-left: 12px !important;
     border-right: none !important;
   }
   .hero-cred-lbl {
