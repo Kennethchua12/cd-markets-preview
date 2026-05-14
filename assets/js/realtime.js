@@ -141,7 +141,8 @@
   }
 
   async function fetchGold(symCfg) {
-    const url = 'https://api.gold-api.com/price/' + symCfg.tdSym + '?_t=' + Date.now();
+    // gold-api 不接受 query 參數,純路徑即可
+    const url = 'https://api.gold-api.com/price/' + symCfg.tdSym;
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error('HTTP ' + res.status);
