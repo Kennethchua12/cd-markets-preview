@@ -138,9 +138,11 @@
   // ===== Fetch ===== //
   // 單一 symbol 的請求
   async function fetchOne(symCfg) {
-    const url = `${CONFIG.endpoint}?symbol=${encodeURIComponent(symCfg.td)}&apikey=${CONFIG.apiKey}`;
+    // 用時間戳避瀏覽器快取（取代 cache: 'no-store'，避免觸發 CORS preflight）
+    const cacheBust = '&_t=' + Date.now();
+    const url = `${CONFIG.endpoint}?symbol=${encodeURIComponent(symCfg.td)}&apikey=${CONFIG.apiKey}${cacheBust}`;
     try {
-      const res = await fetch(url, { cache: 'no-store' });
+      const res = await fetch(url);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
 
