@@ -19,15 +19,15 @@
   'use strict';
 
   const SYMBOLS = [
-    { id: 'XAU/USD', cc: 'XAUT', invert: false, dp: 2, comma: true  },
-    { id: 'XPT/USD', cc: 'XPT',  invert: false, dp: 2, comma: true  },
-    { id: 'EUR/USD', cc: 'EUR',  invert: false, dp: 4, comma: false },
-    { id: 'GBP/USD', cc: 'GBP',  invert: false, dp: 4, comma: false },
-    { id: 'USD/JPY', cc: 'JPY',  invert: true,  dp: 2, comma: true  },
-    { id: 'AUD/USD', cc: 'AUD',  invert: false, dp: 4, comma: false },
-    { id: 'USD/CHF', cc: 'CHF',  invert: true,  dp: 4, comma: false },
-    { id: 'BTC/USD', cc: 'BTC',  invert: false, dp: 2, comma: true  },
-    { id: 'ETH/USD', cc: 'ETH',  invert: false, dp: 2, comma: true  },
+    { id: 'XAU/USD', cc: 'XAUT', invert: false, dp: 2, comma: true,  hasHistory: true  },
+    { id: 'XPT/USD', cc: 'XPT',  invert: false, dp: 2, comma: true,  hasHistory: false }, // CCCAGG 無歷史
+    { id: 'EUR/USD', cc: 'EUR',  invert: false, dp: 4, comma: false, hasHistory: true  },
+    { id: 'GBP/USD', cc: 'GBP',  invert: false, dp: 4, comma: false, hasHistory: true  },
+    { id: 'USD/JPY', cc: 'JPY',  invert: true,  dp: 2, comma: true,  hasHistory: true  },
+    { id: 'AUD/USD', cc: 'AUD',  invert: false, dp: 4, comma: false, hasHistory: true  },
+    { id: 'USD/CHF', cc: 'CHF',  invert: true,  dp: 4, comma: false, hasHistory: true  },
+    { id: 'BTC/USD', cc: 'BTC',  invert: false, dp: 2, comma: true,  hasHistory: true  },
+    { id: 'ETH/USD', cc: 'ETH',  invert: false, dp: 2, comma: true,  hasHistory: true  },
   ];
 
   const PRICE_REFRESH_MS = 60 * 1000;
@@ -242,12 +242,22 @@
     }
   }
 
-  // 9 個 symbol 並行拉 sparkline
+  // 9 個 symbol 錯開拉 sparkline (避免 CryptoCompare 並行限流)
+  // XPT 跳過 (CCCAGG 無歷史數據)
+  const SPARK_STAGGER_MS = 1500;  // 每個 symbol 間隔 1.5 秒
+
   async function fetchAllSparklines() {
-    const tasks = SYMBOLS.map(function (s) { return fetchSparkline(s); });
-    const results = await Promise.all(tasks);
-    const ok = results.filter(Boolean).length;
-    console.log('[realtime] Sparklines · ' + ok + '/' + SYMBOLS.length);
+    const eligible = SYMBOLS.filter(function (s) { return s.hasHistory; });
+    let ok = 0;
+    for (let i = 0; i < eligible.length; i++) {
+      const success = await fetchSparkline(eligible[i]);
+      if (success) ok++;
+      // 最後一個不等
+      if (i < eligible.length - 1) {
+        await new Promise(function (r) { setTimeout(r, SPARK_STAGGER_MS); });
+      }
+    }
+    console.log('[realtime] Sparklines · ' + ok + '/' + eligible.length + ' (XPT skipped: no history)');
   }
 
   // ===== 啟動 ===== //
