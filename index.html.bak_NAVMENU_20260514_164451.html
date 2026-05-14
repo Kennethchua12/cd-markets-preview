@@ -117,7 +117,7 @@ img { display: block; max-width: 100%; }
 
 .topbar-nav {
   display: flex;
-  gap: 22px;
+  gap: 28px;
   justify-content: center;
 }
 .topbar-nav a {
@@ -2253,7 +2253,7 @@ body.no-scroll { overflow: hidden; }
 <!-- ============================================================
      A. Topbar
      ============================================================ -->
-<nav class="topbar" id="top">
+<nav class="topbar">
   <div class="topbar-inner">
     <a href="/" class="topbar-brand">
       <img src="data:image/png;base64,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" alt="CD Markets">
@@ -2261,13 +2261,11 @@ body.no-scroll { overflow: hidden; }
       <span class="topbar-brand-meta">HK · EST 2014</span>
     </a>
     <div class="topbar-nav">
-      <a href="#top">港金通</a>
-      <a href="#products">產品介紹</a>
-      <a href="#bulletin">資訊中心</a>
-      <a href="#account">開戶交易</a>
-      <a href="#footer">關於我們</a>
-      <a href="#footer">服務支持</a>
-      <a href="#platform">軟件下載</a>
+      <a href="#products">業務範圍</a>
+      <a href="#deeptrade">DeepTrade</a>
+      <a href="#platform">交易平台</a>
+      <a href="#account">開戶</a>
+      <a href="#bulletin">公告</a>
     </div>
     <div class="topbar-right">
       <div class="market-status">MARKET · OPEN</div>
@@ -2687,7 +2685,7 @@ body.no-scroll { overflow: hidden; }
 <!-- ============================================================
      Footer
      ============================================================ -->
-<footer class="footer" id="footer">
+<footer class="footer">
   <div class="container">
     <div class="footer-top">
       <div class="footer-brand-block">
@@ -2785,13 +2783,11 @@ body.no-scroll { overflow: hidden; }
   </div>
   <div class="drawer-body">
     <div class="drawer-section-label">Sections · 主要章節</div>
-    <a class="drawer-item" href="#top"><span>港金通</span><span class="no">01</span></a>
-    <a class="drawer-item" href="#products"><span>產品介紹</span><span class="no">02</span></a>
-    <a class="drawer-item" href="#bulletin"><span>資訊中心</span><span class="no">03</span></a>
-    <a class="drawer-item" href="#account"><span>開戶交易</span><span class="no">04</span></a>
-    <a class="drawer-item" href="#footer"><span>關於我們</span><span class="no">05</span></a>
-    <a class="drawer-item" href="#footer"><span>服務支持</span><span class="no">06</span></a>
-    <a class="drawer-item" href="#platform"><span>軟件下載</span><span class="no">07</span></a>
+    <a class="drawer-item" href="#products"><span>業務範圍</span><span class="no">01</span></a>
+    <a class="drawer-item" href="#deeptrade"><span>DeepTrade 智能輔助</span><span class="no">02</span></a>
+    <a class="drawer-item" href="#platform"><span>MT4 交易平台</span><span class="no">03</span></a>
+    <a class="drawer-item" href="#account"><span>開戶申請</span><span class="no">04</span></a>
+    <a class="drawer-item" href="#bulletin"><span>公司公告</span><span class="no">05</span></a>
 
     <div class="drawer-section-label">Account · 帳戶</div>
     <a class="drawer-item" href="#"><span>登入</span><span class="no">→</span></a>
