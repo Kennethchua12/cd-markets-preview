@@ -252,9 +252,10 @@
 
   // ===== 啟動 ===== //
   function start() {
-    // 立即各拉一次 (並行,秒開)
+    // 立即拉 price (1 個請求,秒開)
     fetchPrices();
-    fetchAllSparklines();
+    // 延遲 2 秒再拉 sparkline (9 個並行請求,避免跟 price 搶頻寬)
+    setTimeout(fetchAllSparklines, 2000);
 
     setInterval(fetchPrices, PRICE_REFRESH_MS);
     setInterval(fetchAllSparklines, SPARK_REFRESH_MS);
