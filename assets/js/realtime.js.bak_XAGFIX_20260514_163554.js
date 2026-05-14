@@ -10,11 +10,11 @@
   'use strict';
 
   // 顯示 ID → CryptoCompare symbol / 是否 invert / 小數位 / 千分位
-  // XAUT = Tether Gold (錨定 XAU)
-  // XAG 在 CryptoCompare 無對應代幣 → 改用 gold-api.com 單獨拉 (見 fetchXagFromGoldApi)
+  // XAUT = Tether Gold (錨定 XAU)、XAGT 暫試 (若無就 fallback)
   // USD/JPY、USD/CHF 因 CC 給的是 1 JPY/CHF = X USD,需 invert
   const SYMBOLS = [
     { id: 'XAU/USD', cc: 'XAUT', invert: false, dp: 2, comma: true  },
+    { id: 'XAG/USD', cc: 'XAGT', invert: false, dp: 2, comma: true  },
     { id: 'EUR/USD', cc: 'EUR',  invert: false, dp: 4, comma: false },
     { id: 'GBP/USD', cc: 'GBP',  invert: false, dp: 4, comma: false },
     { id: 'USD/JPY', cc: 'JPY',  invert: true,  dp: 2, comma: true  },
@@ -23,9 +23,6 @@
     { id: 'BTC/USD', cc: 'BTC',  invert: false, dp: 2, comma: true  },
     { id: 'ETH/USD', cc: 'ETH',  invert: false, dp: 2, comma: true  },
   ];
-
-  // XAG/USD 獨立來源 (gold-api 真實白銀現貨價, 不推算)
-  const XAG_CFG = { id: 'XAG/USD', dp: 2, comma: true };
 
   const REFRESH_MS = 60 * 1000;
   const FLASH_MS = 600;
@@ -164,105 +161,10 @@
     }
   }
 
-  // ===== XAG 獨立 Fetch (gold-api, 真實白銀現貨價) ===== //
-  // gold-api 只給 price 無 change, 用 localStorage 存當日基準自算漲跌
-  function getTodayBaselineXag(currentPrice) {
-    const today = new Date().toISOString().slice(0, 10);
-    const key = 'cdmkt_base_XAG/USD';
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw) {
-        const obj = JSON.parse(raw);
-        if (obj && obj.date === today && typeof obj.price === 'number') {
-          return obj.price;
-        }
-      }
-      localStorage.setItem(key, JSON.stringify({ date: today, price: currentPrice }));
-      return currentPrice;
-    } catch (e) {
-      return currentPrice;
-    }
-  }
-
-  async function fetchXag() {
-    try {
-      const res = await fetch('https://api.gold-api.com/price/XAG');
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
-      const price = parseFloat(data.price);
-      if (isNaN(price)) {
-        console.warn('[realtime] XAG/USD unexpected format:', data);
-        return false;
-      }
-      const baseline = getTodayBaselineXag(price);
-      const change = price - baseline;
-      const pct = baseline !== 0 ? (change / baseline) * 100 : 0;
-      // 跟 updateSymbol 一樣的更新邏輯,但 XAG_CFG 不在 SYMBOLS 陣列裡
-      updateSymbolDirect(XAG_CFG, price, change, pct);
-      return true;
-    } catch (err) {
-      console.warn('[realtime] XAG/USD failed:', err.message);
-      return false;
-    }
-  }
-
-  // updateSymbol 從 pct 反推 change,XAG 已自算 change,需另一個函數直接接收 change
-  function updateSymbolDirect(symCfg, price, change, pct) {
-    if (isNaN(price)) return;
-    const isUp = change >= 0;
-    const priceStr = fmt(price, symCfg.dp, symCfg.comma);
-    const changeStr = fmtChange(change, symCfg.dp);
-    const pctStr = fmtPct(pct);
-
-    const prevPrice = lastPriceMap[symCfg.id];
-    const priceFlashDir = prevPrice !== undefined ? (price >= prevPrice) : isUp;
-    lastPriceMap[symCfg.id] = price;
-
-    const heroQuote = document.querySelector('.quote[data-sym="' + symCfg.id + '"]');
-    if (heroQuote) {
-      const priceEl = heroQuote.querySelector('.quote-price');
-      const changeEl = heroQuote.querySelector('.quote-change');
-      const timeEl = heroQuote.querySelector('.quote-time');
-      if (priceEl && priceEl.textContent !== priceStr) {
-        priceEl.textContent = priceStr;
-        flashEl(priceEl, priceFlashDir);
-      }
-      if (changeEl) {
-        changeEl.textContent = changeStr + ' · ' + pctStr;
-        changeEl.classList.remove('up', 'down');
-        changeEl.classList.add(isUp ? 'up' : 'down');
-      }
-      if (timeEl) {
-        const now = new Date();
-        timeEl.textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-      }
-    }
-
-    document.querySelectorAll('.tk-item[data-sym="' + symCfg.id + '"]').forEach(function (item) {
-      const pxEl = item.querySelector('.tk-px');
-      const chEl = item.querySelector('.tk-ch');
-      if (pxEl && pxEl.textContent !== priceStr) {
-        pxEl.textContent = priceStr;
-        flashEl(pxEl, priceFlashDir);
-      }
-      if (chEl) {
-        chEl.textContent = (isUp ? '+' : '-') + fmtPct(pct);
-        chEl.classList.remove('up', 'down');
-        chEl.classList.add(isUp ? 'up' : 'down');
-      }
-    });
-  }
-
   // ===== 啟動 ===== //
-  function refreshAll() {
-    // 並行,兩個 API 同時打,秒開
-    fetchAll();
-    fetchXag();
-  }
-
   function start() {
-    refreshAll();
-    setInterval(refreshAll, REFRESH_MS);
+    fetchAll();                          // 立即拉 → 秒開
+    setInterval(fetchAll, REFRESH_MS);   // 每 60s 重抓
   }
 
   if (document.readyState === 'loading') {
