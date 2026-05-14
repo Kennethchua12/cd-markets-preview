@@ -9,6 +9,148 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/main.css">
+<style>
+/* 產品介紹頁面專屬樣式 */
+.product-with-image {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px;
+  transition: all 220ms;
+}
+.product-with-image:hover {
+  border-color: var(--line-strong);
+  background: var(--bg-3);
+  transform: translateY(-2px);
+}
+.product-img-box {
+  background: linear-gradient(135deg, rgba(254,201,73,0.08) 0%, rgba(254,201,73,0.02) 100%);
+  border: 1px solid rgba(254,201,73,0.15);
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+}
+.product-img-box img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(254,201,73,0.15));
+}
+.product-info-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+@media (max-width: 900px) {
+  .product-with-image { grid-template-columns: 1fr; gap: 20px; padding: 22px; }
+  .product-img-box { min-height: 200px; padding: 18px; }
+  .product-img-box img { max-height: 160px; }
+}
+
+/* 倫敦金銀 hero banner */
+.llg-hero-banner {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 220px;
+  margin-bottom: 28px;
+  background: var(--bg-2);
+}
+.llg-hero-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+.llg-hero-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(10,11,13,0.85) 0%, rgba(10,11,13,0.4) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 36px;
+}
+.llg-hero-banner-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.llg-hero-banner-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--t1);
+  letter-spacing: -0.01em;
+  max-width: 480px;
+  line-height: 1.25;
+}
+@media (max-width: 640px) {
+  .llg-hero-banner { height: 180px; }
+  .llg-hero-banner-overlay { padding: 20px 22px; }
+  .llg-hero-banner-title { font-size: 20px; }
+}
+
+/* 衍生品 6 類 icon 卡片 */
+.deriv-category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.deriv-cat-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 16px;
+  text-align: center;
+  transition: all 200ms;
+  cursor: default;
+}
+.deriv-cat-card:hover {
+  background: var(--bg-3);
+  border-color: var(--accent);
+}
+.deriv-cat-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-3);
+  border-radius: 50%;
+  font-size: 24px;
+}
+.deriv-cat-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+.deriv-cat-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t1);
+  margin-bottom: 2px;
+}
+.deriv-cat-en {
+  font-size: 10px;
+  color: var(--t4);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+}
+@media (max-width: 640px) {
+  .deriv-category-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
 </head>
 <body data-page="products">
 
@@ -48,7 +190,7 @@
     </div>
 
     <!-- ============================================================
-         Tab 1: 實金訂購
+         Tab 1: 實金訂購（雙產品卡 含金條圖片）
          ============================================================ -->
     <div class="tab-panel is-active" id="panel-gold">
       <div class="section-eyebrow">PHYSICAL GOLD · 實物黃金</div>
@@ -57,38 +199,60 @@
         實物黃金是人類永恆的財富物，是資產和財富保值的第一選擇，能有效免疫國際地緣衝突等不可抗力風險。CD Markets 提供 CGSE 標準規格的實金訂購服務。
       </p>
 
-      <div class="card-grid cols-2">
-        <div class="spec-card reveal">
-          <div class="spec-card-head">
-            <div class="spec-card-title">港金公斤條</div>
-            <div class="spec-card-tag accent">LKG · 1KG</div>
+      <div style="display:grid; gap:20px;">
+        <!-- 公斤條 -->
+        <div class="product-with-image reveal">
+          <div class="product-img-box">
+            <img src="https://cloud-data.com.hk/img/LKG.9446659a.png"
+                 alt="港金公斤條 999.9 純金 1KG"
+                 loading="lazy"
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:64px;color:var(--accent);\'>🪙</div>';">
           </div>
-          <div class="spec-card-meta">CGSE Standard · 999.9 Purity</div>
-          <ul class="spec-card-list">
-            <li>成色:&nbsp;&nbsp;999.9%</li>
-            <li>重量:&nbsp;&nbsp;1 公斤 (1000 g)</li>
-            <li>香港黃金交易所認可規格</li>
-            <li>支援即時訂購與實物交收</li>
-          </ul>
-          <div style="margin-top:18px;">
-            <a href="account.html" class="big-btn ghost" style="font-size:13px; padding:10px 20px;">咨詢訂購 →</a>
+          <div class="product-info-side">
+            <div>
+              <div class="spec-card-head">
+                <div class="spec-card-title" style="font-size:20px;">港金公斤條</div>
+                <div class="spec-card-tag accent">LKG · 1KG</div>
+              </div>
+              <div class="spec-card-meta">CGSE Standard · 999.9 Purity</div>
+              <ul class="spec-card-list" style="margin-top:12px;">
+                <li>成色:&nbsp;&nbsp;999.9%</li>
+                <li>重量:&nbsp;&nbsp;1 公斤 (1000 g)</li>
+                <li>香港黃金交易所認可規格</li>
+                <li>支援即時訂購與實物交收</li>
+              </ul>
+            </div>
+            <div style="margin-top:18px;">
+              <a href="account.html" class="big-btn ghost" style="font-size:13px; padding:10px 20px;">咨詢訂購 →</a>
+            </div>
           </div>
         </div>
 
-        <div class="spec-card reveal">
-          <div class="spec-card-head">
-            <div class="spec-card-title">五兩 999.9 金條</div>
-            <div class="spec-card-tag accent">5 TAEL · 250G</div>
+        <!-- 五兩條 -->
+        <div class="product-with-image reveal">
+          <div class="product-img-box">
+            <img src="https://cloud-data.com.hk/img/9999T.b9207bbe.png"
+                 alt="五兩 999.9 金條 250g"
+                 loading="lazy"
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:64px;color:var(--accent);\'>🪙</div>';">
           </div>
-          <div class="spec-card-meta">CGSE Standard · 999.9 Purity</div>
-          <ul class="spec-card-list">
-            <li>成色:&nbsp;&nbsp;999.9%</li>
-            <li>重量:&nbsp;&nbsp;五兩 (250 g)</li>
-            <li>傳統香港金條規格</li>
-            <li>適合中長線實物配置</li>
-          </ul>
-          <div style="margin-top:18px;">
-            <a href="account.html" class="big-btn ghost" style="font-size:13px; padding:10px 20px;">咨詢訂購 →</a>
+          <div class="product-info-side">
+            <div>
+              <div class="spec-card-head">
+                <div class="spec-card-title" style="font-size:20px;">五兩 999.9 金條</div>
+                <div class="spec-card-tag accent">5 TAEL · 250G</div>
+              </div>
+              <div class="spec-card-meta">CGSE Standard · 999.9 Purity</div>
+              <ul class="spec-card-list" style="margin-top:12px;">
+                <li>成色:&nbsp;&nbsp;999.9%</li>
+                <li>重量:&nbsp;&nbsp;五兩 (250 g)</li>
+                <li>傳統香港金條規格</li>
+                <li>適合中長線實物配置</li>
+              </ul>
+            </div>
+            <div style="margin-top:18px;">
+              <a href="account.html" class="big-btn ghost" style="font-size:13px; padding:10px 20px;">咨詢訂購 →</a>
+            </div>
           </div>
         </div>
       </div>
@@ -102,13 +266,23 @@
     </div>
 
     <!-- ============================================================
-         Tab 2: 倫敦金銀
+         Tab 2: 倫敦金銀（含 hero banner 圖）
          ============================================================ -->
     <div class="tab-panel" id="panel-llg">
-      <div class="section-eyebrow">LONDON SPOT · 倫敦現貨</div>
-      <h2 class="section-title">倫敦金銀現貨合約</h2>
-      <p class="section-lead">
-        貴金屬一直是人類世界最核心的避險和投資金融品種。倫敦金銀價格是國際基準，屬即期交易合約，具備高流動性與避險屬性，是資產配置和對沖通脹的重要工具。
+      <!-- Hero Banner 圖 -->
+      <div class="llg-hero-banner">
+        <img src="https://cloud-data.com.hk/img/ai-generated-8714005.63cdd079.jpg"
+             alt="倫敦金銀 貴金屬交易"
+             loading="lazy"
+             onerror="this.style.display='none';">
+        <div class="llg-hero-banner-overlay">
+          <div class="llg-hero-banner-eyebrow">LONDON SPOT · 倫敦現貨</div>
+          <h2 class="llg-hero-banner-title">貴金屬是人類最核心的<br>避險與投資金融品種</h2>
+        </div>
+      </div>
+
+      <p class="section-lead" style="margin-top:0;">
+        倫敦金銀價格是國際基準，屬即期交易合約，具備高流動性與避險屬性，是資產配置和對沖通脹的重要工具。
       </p>
 
       <div class="card-grid cols-2" style="margin-bottom:34px;">
@@ -181,7 +355,7 @@
     </div>
 
     <!-- ============================================================
-         Tab 3: 衍生品
+         Tab 3: 衍生品（6 大類 icon 網格 + 各分類表格）
          ============================================================ -->
     <div class="tab-panel" id="panel-derivatives">
       <div class="section-eyebrow">DERIVATIVES · 衍生品</div>
@@ -200,8 +374,51 @@
       <h3 style="font-size:18px; color:var(--t1); margin-bottom:14px;">六大類期貨合約</h3>
       <p style="font-size:13.5px; color:var(--t3); margin-bottom:24px;">所有合約以美元計價結算，開倉/平倉手續費統一為 USD 6 / 手。</p>
 
+      <!-- 六大類 icon 網格 -->
+      <div class="deriv-category-grid">
+        <a href="#cat-index" class="deriv-cat-card">
+          <div class="deriv-cat-icon">📊</div>
+          <div class="deriv-cat-name">國際指數期貨</div>
+          <div class="deriv-cat-en">INDEX</div>
+        </a>
+        <a href="#cat-metal" class="deriv-cat-card">
+          <div class="deriv-cat-icon">🥇</div>
+          <div class="deriv-cat-name">金屬期貨</div>
+          <div class="deriv-cat-en">METAL</div>
+        </a>
+        <a href="#cat-forex" class="deriv-cat-card">
+          <div class="deriv-cat-icon">💱</div>
+          <div class="deriv-cat-name">外匯期貨</div>
+          <div class="deriv-cat-en">FOREX</div>
+        </a>
+        <a href="#cat-energy" class="deriv-cat-card">
+          <div class="deriv-cat-icon">
+            <img src="https://cloud-data.com.hk/img/%E8%83%BD%E6%BA%90.4dfe2fbe.png"
+                 alt="能源" loading="lazy" onerror="this.parentElement.textContent='⛽';">
+          </div>
+          <div class="deriv-cat-name">能源期貨</div>
+          <div class="deriv-cat-en">ENERGIES</div>
+        </a>
+        <a href="#cat-agri" class="deriv-cat-card">
+          <div class="deriv-cat-icon">
+            <img src="https://cloud-data.com.hk/img/%E5%86%9C%E4%BA%A7%E5%93%81.3d7f6450.png"
+                 alt="農產品" loading="lazy" onerror="this.parentElement.textContent='🌾';">
+          </div>
+          <div class="deriv-cat-name">農產品期貨</div>
+          <div class="deriv-cat-en">AGRI</div>
+        </a>
+        <a href="#cat-rate" class="deriv-cat-card">
+          <div class="deriv-cat-icon">
+            <img src="https://cloud-data.com.hk/img/%E5%88%A9%E7%8E%87.fb797e59.png"
+                 alt="利率" loading="lazy" onerror="this.parentElement.textContent='📈';">
+          </div>
+          <div class="deriv-cat-name">利率期貨</div>
+          <div class="deriv-cat-en">RATE</div>
+        </a>
+      </div>
+
       <!-- 指數期貨 -->
-      <div style="margin-bottom:30px;">
+      <div id="cat-index" style="margin-bottom:30px; scroll-margin-top:80px;">
         <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
           <span class="chip accent">Index</span>
           <span style="font-size:15px; color:var(--t1); font-weight:600;">國際指數期貨</span>
@@ -222,7 +439,7 @@
       </div>
 
       <!-- 金屬期貨 -->
-      <div style="margin-bottom:30px;">
+      <div id="cat-metal" style="margin-bottom:30px; scroll-margin-top:80px;">
         <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
           <span class="chip accent">Metal</span>
           <span style="font-size:15px; color:var(--t1); font-weight:600;">金屬期貨</span>
@@ -243,7 +460,7 @@
       </div>
 
       <!-- 外匯期貨 -->
-      <div style="margin-bottom:30px;">
+      <div id="cat-forex" style="margin-bottom:30px; scroll-margin-top:80px;">
         <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
           <span class="chip accent">Forex</span>
           <span style="font-size:15px; color:var(--t1); font-weight:600;">外匯期貨</span>
@@ -262,7 +479,7 @@
       </div>
 
       <!-- 能源期貨 -->
-      <div style="margin-bottom:30px;">
+      <div id="cat-energy" style="margin-bottom:30px; scroll-margin-top:80px;">
         <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
           <span class="chip accent">Energies</span>
           <span style="font-size:15px; color:var(--t1); font-weight:600;">能源期貨</span>
@@ -280,7 +497,7 @@
       </div>
 
       <!-- 農產品期貨 -->
-      <div style="margin-bottom:30px;">
+      <div id="cat-agri" style="margin-bottom:30px; scroll-margin-top:80px;">
         <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
           <span class="chip accent">Agri</span>
           <span style="font-size:15px; color:var(--t1); font-weight:600;">農產品期貨</span>
@@ -303,7 +520,7 @@
       </div>
 
       <!-- 利率期貨 -->
-      <div style="margin-bottom:30px;">
+      <div id="cat-rate" style="margin-bottom:30px; scroll-margin-top:80px;">
         <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
           <span class="chip accent">Rate</span>
           <span style="font-size:15px; color:var(--t1); font-weight:600;">利率期貨</span>
@@ -409,7 +626,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
-  // 從 URL hash 切換
   if (location.hash) {
     var key = location.hash.replace('#', '');
     var btn = document.querySelector('[data-tab="' + key + '"]');
