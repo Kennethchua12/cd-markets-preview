@@ -9,6 +9,150 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/main.css">
+<style>
+/* 資質證書卡片 */
+.cert-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 220ms;
+}
+.cert-card:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-2px);
+}
+.cert-img-wrap {
+  position: relative;
+  background: linear-gradient(135deg, rgba(254,201,73,0.06) 0%, rgba(10,11,13,0.4) 100%);
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--line);
+  cursor: zoom-in;
+  overflow: hidden;
+}
+.cert-img-wrap img {
+  max-height: 240px;
+  max-width: 80%;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,0.4));
+  transition: transform 280ms;
+}
+.cert-img-wrap:hover img {
+  transform: scale(1.04);
+}
+.cert-img-wrap::after {
+  content: '🔍 點擊放大';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--t1);
+  background: rgba(10,11,13,0.7);
+  padding: 5px 10px;
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.cert-img-wrap:hover::after {
+  opacity: 1;
+}
+.cert-body {
+  padding: 24px;
+}
+.cert-fallback {
+  font-size: 14px;
+  color: var(--t3);
+  text-align: center;
+  padding: 24px;
+}
+.cert-fallback-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  color: var(--accent);
+}
+
+/* Lightbox */
+.cert-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,11,13,0.92);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  cursor: zoom-out;
+}
+.cert-lightbox.is-open { display: flex; }
+.cert-lightbox img {
+  max-width: 90vw;
+  max-height: 88vh;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.cert-lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+  color: var(--t1);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.cert-lightbox-close:hover {
+  background: rgba(255,255,255,0.16);
+}
+
+@media (max-width: 640px) {
+  .cert-img-wrap { height: 220px; }
+  .cert-img-wrap img { max-height: 180px; max-width: 85%; }
+}
+
+/* Hero 視覺增強 */
+.about-hero-visual {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 460px;
+}
+.about-hero-badge {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.about-hero-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bid-up);
+  box-shadow: 0 0 8px var(--bid-up);
+  flex-shrink: 0;
+}
+.about-hero-badge-text {
+  font-size: 11.5px;
+  color: var(--t2);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+</style>
 </head>
 <body data-page="about">
 
@@ -29,6 +173,16 @@
     <p class="subhero-sub">
       CD Markets 為香港黃金交易所第 125 號會員、香港海關 A 類註冊。我們以「實而不華、穩健發展、誠信為基」為座右銘，多年來為全球客戶提供專業、可靠的金銀買賣服務。
     </p>
+    <div class="about-hero-visual">
+      <div class="about-hero-badge">
+        <span class="about-hero-badge-dot"></span>
+        <span class="about-hero-badge-text">CGSE MEMBER · No.125</span>
+      </div>
+      <div class="about-hero-badge">
+        <span class="about-hero-badge-dot"></span>
+        <span class="about-hero-badge-text">HK CUSTOMS · TYPE A</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -164,54 +318,70 @@
 </section>
 
 <!-- ============================================================
-     3. 資質認證
+     3. 資質認證（含真實證書圖片）
      ============================================================ -->
 <section class="page-section" id="certification">
   <div class="page-section-inner">
     <div class="section-eyebrow">CERTIFICATIONS · 資質認證</div>
     <h2 class="section-title">雙重監管資質</h2>
     <p class="section-lead">
-      CD Markets 同時取得香港海關 A 類註冊與香港黃金交易所會員資格，業務範圍涵蓋貴金屬現貨、槓桿式按金交易及全球經紀夥伴業務。
+      CD Markets 同時取得香港海關 A 類註冊與香港黃金交易所會員資格，業務範圍涵蓋貴金屬現貨、槓桿式按金交易及全球經紀夥伴業務。下方為實際證書原件，點擊可放大檢視。
     </p>
 
     <div class="card-grid cols-2">
-      <!-- 海關 -->
-      <div class="spec-card">
-        <div class="spec-card-head">
-          <div class="spec-card-title">香港海關 A 類註冊人</div>
-          <div class="spec-card-tag up">ACTIVE</div>
+      <!-- 海關證書（含圖） -->
+      <div class="cert-card">
+        <div class="cert-img-wrap" data-lightbox-src="https://cloud-data.com.hk/img/%E6%B5%B7%E5%85%B3%E8%AF%81%E4%B9%A6_copy.67ad31e5.jpg">
+          <img src="https://cloud-data.com.hk/img/%E6%B5%B7%E5%85%B3%E8%AF%81%E4%B9%A6_copy.67ad31e5.jpg"
+               alt="香港海關 A 類註冊證書"
+               loading="lazy"
+               onerror="this.parentElement.innerHTML='<div class=\'cert-fallback\'><div class=\'cert-fallback-icon\'>🏛️</div>香港海關證書原件<br><small>A-B-25-01-08627</small></div>';">
         </div>
-        <div class="spec-card-meta">註冊號碼：A-B-25-01-08627</div>
-        <div class="spec-card-desc" style="margin-bottom:16px;">
-          已獲批香港海關 A 類註冊，經營包括進行指明交易，但不包括進行指明現金交易的貴金屬及寶石業務。
-        </div>
-        <div style="padding-top:14px; border-top:1px solid var(--line-faint);">
-          <div style="display:grid; grid-template-columns:auto 1fr; gap:8px 12px; font-size:12.5px; margin-bottom:14px;">
-            <span style="color:var(--t4);">有效起算</span><span style="color:var(--t1);">2025-01-14</span>
-            <span style="color:var(--t4);">註冊號</span><span style="color:var(--t1); font-family:var(--font-mono);">A-B-25-01-08627</span>
-            <span style="color:var(--t4);">業務類別</span><span style="color:var(--t1);">指明貴金屬及寶石業務</span>
+        <div class="cert-body">
+          <div class="spec-card-head">
+            <div class="spec-card-title">香港海關 A 類註冊人</div>
+            <div class="spec-card-tag up">ACTIVE</div>
           </div>
-          <a href="https://www.customs.gov.hk/" target="_blank" rel="noopener" class="big-btn ghost" style="font-size:12.5px; padding:9px 18px;">前往香港海關官網 →</a>
+          <div class="spec-card-meta">註冊號碼：A-B-25-01-08627</div>
+          <div class="spec-card-desc" style="margin-bottom:16px; margin-top:10px;">
+            已獲批香港海關 A 類註冊，經營包括進行指明交易，但不包括進行指明現金交易的貴金屬及寶石業務。
+          </div>
+          <div style="padding-top:14px; border-top:1px solid var(--line-faint);">
+            <div style="display:grid; grid-template-columns:auto 1fr; gap:8px 12px; font-size:12.5px; margin-bottom:14px;">
+              <span style="color:var(--t4);">有效起算</span><span style="color:var(--t1);">2025-01-14</span>
+              <span style="color:var(--t4);">註冊號</span><span style="color:var(--t1); font-family:var(--font-mono);">A-B-25-01-08627</span>
+              <span style="color:var(--t4);">業務類別</span><span style="color:var(--t1);">指明貴金屬及寶石業務</span>
+            </div>
+            <a href="https://www.customs.gov.hk/" target="_blank" rel="noopener" class="big-btn ghost" style="font-size:12.5px; padding:9px 18px;">前往香港海關官網 →</a>
+          </div>
         </div>
       </div>
 
-      <!-- 香港黃金交易所 -->
-      <div class="spec-card">
-        <div class="spec-card-head">
-          <div class="spec-card-title">香港黃金交易所會員</div>
-          <div class="spec-card-tag accent">No. 125</div>
+      <!-- 香港黃金交易所證書（含圖） -->
+      <div class="cert-card">
+        <div class="cert-img-wrap" data-lightbox-src="https://cloud-data.com.hk/img/HKGX_%E4%BC%9A%E5%91%98%E8%AF%81%E4%B9%A6_copy.6a2e81c3.jpg">
+          <img src="https://cloud-data.com.hk/img/HKGX_%E4%BC%9A%E5%91%98%E8%AF%81%E4%B9%A6_copy.6a2e81c3.jpg"
+               alt="香港黃金交易所會員證書 No.125"
+               loading="lazy"
+               onerror="this.parentElement.innerHTML='<div class=\'cert-fallback\'><div class=\'cert-fallback-icon\'>🥇</div>香港黃金交易所會員證書<br><small>會員編號 No.125</small></div>';">
         </div>
-        <div class="spec-card-meta">AA 類成員 · 黃金業務</div>
-        <div class="spec-card-desc" style="margin-bottom:16px;">
-          根據香港特別行政區政府公司法成立，獲准在香港經營貴金屬現貨、槓桿式按金交易或及接受全球經紀夥伴業務。
-        </div>
-        <div style="padding-top:14px; border-top:1px solid var(--line-faint);">
-          <div style="display:grid; grid-template-columns:auto 1fr; gap:8px 12px; font-size:12.5px; margin-bottom:14px;">
-            <span style="color:var(--t4);">會員編號</span><span style="color:var(--t1); font-family:var(--font-mono);">125</span>
-            <span style="color:var(--t4);">類別</span><span style="color:var(--t1);">AA 類成員</span>
-            <span style="color:var(--t4);">業務</span><span style="color:var(--t1);">貴金屬現貨 · 槓桿式按金</span>
+        <div class="cert-body">
+          <div class="spec-card-head">
+            <div class="spec-card-title">香港黃金交易所會員</div>
+            <div class="spec-card-tag accent">No. 125</div>
           </div>
-          <a href="https://www.cgse.com.hk/" target="_blank" rel="noopener" class="big-btn ghost" style="font-size:12.5px; padding:9px 18px;">前往香港黃金交易所 →</a>
+          <div class="spec-card-meta">AA 類成員 · 黃金業務</div>
+          <div class="spec-card-desc" style="margin-bottom:16px; margin-top:10px;">
+            根據香港特別行政區政府公司法成立，獲准在香港經營貴金屬現貨、槓桿式按金交易或及接受全球經紀夥伴業務。
+          </div>
+          <div style="padding-top:14px; border-top:1px solid var(--line-faint);">
+            <div style="display:grid; grid-template-columns:auto 1fr; gap:8px 12px; font-size:12.5px; margin-bottom:14px;">
+              <span style="color:var(--t4);">會員編號</span><span style="color:var(--t1); font-family:var(--font-mono);">125</span>
+              <span style="color:var(--t4);">類別</span><span style="color:var(--t1);">AA 類成員</span>
+              <span style="color:var(--t4);">業務</span><span style="color:var(--t1);">貴金屬現貨 · 槓桿式按金</span>
+            </div>
+            <a href="https://www.cgse.com.hk/" target="_blank" rel="noopener" class="big-btn ghost" style="font-size:12.5px; padding:9px 18px;">前往香港黃金交易所 →</a>
+          </div>
         </div>
       </div>
     </div>
@@ -313,10 +483,46 @@
   </div>
 </section>
 
+<!-- Lightbox -->
+<div class="cert-lightbox" id="cert-lightbox">
+  <button class="cert-lightbox-close" id="cert-lightbox-close">✕</button>
+  <img src="" alt="" id="cert-lightbox-img">
+</div>
+
 <div id="footer-mount"></div>
 <div id="drawer-mount"></div>
 
 <script src="assets/js/components.js"></script>
+
+<script>
+(function() {
+  // Lightbox 點擊放大證書
+  var lightbox = document.getElementById('cert-lightbox');
+  var lightboxImg = document.getElementById('cert-lightbox-img');
+  var closeBtn = document.getElementById('cert-lightbox-close');
+
+  document.querySelectorAll('.cert-img-wrap').forEach(function(wrap) {
+    wrap.addEventListener('click', function() {
+      var src = wrap.dataset.lightboxSrc;
+      if (!src) return;
+      lightboxImg.src = src;
+      lightbox.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function close() {
+    lightbox.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox || e.target === closeBtn) close();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') close();
+  });
+})();
+</script>
 
 </body>
 </html>
