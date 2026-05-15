@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Light Ai · APP V2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+TC:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/font/Lucide.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#000;--bg-2:#0a0a0a;--bg-3:#141414;--bg-4:#1f1f1f;--line:rgba(255,255,255,0.08);--line-2:rgba(255,255,255,0.14);--text:#ffffff;--text-sub:#a0a0a0;--text-mut:#5a5a5a;--green:#00ff7a;--green-2:#00cc62;--green-dim:#005028;--green-bg:rgba(0,255,122,0.1);--red:#ff4d6d;--red-bg:rgba(255,77,109,0.1);--yellow:#ffcc00;--header-h:58px;--tabbar-h:78px;--status-h:44px}
+html,body{background:var(--bg);color:var(--text);font-family:'Inter','Noto Sans TC',sans-serif;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased}
+body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:#000}
+.device{width:100%;max-width:430px;height:100vh;max-height:932px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media (min-width:431px){.device{height:932px;border-radius:48px;border:8px solid #1a1a1a;box-shadow:0 0 80px rgba(0,255,122,0.08)}}
+/* Status bar */
+.statusbar{height:var(--status-h);padding:14px 28px 6px;display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:600;color:var(--text);background:var(--bg);position:relative;z-index:50;flex-shrink:0}
+.statusbar .right{display:flex;align-items:center;gap:6px;font-size:14px}
+.statusbar .battery{display:inline-flex;align-items:center;gap:2px;font-size:11px}
+.statusbar .battery::after{content:"";display:inline-block;width:24px;height:11px;border:1px solid var(--text);border-radius:3px;background:linear-gradient(90deg,var(--text) 80%,transparent 80%);margin-left:3px}
+/* Header */
+.header{height:var(--header-h);padding:0 18px;display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-bottom:1px solid var(--line);flex-shrink:0}
+.header-left{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--green),var(--green-2));display:grid;place-items:center;box-shadow:0 0 20px rgba(0,255,122,0.3),inset 0 1px 0 rgba(255,255,255,0.3)}
+.logo i{color:var(--bg);font-size:18px;font-weight:bold}
+.brand-name{font-family:'Inter',sans-serif;font-weight:700;font-size:20px;color:var(--text);letter-spacing:-0.02em;line-height:1}
+.brand-meta{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--green);text-transform:uppercase;margin-top:3px;font-weight:600}
+.header-right{display:flex;gap:8px}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--bg-2);color:var(--text);display:grid;place-items:center;font-size:18px;position:relative}
+.icon-btn .badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;background:var(--green);color:var(--bg);font-size:9px;border-radius:50%;display:grid;place-items:center;font-weight:800;border:2px solid var(--bg)}
+/* Content */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--tabbar-h) + 16px)}
+.content::-webkit-scrollbar{display:none}
+.screen{display:none;animation:fadein 0.25s ease-out}
+.screen.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* ===== HOME ===== */
+.portfolio-hero{padding:24px 20px 30px;text-align:center;position:relative}
+.portfolio-hero::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:200px;background:radial-gradient(ellipse,rgba(0,255,122,0.12),transparent 70%);pointer-events:none;z-index:0}
+.port-label{position:relative;font-size:12px;color:var(--text-sub);letter-spacing:0.04em;margin-bottom:12px;font-weight:500}
+.port-value{position:relative;font-family:'Inter',sans-serif;font-size:54px;font-weight:800;color:var(--text);letter-spacing:-0.04em;line-height:1;margin-bottom:14px;font-variant-numeric:tabular-nums}
+.port-value .cur{font-size:32px;color:var(--text-sub);font-weight:500;vertical-align:top;margin-right:4px}
+.port-delta{position:relative;display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:var(--green-bg);color:var(--green);font-size:14px;font-weight:700;border-radius:100px;letter-spacing:-0.01em}
+.port-delta i{font-size:14px}
+/* Quick action */
+.quick-actions{padding:0 20px 28px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.qa{background:var(--bg-3);border-radius:16px;padding:14px 8px;text-align:center;border:none;color:var(--text);transition:all 0.2s}
+.qa:active{transform:scale(0.95);background:var(--bg-4)}
+.qa-ic{width:36px;height:36px;background:linear-gradient(135deg,rgba(0,255,122,0.15),rgba(0,255,122,0.05));border-radius:12px;display:grid;place-items:center;margin:0 auto 8px}
+.qa-ic i{color:var(--green);font-size:18px}
+.qa span{font-size:11px;font-weight:600;color:var(--text-sub);letter-spacing:-0.01em}
+/* Section */
+.sec-h{padding:0 20px 14px;display:flex;justify-content:space-between;align-items:center}
+.sec-h h2{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.02em}
+.sec-h .more{font-size:13px;color:var(--green);font-weight:600;display:flex;align-items:center;gap:3px;background:transparent;border:none}
+/* Top pick card */
+.pick-card{margin:0 20px 14px;background:linear-gradient(135deg,#0d3320,var(--bg-2));border:1px solid var(--green-dim);border-radius:20px;padding:18px;position:relative;overflow:hidden}
+.pick-card::before{content:"";position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(0,255,122,0.15),transparent 70%);pointer-events:none}
+.pick-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:14px;position:relative}
+.pick-sym-block{display:flex;align-items:center;gap:10px}
+.pick-sym-ic{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#ffd700,#b8860b);display:grid;place-items:center;font-size:18px;color:#fff;font-weight:700}
+.pick-sym-info .sym{font-size:18px;font-weight:700;letter-spacing:-0.01em;color:var(--text)}
+.pick-sym-info .name{font-size:11px;color:var(--text-sub);font-weight:500;margin-top:2px}
+.pick-action{padding:6px 12px;background:var(--green);color:var(--bg);font-size:11px;font-weight:800;border-radius:8px;letter-spacing:0.04em;text-transform:uppercase}
+.pick-detail{font-size:13px;line-height:1.55;color:var(--text-sub);margin-bottom:16px;position:relative}
+.pick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08);position:relative}
+.pick-stat{text-align:center}
+.pick-stat .k{font-size:10px;color:var(--text-mut);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;font-weight:600}
+.pick-stat .v{font-family:'Inter',sans-serif;font-size:14px;color:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
+/* Watchlist preview */
+.watch-card{margin:0 20px 14px;background:var(--bg-2);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.watch-row{padding:14px 18px;display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;border-bottom:1px solid var(--line)}
+.watch-row:last-child{border-bottom:none}
+.watch-ic{width:36px;height:36px;border-radius:50%;background:var(--bg-4);display:grid;place-items:center;flex-shrink:0;font-weight:700;font-size:13px;letter-spacing:-0.02em}
+.watch-ic.gold{background:linear-gradient(135deg,#ffd700,#b8860b);color:#fff}
+.watch-ic.eur{background:linear-gradient(135deg,#3b82f6,#1e40af);color:#fff}
+.watch-ic.btc{background:linear-gradient(135deg,#f7931a,#ea580c);color:#fff}
+.watch-ic.spx{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.watch-info .s{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-0.01em}
+.watch-info .n{font-size:11px;color:var(--text-mut);margin-top:1px}
+.watch-px{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:var(--text);text-align:right;font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.watch-ch{font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+.watch-ch.up{background:var(--green-bg);color:var(--green)}
+.watch-ch.dn{background:var(--red-bg);color:var(--red)}
+/* News */
+.news-list{padding:0 20px 20px}
+.news-card{background:var(--bg-2);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px;display:grid;grid-template-columns:1fr auto;gap:14px}
+.news-tag{display:inline-block;padding:3px 8px;background:var(--green-bg);color:var(--green);font-size:10px;font-weight:700;border-radius:6px;margin-bottom:8px;letter-spacing:0.04em;text-transform:uppercase}
+.news-title{font-size:14.5px;line-height:1.4;font-weight:600;color:var(--text);margin-bottom:8px;letter-spacing:-0.01em}
+.news-meta{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--text-mut);font-weight:500}
+.news-thumb{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--bg-4),var(--bg-3));display:grid;place-items:center;flex-shrink:0}
+.news-thumb i{color:var(--green);font-size:22px}
+/* ===== MARKETS ===== */
+.mkt-segment{padding:14px 20px;display:flex;gap:6px;overflow-x:auto;background:var(--bg);position:sticky;top:0;z-index:10}
+.mkt-segment::-webkit-scrollbar{display:none}
+.seg{padding:8px 16px;background:var(--bg-3);border:none;border-radius:100px;color:var(--text-sub);font-size:13px;font-weight:600;flex-shrink:0;letter-spacing:-0.01em}
+.seg.on{background:var(--green);color:var(--bg);font-weight:700}
+.mkt-search{padding:0 20px 14px}
+.mkt-search-wrap{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-3);border-radius:14px}
+.mkt-search-wrap i{color:var(--text-sub);font-size:16px}
+.mkt-search-wrap input{flex:1;background:transparent;border:none;color:var(--text);font-size:14px;outline:none;font-family:inherit;font-weight:500}
+.mkt-search-wrap input::placeholder{color:var(--text-mut)}
+.mkt-list-wrap{padding:0 20px}
+.mkt-row{padding:14px 0;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;border-bottom:1px solid var(--line)}
+.mkt-row .ic{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px;flex-shrink:0}
+.mkt-row .ic.gold{background:linear-gradient(135deg,#ffd700,#b8860b);color:#fff}
+.mkt-row .ic.eur{background:linear-gradient(135deg,#3b82f6,#1e40af);color:#fff}
+.mkt-row .ic.gbp{background:linear-gradient(135deg,#7c3aed,#4c1d95);color:#fff}
+.mkt-row .ic.btc{background:linear-gradient(135deg,#f7931a,#ea580c);color:#fff}
+.mkt-row .ic.usd{background:linear-gradient(135deg,#dc2626,#7f1d1d);color:#fff}
+.mkt-row .ic.ag{background:linear-gradient(135deg,#94a3b8,#475569);color:#fff}
+.mkt-row .ic.eth{background:linear-gradient(135deg,#6366f1,#3730a3);color:#fff}
+.mkt-row .ic.aud{background:linear-gradient(135deg,#06b6d4,#0e7490);color:#fff}
+.mkt-row .ic.spx{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.mkt-row .info .s{font-size:14.5px;font-weight:700;color:var(--text);letter-spacing:-0.01em}
+.mkt-row .info .n{font-size:11.5px;color:var(--text-mut);margin-top:2px}
+.mkt-row .price-block{text-align:right}
+.mkt-row .price-block .p{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.mkt-row .price-block .pill{display:inline-block;margin-top:4px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px;min-width:62px;text-align:center;font-variant-numeric:tabular-nums}
+.mkt-row .price-block .pill.up{background:var(--green-bg);color:var(--green)}
+.mkt-row .price-block .pill.dn{background:var(--red-bg);color:var(--red)}
+/* ===== TERMINAL ===== */
+.term-h{padding:24px 20px 16px}
+.term-h .lbl{font-size:12px;color:var(--green);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;display:inline-flex;align-items:center;gap:6px}
+.term-h .lbl::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:0.3}}
+.term-h h2{font-size:30px;font-weight:800;letter-spacing:-0.03em;line-height:1.1;color:var(--text);margin-bottom:8px}
+.term-h h2 .grad{background:linear-gradient(135deg,var(--green),var(--green-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.term-h p{font-size:14px;color:var(--text-sub);line-height:1.5}
+.term-input{margin:18px 20px;padding:16px;background:var(--bg-2);border:1px solid var(--green-dim);border-radius:18px;position:relative}
+.term-input::before{content:"";position:absolute;inset:0;border-radius:18px;padding:1px;background:linear-gradient(135deg,var(--green) 0%,transparent 50%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0.6}
+.term-prompt{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-family:'JetBrains Mono',monospace;font-size:14px}
+.term-prompt .p{color:var(--green);font-weight:700}
+.term-prompt .v{color:var(--text);flex:1}
+.term-prompt .cur{display:inline-block;width:8px;height:14px;background:var(--green);animation:blink 1s steps(2) infinite;vertical-align:-2px;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.term-chip{display:flex;flex-wrap:wrap;gap:6px}
+.term-chip .c{padding:6px 12px;background:var(--bg-3);border:none;border-radius:100px;font-size:12px;color:var(--text);font-weight:600;font-family:'JetBrains Mono',monospace;letter-spacing:0.02em}
+.term-chip .c.on{background:var(--green);color:var(--bg)}
+.term-grid{margin:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.term-action{padding:18px;background:var(--bg-2);border:1px solid var(--line);border-radius:18px;text-align:left;position:relative;overflow:hidden}
+.term-action::before{content:"";position:absolute;top:0;left:0;width:40px;height:40px;background:radial-gradient(circle,rgba(0,255,122,0.15),transparent 70%);pointer-events:none}
+.term-action i{font-size:22px;color:var(--green);margin-bottom:10px;display:block}
+.term-action .t{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;letter-spacing:-0.01em}
+.term-action .d{font-size:11.5px;color:var(--text-mut);line-height:1.4}
+.term-history-h{padding:24px 20px 12px;display:flex;justify-content:space-between;align-items:center}
+.term-history-h h3{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-0.01em}
+.term-history-h .more{color:var(--green);font-size:12px;font-weight:600}
+.term-hist{padding:0 20px}
+.term-hist-card{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+.term-hist-card .hs{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--green);font-weight:700;min-width:74px;letter-spacing:0.04em}
+.term-hist-card .hm .ti{font-size:13.5px;font-weight:600;color:var(--text);letter-spacing:-0.01em}
+.term-hist-card .hm .ts{font-size:11px;color:var(--text-mut);margin-top:2px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em}
+.term-hist-card .arrow{color:var(--text-sub)}
+/* ===== COPY ===== */
+.copy-grid{padding:18px 20px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.copy-card{padding:16px;background:var(--bg-2);border:1px solid var(--line);border-radius:18px;position:relative;overflow:hidden}
+.copy-card.green{background:linear-gradient(135deg,#0d3320,var(--bg-2));border-color:var(--green-dim)}
+.copy-card .k{font-size:11px;color:var(--text-mut);letter-spacing:0.04em;font-weight:600;margin-bottom:8px}
+.copy-card .v{font-family:'Inter',sans-serif;font-size:24px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-0.02em;line-height:1}
+.copy-card .v .u{font-size:14px;color:var(--text-sub);font-weight:500}
+.copy-card .delta{font-size:12px;font-weight:700;margin-top:6px;display:flex;align-items:center;gap:4px}
+.copy-card .delta.up{color:var(--green)}
+.copy-card .delta.dn{color:var(--red)}
+.traders{padding:0 20px 20px}
+.trader-card{background:var(--bg-2);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px;position:relative;overflow:hidden}
+.trader-card.top{background:linear-gradient(135deg,#0d3320 0%,var(--bg-2) 60%);border-color:var(--green)}
+.trader-card.top::before{content:"";position:absolute;top:0;right:0;width:100px;height:100px;background:radial-gradient(circle,rgba(0,255,122,0.2),transparent 70%);pointer-events:none}
+.trader-rank{display:inline-flex;align-items:center;gap:4px;background:var(--green);color:var(--bg);font-size:10px;font-weight:800;padding:4px 9px;border-radius:8px;letter-spacing:0.06em;margin-bottom:12px;position:relative}
+.trader-rank i{font-size:11px}
+.trader-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;position:relative}
+.trader-av{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--green),var(--green-2));display:grid;place-items:center;font-size:20px;font-weight:800;color:var(--bg);flex-shrink:0}
+.trader-info{flex:1}
+.trader-info .nm{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-0.01em}
+.trader-info .ti{font-size:11.5px;color:var(--text-mut);margin-top:2px}
+.trader-roi{text-align:right}
+.trader-roi .pct{font-family:'Inter',sans-serif;font-size:22px;color:var(--green);font-weight:800;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;line-height:1}
+.trader-roi .lbl{font-size:10px;color:var(--text-mut);margin-top:3px;font-weight:600}
+.trader-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:14px;position:relative}
+.trader-stats div{text-align:center}
+.trader-stats .k{font-size:10px;color:var(--text-mut);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px;font-weight:600}
+.trader-stats .v{font-size:14px;color:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
+.trader-cta{width:100%;padding:13px;font-size:13px;font-weight:700;border:none;border-radius:14px;background:var(--bg-3);color:var(--text);display:flex;align-items:center;justify-content:center;gap:8px;position:relative;letter-spacing:-0.01em}
+.trader-card.top .trader-cta{background:var(--green);color:var(--bg)}
+.trader-cta i{font-size:14px}
+/* ===== PROFILE ===== */
+.prof-h{padding:24px 20px 18px;background:linear-gradient(180deg,var(--bg-3) 0%,var(--bg) 100%);border-bottom:1px solid var(--line)}
+.prof-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.prof-av{width:66px;height:66px;border-radius:20px;background:linear-gradient(135deg,var(--green),var(--green-2));display:grid;place-items:center;font-size:28px;font-weight:800;color:var(--bg);flex-shrink:0;box-shadow:0 8px 20px rgba(0,255,122,0.2)}
+.prof-name-block .nm{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.02em;line-height:1}
+.prof-tier{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--green);background:var(--green-bg);padding:5px 11px;border-radius:100px;margin-top:8px;letter-spacing:-0.01em}
+.prof-credits{padding:16px 18px;border:1px solid var(--green-dim);background:linear-gradient(135deg,rgba(0,255,122,0.05),var(--bg-2));border-radius:18px;display:flex;justify-content:space-between;align-items:center}
+.prof-credits .left .k{font-size:11px;color:var(--text-mut);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:5px;font-weight:600}
+.prof-credits .left .v{font-family:'Inter',sans-serif;font-size:26px;font-weight:800;color:var(--green);letter-spacing:-0.02em;font-variant-numeric:tabular-nums;line-height:1}
+.prof-credits .left .v .total{color:var(--text-mut);font-size:15px;font-weight:600}
+.prof-credits-cta{padding:12px 18px;background:var(--green);color:var(--bg);font-size:12px;font-weight:800;border-radius:12px;border:none;letter-spacing:-0.01em;display:flex;align-items:center;gap:6px}
+.prof-section-title{font-size:12px;color:var(--text-mut);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;padding:24px 20px 10px}
+.prof-list{padding:0 20px}
+.prof-row{padding:14px 16px;background:var(--bg-2);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center}
+.prof-row .ic{width:38px;height:38px;border-radius:11px;background:var(--bg-3);display:grid;place-items:center;color:var(--green);font-size:18px;flex-shrink:0}
+.prof-row .label{font-size:14.5px;font-weight:600;color:var(--text);letter-spacing:-0.01em}
+.prof-row .label .en{display:block;font-size:11px;color:var(--text-mut);font-weight:500;margin-top:2px}
+.prof-row .badge{padding:3px 8px;background:var(--green-bg);color:var(--green);font-size:11px;font-weight:700;border-radius:6px}
+.prof-row > i.arrow{color:var(--text-mut);font-size:18px}
+/* ===== TAB BAR ===== */
+.tabbar{position:absolute;bottom:14px;left:14px;right:14px;background:rgba(20,20,20,0.85);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border:1px solid var(--line-2);border-radius:24px;display:grid;grid-template-columns:repeat(5,1fr);padding:10px 6px;z-index:50;box-shadow:0 12px 40px rgba(0,0,0,0.5)}
+.tab{background:transparent;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;color:var(--text-mut);cursor:pointer;border-radius:14px;transition:all 0.25s}
+.tab i{font-size:22px;line-height:1}
+.tab span{font-size:9.5px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase}
+.tab.active{color:var(--green)}
+.tab.active i{filter:drop-shadow(0 0 8px rgba(0,255,122,0.5))}
+</style>
+</head>
+<body>
+<div class="device">
+<div class="statusbar"><span class="time">9:41</span><span class="right"><i class="lucide lucide-signal"></i><i class="lucide lucide-wifi"></i><span class="battery">93</span></span></div>
+<div class="header"><div class="header-left"><div class="logo"><i class="lucide lucide-zap"></i></div><div><div class="brand-name">Light Ai</div><div class="brand-meta">Markets · LIVE</div></div></div><div class="header-right"><button class="icon-btn"><i class="lucide lucide-search"></i></button><button class="icon-btn"><i class="lucide lucide-bell"></i><span class="badge">3</span></button></div></div>
+<div class="content">
+
+<!-- HOME -->
+<section class="screen active" id="screen-home">
+<div class="portfolio-hero">
+<div class="port-label">Portfolio Value</div>
+<div class="port-value"><span class="cur">$</span>28,453.20</div>
+<div class="port-delta"><i class="lucide lucide-trending-up"></i>+$1,284.50 · +4.71%</div>
+</div>
+<div class="quick-actions">
+<button class="qa"><div class="qa-ic"><i class="lucide lucide-trending-up"></i></div><span>分析</span></button>
+<button class="qa"><div class="qa-ic"><i class="lucide lucide-radar"></i></div><span>掃描</span></button>
+<button class="qa"><div class="qa-ic"><i class="lucide lucide-bookmark"></i></div><span>收藏</span></button>
+<button class="qa"><div class="qa-ic"><i class="lucide lucide-file-text"></i></div><span>PDF</span></button>
+</div>
+<div class="sec-h"><h2>今日 Top Pick</h2><button class="more">查看全部 <i class="lucide lucide-arrow-right"></i></button></div>
+<div class="pick-card">
+<div class="pick-top">
+<div class="pick-sym-block"><div class="pick-sym-ic">Au</div><div class="pick-sym-info"><div class="sym">XAU/USD</div><div class="name">黃金 / 美元</div></div></div>
+<div class="pick-action">LONG</div>
+</div>
+<p class="pick-detail">技術面突破 2,640 阻力，配合美元疲軟與避險需求升溫，多頭可望挑戰 2,680。三軸研判一致看多。</p>
+<div class="pick-stats">
+<div class="pick-stat"><div class="k">Entry</div><div class="v">2,648.20</div></div>
+<div class="pick-stat"><div class="k">Target</div><div class="v">2,680.00</div></div>
+<div class="pick-stat"><div class="k">R:R</div><div class="v">1:3.2</div></div>
+</div>
+</div>
+<div class="sec-h"><h2>自選 Watchlist</h2><button class="more">編輯 <i class="lucide lucide-edit-3"></i></button></div>
+<div class="watch-card">
+<div class="watch-row"><div class="watch-ic gold">Au</div><div class="watch-info"><div class="s">XAU/USD</div><div class="n">黃金</div></div><div class="watch-px">2,648.20</div><div class="watch-ch up">+1.24%</div></div>
+<div class="watch-row"><div class="watch-ic eur">€</div><div class="watch-info"><div class="s">EUR/USD</div><div class="n">歐元</div></div><div class="watch-px">1.16253</div><div class="watch-ch up">+0.42%</div></div>
+<div class="watch-row"><div class="watch-ic btc">₿</div><div class="watch-info"><div class="s">BTC/USD</div><div class="n">比特幣</div></div><div class="watch-px">79,129</div><div class="watch-ch up">+0.84%</div></div>
+<div class="watch-row"><div class="watch-ic spx">S</div><div class="watch-info"><div class="s">SPX500</div><div class="n">標普 500</div></div><div class="watch-px">5,847.21</div><div class="watch-ch up">+0.31%</div></div>
+</div>
+<div class="sec-h"><h2>市場頭條</h2><button class="more">More <i class="lucide lucide-arrow-right"></i></button></div>
+<div class="news-list">
+<div class="news-card"><div><div class="news-tag">Forex</div><div class="news-title">美元指數突破 105，歐元 / 美元跌破 1.16</div><div class="news-meta"><i class="lucide lucide-clock"></i>7m · 2.3k views</div></div><div class="news-thumb"><i class="lucide lucide-line-chart"></i></div></div>
+<div class="news-card"><div><div class="news-tag">Crypto</div><div class="news-title">比特幣站穩 79K，機構持倉再度增加</div><div class="news-meta"><i class="lucide lucide-clock"></i>22m · 5.8k views</div></div><div class="news-thumb"><i class="lucide lucide-bitcoin"></i></div></div>
+<div class="news-card"><div><div class="news-tag">Metals</div><div class="news-title">黃金延續漲勢，多頭瞄準 2,680 阻力</div><div class="news-meta"><i class="lucide lucide-clock"></i>1h · 1.2k views</div></div><div class="news-thumb"><i class="lucide lucide-gem"></i></div></div>
+</div>
+</section>
+
+<!-- MARKETS -->
+<section class="screen" id="screen-markets">
+<div class="mkt-segment"><button class="seg on">All</button><button class="seg">Forex</button><button class="seg">Crypto</button><button class="seg">Metals</button><button class="seg">Indices</button></div>
+<div class="mkt-search"><div class="mkt-search-wrap"><i class="lucide lucide-search"></i><input placeholder="搜尋品種、代號..."></div></div>
+<div class="mkt-list-wrap">
+<div class="mkt-row"><div class="ic gold">Au</div><div class="info"><div class="s">XAU/USD</div><div class="n">黃金 / 美元</div></div><div class="price-block"><div class="p">2,648.20</div><div class="pill up">+1.24%</div></div></div>
+<div class="mkt-row"><div class="ic eur">€</div><div class="info"><div class="s">EUR/USD</div><div class="n">歐元 / 美元</div></div><div class="price-block"><div class="p">1.16253</div><div class="pill up">+0.42%</div></div></div>
+<div class="mkt-row"><div class="ic gbp">£</div><div class="info"><div class="s">GBP/USD</div><div class="n">英鎊 / 美元</div></div><div class="price-block"><div class="p">1.33274</div><div class="pill dn">-0.18%</div></div></div>
+<div class="mkt-row"><div class="ic btc">₿</div><div class="info"><div class="s">BTC/USD</div><div class="n">比特幣 / 美元</div></div><div class="price-block"><div class="p">79,129</div><div class="pill up">+0.84%</div></div></div>
+<div class="mkt-row"><div class="ic usd">¥</div><div class="info"><div class="s">USD/JPY</div><div class="n">美元 / 日圓</div></div><div class="price-block"><div class="p">158.71</div><div class="pill up">+0.04%</div></div></div>
+<div class="mkt-row"><div class="ic ag">Ag</div><div class="info"><div class="s">XAG/USD</div><div class="n">白銀 / 美元</div></div><div class="price-block"><div class="p">30.85</div><div class="pill dn">-2.31%</div></div></div>
+<div class="mkt-row"><div class="ic eth">Ξ</div><div class="info"><div class="s">ETH/USD</div><div class="n">以太坊 / 美元</div></div><div class="price-block"><div class="p">2,221.05</div><div class="pill up">+1.62%</div></div></div>
+<div class="mkt-row"><div class="ic aud">A$</div><div class="info"><div class="s">AUD/USD</div><div class="n">澳元 / 美元</div></div><div class="price-block"><div class="p">0.6584</div><div class="pill dn">-0.31%</div></div></div>
+<div class="mkt-row"><div class="ic spx">S</div><div class="info"><div class="s">SPX500</div><div class="n">標普 500</div></div><div class="price-block"><div class="p">5,847.21</div><div class="pill up">+0.31%</div></div></div>
+</div>
+</section>
+
+<!-- TERMINAL -->
+<section class="screen" id="screen-terminal">
+<div class="term-h">
+<div class="lbl">AI Analysis</div>
+<h2>智能 <span class="grad">研判</span> 終端</h2>
+<p>輸入品種或點選快捷指令，啟動機構級深度分析</p>
+</div>
+<div class="term-input">
+<div class="term-prompt"><span class="p">› </span><span class="v">XAU/USD<span class="cur"></span></span></div>
+<div class="term-chip"><button class="c on">XAU/USD</button><button class="c">EUR/USD</button><button class="c">BTC/USD</button><button class="c">SPX500</button></div>
+</div>
+<div class="term-grid">
+<button class="term-action"><i class="lucide lucide-layers-3"></i><div class="t">Deep Scan</div><div class="d">五維信號全面研判</div></button>
+<button class="term-action"><i class="lucide lucide-radar"></i><div class="t">Live Monitor</div><div class="d">毫秒級盤面追蹤</div></button>
+<button class="term-action"><i class="lucide lucide-shield-check"></i><div class="t">Risk Audit</div><div class="d">三層守門員評估</div></button>
+<button class="term-action"><i class="lucide lucide-file-text"></i><div class="t">Daily Picks</div><div class="d">早晚雙刊 PDF</div></button>
+</div>
+<div class="term-history-h"><h3>最近分析</h3><button class="more">View All <i class="lucide lucide-arrow-right"></i></button></div>
+<div class="term-hist">
+<div class="term-hist-card"><span class="hs">XAU/USD</span><div class="hm"><div class="ti">Multi-Factor Scan</div><div class="ts">08:00 · 信號清晰度 92</div></div><i class="lucide lucide-chevron-right arrow"></i></div>
+<div class="term-hist-card"><span class="hs">EUR/USD</span><div class="hm"><div class="ti">Trend Reversal</div><div class="ts">18:00 · R:R 1 : 2.4</div></div><i class="lucide lucide-chevron-right arrow"></i></div>
+<div class="term-hist-card"><span class="hs">BTC/USD</span><div class="hm"><div class="ti">Momentum Break</div><div class="ts">08:00 · Long Setup</div></div><i class="lucide lucide-chevron-right arrow"></i></div>
+</div>
+</section>
+
+<!-- COPY -->
+<section class="screen" id="screen-copy">
+<div class="copy-grid">
+<div class="copy-card green"><div class="k">My Following</div><div class="v">3<span class="u"> / 5</span></div><div class="delta up"><i class="lucide lucide-arrow-up-right"></i>2 active</div></div>
+<div class="copy-card green"><div class="k">30D ROI</div><div class="v">+18.4<span class="u">%</span></div><div class="delta up"><i class="lucide lucide-arrow-up-right"></i>vs S&P 14.2%</div></div>
+<div class="copy-card"><div class="k">Total PnL</div><div class="v">$2,840</div><div class="delta up"><i class="lucide lucide-arrow-up-right"></i>+$312 today</div></div>
+<div class="copy-card"><div class="k">Win Rate</div><div class="v">72<span class="u">%</span></div><div class="delta up"><i class="lucide lucide-arrow-up-right"></i>4% MoM</div></div>
+</div>
+<div class="sec-h"><h2>頂尖跟單師</h2><button class="more">排行榜 <i class="lucide lucide-arrow-right"></i></button></div>
+<div class="traders">
+<div class="trader-card top">
+<div class="trader-rank"><i class="lucide lucide-crown"></i>#1 TOP</div>
+<div class="trader-row"><div class="trader-av">S</div><div class="trader-info"><div class="nm">Sarah Chen</div><div class="ti">Quantitative · HK</div></div><div class="trader-roi"><div class="pct">+24.8%</div><div class="lbl">30D ROI</div></div></div>
+<div class="trader-stats"><div><div class="k">Win Rate</div><div class="v">81%</div></div><div><div class="k">Trades</div><div class="v">142</div></div><div><div class="k">Followers</div><div class="v">2.3K</div></div></div>
+<button class="trader-cta"><span>Copy Strategy</span><i class="lucide lucide-arrow-right"></i></button>
+</div>
+<div class="trader-card">
+<div class="trader-rank" style="background:var(--bg-3);color:var(--text-sub)">#2</div>
+<div class="trader-row"><div class="trader-av" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">M</div><div class="trader-info"><div class="nm">Marcus Wei</div><div class="ti">Macro Strategy · SG</div></div><div class="trader-roi"><div class="pct">+19.3%</div><div class="lbl">30D ROI</div></div></div>
+<div class="trader-stats"><div><div class="k">Win Rate</div><div class="v">74%</div></div><div><div class="k">Trades</div><div class="v">98</div></div><div><div class="k">Followers</div><div class="v">1.8K</div></div></div>
+<button class="trader-cta"><span>View Profile</span><i class="lucide lucide-arrow-right"></i></button>
+</div>
+<div class="trader-card">
+<div class="trader-rank" style="background:var(--bg-3);color:var(--text-sub)">#3</div>
+<div class="trader-row"><div class="trader-av" style="background:linear-gradient(135deg,#f97316,#c2410c)">E</div><div class="trader-info"><div class="nm">Elena Rossi</div><div class="ti">Crypto Specialist · DUB</div></div><div class="trader-roi"><div class="pct">+16.7%</div><div class="lbl">30D ROI</div></div></div>
+<div class="trader-stats"><div><div class="k">Win Rate</div><div class="v">69%</div></div><div><div class="k">Trades</div><div class="v">203</div></div><div><div class="k">Followers</div><div class="v">1.4K</div></div></div>
+<button class="trader-cta"><span>View Profile</span><i class="lucide lucide-arrow-right"></i></button>
+</div>
+</div>
+</section>
+
+<!-- PROFILE -->
+<section class="screen" id="screen-profile">
+<div class="prof-h">
+<div class="prof-top"><div class="prof-av">K</div><div class="prof-name-block"><div class="nm">Kenneth</div><div class="prof-tier"><i class="lucide lucide-crown"></i>Professional · Tier II</div></div></div>
+<div class="prof-credits"><div class="left"><div class="k">算力配額</div><div class="v">1,840<span class="total"> / 2,000</span></div></div><button class="prof-credits-cta"><i class="lucide lucide-plus"></i>Top Up</button></div>
+</div>
+<div class="prof-section-title">Account</div>
+<div class="prof-list">
+<div class="prof-row"><div class="ic"><i class="lucide lucide-history"></i></div><div class="label">分析歷史<span class="en">Analysis History</span></div><span class="badge">142</span><i class="lucide lucide-chevron-right arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="lucide lucide-bookmark"></i></div><div class="label">收藏研判<span class="en">Saved Picks</span></div><span></span><i class="lucide lucide-chevron-right arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="lucide lucide-file-text"></i></div><div class="label">PDF 下載<span class="en">PDF Downloads</span></div><span></span><i class="lucide lucide-chevron-right arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="lucide lucide-gem"></i></div><div class="label">升級方案<span class="en">Upgrade Plan</span></div><span class="badge">Whale</span><i class="lucide lucide-chevron-right arrow"></i></div>
+</div>
+<div class="prof-section-title">Settings</div>
+<div class="prof-list">
+<div class="prof-row"><div class="ic"><i class="lucide lucide-bell"></i></div><div class="label">通知<span class="en">Notifications</span></div><span></span><i class="lucide lucide-chevron-right arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="lucide lucide-shield"></i></div><div class="label">安全<span class="en">Security</span></div><span></span><i class="lucide lucide-chevron-right arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="lucide lucide-headphones"></i></div><div class="label">客服<span class="en">Support</span></div><span></span><i class="lucide lucide-chevron-right arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="lucide lucide-info"></i></div><div class="label">關於<span class="en">About</span></div><span></span><i class="lucide lucide-chevron-right arrow"></i></div>
+</div>
+</section>
+
+</div>
+<nav class="tabbar">
+<button class="tab active" data-tab="home"><i class="lucide lucide-home"></i><span>Home</span></button>
+<button class="tab" data-tab="markets"><i class="lucide lucide-bar-chart-3"></i><span>Markets</span></button>
+<button class="tab" data-tab="terminal"><i class="lucide lucide-radar"></i><span>Terminal</span></button>
+<button class="tab" data-tab="copy"><i class="lucide lucide-users"></i><span>Copy</span></button>
+<button class="tab" data-tab="profile"><i class="lucide lucide-user"></i><span>Me</span></button>
+</nav>
+</div>
+<script>
+document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{const id=t.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');document.querySelector('.content').scrollTop=0})});
+function tick(){const d=new Date(Date.now()+(8*60-new Date().getTimezoneOffset())*60000);document.querySelector('.statusbar .time').textContent=d.toISOString().substr(11,5)}
+tick();setInterval(tick,30000);
+</script>
+</body>
+</html>
