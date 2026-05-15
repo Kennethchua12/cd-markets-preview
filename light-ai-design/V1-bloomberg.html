@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Light Ai · Bloomberg Terminal Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Noto+Serif+TC:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy-900:#050d18;--navy-800:#0a1929;--navy-700:#0f2438;--navy-600:#16304a;
+  --gold-900:#6b4f0f;--gold-700:#a37f1e;--gold-500:#d4af37;--gold-400:#e8c659;--gold-300:#f4dc83;
+  --champagne:#f7e7b1;--up:#00ff85;--down:#ff3b30;--neutral:#ffd23f;
+  --grid:rgba(212,175,55,0.08);--grid-strong:rgba(212,175,55,0.18);
+  --text-main:#f0e6c8;--text-sub:#b8a878;--text-muted:#6b5f3f;
+}
+html,body{background:var(--navy-900);color:var(--text-main);font-family:'Inter','Noto Serif TC',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;z-index:0;mask:radial-gradient(ellipse at top,rgba(0,0,0,0.6) 0%,transparent 70%)}
+body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(212,175,55,0.12) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 100% 100%,rgba(31,63,94,0.4) 0%,transparent 70%);pointer-events:none;z-index:0}
+.container{position:relative;z-index:1;max-width:100%}
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:#000;border-bottom:1px solid var(--gold-700);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.06em}
+.status-bar .left{display:flex;gap:14px;color:var(--gold-500);align-items:center}
+.status-bar .left .dot{width:6px;height:6px;border-radius:50%;background:var(--up);box-shadow:0 0 8px var(--up);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.status-bar .right{color:var(--text-sub);display:flex;gap:10px}
+header{padding:14px 18px;border-bottom:1px solid var(--gold-700);background:linear-gradient(180deg,#000 0%,var(--navy-900) 100%);display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:38px;height:38px;border:1px solid var(--gold-500);display:grid;place-items:center;background:linear-gradient(135deg,var(--navy-700),var(--navy-900));position:relative}
+.brand-mark::before{content:"";position:absolute;inset:3px;border:1px solid var(--gold-700)}
+.brand-mark i{color:var(--gold-400);font-size:18px;position:relative;z-index:1}
+.brand-text{line-height:1.1}
+.brand-text .name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;color:var(--champagne);letter-spacing:0.04em}
+.brand-text .name .ai{color:var(--gold-500);font-style:italic}
+.brand-text .sub{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.32em;color:var(--gold-700);text-transform:uppercase;margin-top:3px}
+.menu-btn{width:38px;height:38px;border:1px solid var(--gold-700);background:transparent;color:var(--gold-500);cursor:pointer;display:grid;place-items:center;font-size:18px}
+.ticker{background:#000;border-top:1px solid var(--gold-700);border-bottom:1px solid var(--gold-700);overflow:hidden;padding:10px 0;position:relative}
+.ticker::before,.ticker::after{content:"";position:absolute;top:0;bottom:0;width:40px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(90deg,#000,transparent)}
+.ticker::after{right:0;background:linear-gradient(-90deg,#000,transparent)}
+.ticker-track{display:flex;gap:32px;animation:scroll 40s linear infinite;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:12px}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick{display:inline-flex;align-items:center;gap:8px}
+.tick .sym{color:var(--gold-500);font-weight:600}
+.tick .px{color:var(--text-main);font-variant-numeric:tabular-nums}
+.tick .ch.up{color:var(--up)}
+.tick .ch.dn{color:var(--down)}
+.tick .ch.flat{color:var(--neutral)}
+.cmdline{padding:14px 18px;border-bottom:1px solid var(--grid-strong);background:var(--navy-800);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace}
+.cmdline .prompt{color:var(--gold-500);font-size:13px;font-weight:600}
+.cmdline .input{color:var(--champagne);font-size:13px;flex:1}
+.cmdline .cursor{display:inline-block;width:8px;height:14px;background:var(--gold-500);margin-left:2px;animation:blink 1s steps(2) infinite;vertical-align:-2px}
+@keyframes blink{50%{opacity:0}}
+.hero{padding:32px 22px 24px;position:relative}
+.hero-overline{display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.32em;color:var(--gold-500);text-transform:uppercase;padding:6px 14px;border:1px solid var(--gold-700);background:rgba(212,175,55,0.05);margin-bottom:28px}
+.hero-overline .pulse{width:6px;height:6px;border-radius:50%;background:var(--up);box-shadow:0 0 6px var(--up)}
+.hero h1{font-family:'Noto Serif TC','Cormorant Garamond',serif;font-weight:900;font-size:38px;line-height:1.12;color:var(--champagne);letter-spacing:0.01em;margin-bottom:12px}
+.hero h1 .accent{color:var(--gold-500);font-style:italic;font-weight:700}
+.hero .tagline{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold-700);margin-bottom:22px;letter-spacing:0.04em}
+.hero .tagline .x{color:var(--gold-500);margin:0 8px}
+.hero p.desc{font-family:'Noto Serif TC',serif;font-size:15.5px;line-height:1.85;color:var(--text-sub);margin-bottom:32px;font-weight:400}
+.cta-group{display:flex;flex-direction:column;gap:12px;margin-bottom:36px}
+.btn{padding:16px 22px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.24em;text-transform:uppercase;border:1px solid;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all 0.2s;font-weight:600}
+.btn-primary{background:linear-gradient(180deg,var(--gold-500),var(--gold-700));color:var(--navy-900);border-color:var(--gold-400);box-shadow:0 0 0 1px var(--navy-900) inset,0 4px 24px rgba(212,175,55,0.25)}
+.btn-secondary{color:var(--gold-500);border-color:var(--gold-700)}
+.btn i{font-size:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--gold-700);background:linear-gradient(180deg,#000 0%,var(--navy-900) 100%);margin:0 18px 36px}
+.stat{padding:18px 12px;text-align:center;border-right:1px solid var(--gold-900)}
+.stat:last-child{border-right:none}
+.stat .num{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:800;color:var(--gold-400);font-variant-numeric:tabular-nums;line-height:1}
+.stat .num .unit{font-size:14px;color:var(--gold-700);font-weight:500}
+.stat .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.28em;color:var(--text-muted);text-transform:uppercase;margin-top:8px}
+.section{padding:36px 18px 12px;position:relative}
+.section-header{margin-bottom:24px}
+.section-num{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.4em;color:var(--gold-700);display:block;margin-bottom:6px}
+.section-title{font-family:'Noto Serif TC',serif;font-weight:700;font-size:26px;color:var(--champagne);line-height:1.2}
+.section-title .gold{color:var(--gold-500);font-style:italic}
+.section-divider{display:flex;align-items:center;gap:8px;margin:10px 0 0}
+.section-divider::before,.section-divider::after{content:"";flex:1;height:1px;background:var(--gold-900)}
+.section-divider i{color:var(--gold-500);font-size:10px}
+.features{display:flex;flex-direction:column;gap:1px;background:var(--gold-900);border:1px solid var(--gold-900)}
+.feature{background:linear-gradient(180deg,var(--navy-800),var(--navy-900));padding:26px 20px;position:relative;overflow:hidden}
+.feature::before{content:"";position:absolute;top:0;left:0;width:4px;height:100%;background:var(--gold-500);opacity:0.3}
+.feature-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:56px;font-weight:300;color:var(--gold-700);position:absolute;top:10px;right:14px;line-height:1;opacity:0.5}
+.feature i.icon{color:var(--gold-500);font-size:28px;margin-bottom:16px;display:block}
+.feature h3{font-family:'Noto Serif TC',serif;font-size:21px;font-weight:600;color:var(--champagne);margin-bottom:10px;letter-spacing:0.01em}
+.feature p{font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.75;color:var(--text-sub);margin-bottom:14px}
+.feature-meta{display:flex;gap:16px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold-700);letter-spacing:0.12em;text-transform:uppercase;border-top:1px solid var(--gold-900);padding-top:12px}
+.feature-meta span{display:flex;align-items:center;gap:5px}
+.feature-meta i{font-size:11px}
+.plans-section{padding:50px 18px 30px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.4))}
+.plans{display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.plan{border:1px solid var(--gold-900);background:var(--navy-800);padding:24px 22px;position:relative}
+.plan.featured{border:1px solid var(--gold-500);background:linear-gradient(180deg,var(--navy-700),var(--navy-800));box-shadow:0 0 0 1px var(--gold-900) inset,0 0 32px rgba(212,175,55,0.1)}
+.plan-tag{position:absolute;top:-10px;right:18px;background:var(--gold-500);color:var(--navy-900);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:5px 11px;letter-spacing:0.22em;text-transform:uppercase}
+.plan-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;font-weight:500;color:var(--champagne)}
+.plan-tier{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.28em;color:var(--gold-700);text-transform:uppercase;margin-bottom:16px}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:18px;border-top:1px solid var(--gold-900);border-bottom:1px solid var(--gold-900);padding:14px 0}
+.plan-price .currency{color:var(--gold-700);font-size:16px;font-family:'JetBrains Mono',monospace}
+.plan-price .amt{font-family:'JetBrains Mono',monospace;font-size:42px;font-weight:800;color:var(--gold-400);font-variant-numeric:tabular-nums;line-height:1}
+.plan-price .per{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:0.1em;margin-left:6px}
+.plan-features{list-style:none;margin-bottom:22px}
+.plan-features li{font-family:'Inter',sans-serif;font-size:12.5px;color:var(--text-sub);padding:7px 0;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.plan-features li i{color:var(--gold-500);font-size:13px;margin-top:3px;flex-shrink:0}
+.plan-cta{width:100%;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:600;border:1px solid var(--gold-700);background:transparent;color:var(--gold-500);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px}
+.plan-cta.featured-cta{background:linear-gradient(180deg,var(--gold-500),var(--gold-700));color:var(--navy-900);border-color:var(--gold-400)}
+.trust{padding:50px 18px;border-top:1px solid var(--gold-900);border-bottom:1px solid var(--gold-900);margin-top:40px;background:#000}
+.trust-overline{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.4em;color:var(--gold-700);text-transform:uppercase;text-align:center;margin-bottom:20px}
+.trust-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;font-weight:400;color:var(--champagne);text-align:center;line-height:1.4;margin-bottom:22px}
+.trust-quote::before,.trust-quote::after{content:'"';color:var(--gold-500);font-size:36px;line-height:0;vertical-align:-8px;font-family:'Cormorant Garamond',serif}
+.trust-author{text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.22em;color:var(--gold-500);text-transform:uppercase}
+.trust-author .name{color:var(--champagne);display:block;margin-bottom:4px}
+.trust-author .title{color:var(--text-muted)}
+.coverage{padding:40px 18px}
+.coverage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--gold-900);border:1px solid var(--gold-900);margin-top:24px}
+.coverage-item{background:var(--navy-800);padding:22px 16px;text-align:center}
+.coverage-item i{color:var(--gold-500);font-size:24px;display:block;margin-bottom:10px}
+.coverage-item .title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:600;color:var(--champagne);margin-bottom:4px}
+.coverage-item .meta{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.18em;color:var(--gold-700);text-transform:uppercase}
+footer{padding:40px 22px 28px;background:#000;border-top:1px solid var(--gold-700)}
+footer .foot-brand{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--champagne);margin-bottom:10px}
+footer .foot-brand .ai{color:var(--gold-500);font-style:italic}
+footer .foot-tagline{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.28em;color:var(--gold-700);text-transform:uppercase;margin-bottom:28px}
+.foot-cols{display:flex;flex-direction:column;gap:24px}
+.foot-col h4{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.28em;color:var(--gold-500);text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--gold-900)}
+.foot-col a{display:block;font-family:'Inter',sans-serif;font-size:13px;color:var(--text-sub);padding:6px 0;text-decoration:none}
+.foot-bottom{margin-top:32px;padding-top:20px;border-top:1px solid var(--gold-900);text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--text-muted);line-height:1.8}
+.foot-bottom a{color:var(--gold-700);text-decoration:none}
+.disclaimer{margin-top:22px;padding:14px;border:1px solid var(--gold-900);background:rgba(0,0,0,0.5);font-family:'Inter',sans-serif;font-size:10px;line-height:1.65;color:var(--text-muted);text-align:justify}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="status-bar"><div class="left"><span class="dot"></span><span>LIVE · ALGO ENGINE OPERATIONAL</span></div><div class="right"><span id="utc-time">UTC+8 · 23:59:00</span></div></div>
+<header><div class="brand"><div class="brand-mark"><i class="ri-bar-chart-grouped-line"></i></div><div class="brand-text"><div class="name">Light <span class="ai">Ai</span></div><div class="sub">Algorithmic Intelligence</div></div></div><button class="menu-btn"><i class="ri-menu-3-line"></i></button></header>
+<div class="ticker"><div class="ticker-track">
+<span class="tick"><span class="sym">EUR/USD</span><span class="px">1.16253</span><span class="ch up">+0.42%</span></span>
+<span class="tick"><span class="sym">GBP/USD</span><span class="px">1.33274</span><span class="ch dn">-0.18%</span></span>
+<span class="tick"><span class="sym">USD/JPY</span><span class="px">158.71</span><span class="ch flat">0.00%</span></span>
+<span class="tick"><span class="sym">XAU/USD</span><span class="px">2,648.20</span><span class="ch up">+1.24%</span></span>
+<span class="tick"><span class="sym">XAG/USD</span><span class="px">30.85</span><span class="ch dn">-2.31%</span></span>
+<span class="tick"><span class="sym">BTC/USD</span><span class="px">79,129</span><span class="ch up">+0.84%</span></span>
+<span class="tick"><span class="sym">ETH/USD</span><span class="px">2,221.05</span><span class="ch up">+1.62%</span></span>
+<span class="tick"><span class="sym">SPX500</span><span class="px">5,847.21</span><span class="ch up">+0.31%</span></span>
+<span class="tick"><span class="sym">EUR/USD</span><span class="px">1.16253</span><span class="ch up">+0.42%</span></span>
+<span class="tick"><span class="sym">GBP/USD</span><span class="px">1.33274</span><span class="ch dn">-0.18%</span></span>
+<span class="tick"><span class="sym">USD/JPY</span><span class="px">158.71</span><span class="ch flat">0.00%</span></span>
+<span class="tick"><span class="sym">XAU/USD</span><span class="px">2,648.20</span><span class="ch up">+1.24%</span></span>
+<span class="tick"><span class="sym">XAG/USD</span><span class="px">30.85</span><span class="ch dn">-2.31%</span></span>
+<span class="tick"><span class="sym">BTC/USD</span><span class="px">79,129</span><span class="ch up">+0.84%</span></span>
+<span class="tick"><span class="sym">ETH/USD</span><span class="px">2,221.05</span><span class="ch up">+1.62%</span></span>
+<span class="tick"><span class="sym">SPX500</span><span class="px">5,847.21</span><span class="ch up">+0.31%</span></span>
+</div></div>
+<div class="cmdline"><span class="prompt">LIGHTAI &rsaquo;</span><span class="input">LOAD MARKET INTELLIGENCE TERMINAL<span class="cursor"></span></span></div>
+<section class="hero">
+<span class="hero-overline"><span class="pulse"></span>Trusted by 2,500+ professional traders globally</span>
+<h1>跨資產<span class="accent">超額信號</span><br>智能分析終端</h1>
+<div class="tagline">MULTI-DIMENSIONAL ALPHA <span class="x">&times;</span> CROSS-ASSET SIGNAL ENGINE</div>
+<p class="desc">整合多維度超額信號算法，覆蓋外匯、加密貨幣、貴金屬與全球指數，提供毫秒級盤面監控、精準走勢預測與智能風控策略 — 為每一筆交易決策注入機構級數據支撐。</p>
+<div class="cta-group">
+<button class="btn btn-primary"><span>Launch Terminal</span><i class="ri-arrow-right-up-line"></i></button>
+<button class="btn btn-secondary"><span>Smart Copy Trading</span><i class="ri-pulse-line"></i></button>
+</div>
+</section>
+<div class="stats">
+<div class="stat"><div class="num">70<span class="unit">%</span></div><div class="lbl">Win Rate</div></div>
+<div class="stat"><div class="num">2.5K<span class="unit">+</span></div><div class="lbl">Active Users</div></div>
+<div class="stat"><div class="num">28</div><div class="lbl">Instruments</div></div>
+</div>
+<section class="section">
+<div class="section-header"><span class="section-num">01 / CORE CAPABILITIES</span><h2 class="section-title">四大核心<span class="gold">競爭優勢</span></h2><div class="section-divider"><i class="ri-arrow-down-double-fill"></i></div></div>
+<div class="features">
+<div class="feature"><div class="feature-num">i</div><i class="icon ri-stack-line"></i><h3>多維超額矩陣</h3><p>融合趨勢動能、波動率、相關性、機構流向四大維度信號，跨資產捕捉系統性 Alpha 超額收益。</p><div class="feature-meta"><span><i class="ri-cpu-line"></i>5 Layer</span><span><i class="ri-flashlight-line"></i>Real-time</span></div></div>
+<div class="feature"><div class="feature-num">ii</div><i class="icon ri-radar-line"></i><h3>毫秒級盤面監控</h3><p>分布式行情接入架構，全球主流交易所價格延遲控制在 12ms 內，異動信號毫秒觸發。</p><div class="feature-meta"><span><i class="ri-time-line"></i>&lt; 12ms</span><span><i class="ri-global-line"></i>Global Feed</span></div></div>
+<div class="feature"><div class="feature-num">iii</div><i class="icon ri-shield-check-line"></i><h3>精準風控策略</h3><p>三層守門員機制：信號清晰度、風險回報比、波動衰減 — 自動過濾低勝率交易窗口。</p><div class="feature-meta"><span><i class="ri-lock-2-line"></i>3-Layer Guard</span><span><i class="ri-aiims-line"></i>AI Filter</span></div></div>
+<div class="feature"><div class="feature-num">iv</div><i class="icon ri-line-chart-line"></i><h3>機構級研判報告</h3><p>每日早晚雙刊發送，覆蓋 28 主流品種，PDF 排版直觀，含技術面、基本面、情緒面三軸研判。</p><div class="feature-meta"><span><i class="ri-file-text-line"></i>2&times; Daily</span><span><i class="ri-newspaper-line"></i>28 Symbols</span></div></div>
+</div>
+</section>
+<section class="trust">
+<div class="trust-overline">Voice of the Trading Floor</div>
+<div class="trust-quote">不是讓 AI 替你下單，<br>而是讓量化邏輯<br>成為你決策的副駕駛。</div>
+<div class="trust-author"><span class="name">Light Ai Research Desk</span><span class="title">Quantitative Strategy &middot; Hong Kong</span></div>
+</section>
+<section class="plans-section">
+<div class="section-header"><span class="section-num">02 / SUBSCRIPTION TIERS</span><h2 class="section-title">算力<span class="gold">配額方案</span></h2><div class="section-divider"><i class="ri-arrow-down-double-fill"></i></div></div>
+<div class="plans">
+<div class="plan"><div class="plan-name">Starter</div><div class="plan-tier">體驗版 &middot; Tier I</div><div class="plan-price"><span class="currency">$</span><span class="amt">19</span><span class="per">/月</span></div><ul class="plan-features"><li><i class="ri-check-double-line"></i>500 算力 &middot; 約 50 次深度分析</li><li><i class="ri-check-double-line"></i>每日早晚雙刊 PDF 推送</li><li><i class="ri-check-double-line"></i>核心 8 品種覆蓋</li><li><i class="ri-check-double-line"></i>基礎技術面 + 情緒面研判</li></ul><button class="plan-cta"><span>選擇方案</span><i class="ri-arrow-right-line"></i></button></div>
+<div class="plan featured"><div class="plan-tag">Most Popular</div><div class="plan-name">Professional</div><div class="plan-tier">專業版 &middot; Tier II</div><div class="plan-price"><span class="currency">$</span><span class="amt">49</span><span class="per">/月</span></div><ul class="plan-features"><li><i class="ri-check-double-line"></i>2,000 算力 &middot; 約 200 次深度分析</li><li><i class="ri-check-double-line"></i>全 28 品種覆蓋 + 加密貨幣</li><li><i class="ri-check-double-line"></i>智能跟單功能解鎖</li><li><i class="ri-check-double-line"></i>三軸研判 + 機構流向追蹤</li><li><i class="ri-check-double-line"></i>優先客服支援</li></ul><button class="plan-cta featured-cta"><span>立即升級</span><i class="ri-arrow-right-line"></i></button></div>
+<div class="plan"><div class="plan-name">Whale</div><div class="plan-tier">機構版 &middot; Tier III</div><div class="plan-price"><span class="currency">$</span><span class="amt">99</span><span class="per">/月</span></div><ul class="plan-features"><li><i class="ri-check-double-line"></i>6,000 算力 &middot; 約 600 次深度分析</li><li><i class="ri-check-double-line"></i>專屬研判團隊直線接觸</li><li><i class="ri-check-double-line"></i>機構級風控報告</li><li><i class="ri-check-double-line"></i>API 全功能調用</li><li><i class="ri-check-double-line"></i>白手套客戶經理</li></ul><button class="plan-cta"><span>洽詢方案</span><i class="ri-arrow-right-line"></i></button></div>
+</div>
+</section>
+<section class="coverage">
+<div class="section-header"><span class="section-num">03 / ASSET COVERAGE</span><h2 class="section-title">全資產<span class="gold">研判覆蓋</span></h2><div class="section-divider"><i class="ri-arrow-down-double-fill"></i></div></div>
+<div class="coverage-grid">
+<div class="coverage-item"><i class="ri-exchange-dollar-line"></i><div class="title">外匯</div><div class="meta">14 Major Pairs</div></div>
+<div class="coverage-item"><i class="ri-coin-line"></i><div class="title">加密貨幣</div><div class="meta">8 Top Caps</div></div>
+<div class="coverage-item"><i class="ri-medal-line"></i><div class="title">貴金屬</div><div class="meta">Gold &middot; Silver &middot; Pt</div></div>
+<div class="coverage-item"><i class="ri-stock-line"></i><div class="title">指數</div><div class="meta">SPX &middot; NDX &middot; DAX</div></div>
+</div>
+</section>
+<footer>
+<div class="foot-brand">Light <span class="ai">Ai</span></div>
+<div class="foot-tagline">Algorithmic Intelligence &middot; Est. 2024</div>
+<div class="foot-cols">
+<div class="foot-col"><h4>Platform</h4><a href="#">Trading Terminal</a><a href="#">Smart Copy Trading</a><a href="#">Daily Picks Report</a><a href="#">News Intelligence</a></div>
+<div class="foot-col"><h4>Support</h4><a href="#">Documentation</a><a href="#">Customer Portal</a><a href="#">FAQ</a><a href="#">Contact Desk</a></div>
+<div class="foot-col"><h4>Legal</h4><a href="#">Terms of Service</a><a href="#">Privacy Policy</a><a href="#">Risk Disclosure</a><a href="#">DPO &middot; dpo@lightai.dpdns.org</a></div>
+</div>
+<div class="disclaimer"><strong style="color:var(--gold-700)">RISK DISCLOSURE &mdash; </strong>金融市場交易涉及重大風險，可能導致部分或全部本金損失。Light Ai 提供的所有研判內容僅供參考，不構成任何投資建議、招攬或要約。歷史表現不代表未來收益。投資前請充分評估個人風險承受能力，並諮詢合資格專業顧問。</div>
+<div class="foot-bottom">&copy; 2026 Light Ai Research &middot; All Rights Reserved<br><a href="#">Hong Kong</a> &middot; <a href="#">Singapore</a> &middot; <a href="#">Dubai</a></div>
+</footer>
+</div>
+<script>
+function tick(){const d=new Date(Date.now()+(8*60-new Date().getTimezoneOffset())*60000);const t=d.toISOString().substr(11,8);document.getElementById('utc-time').textContent='UTC+8 · '+t}
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>
