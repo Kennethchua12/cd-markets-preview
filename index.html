@@ -10,6 +10,297 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="assets/css/main.css">
+
+<style>
+/* ====================================================================
+   首頁專屬樣式 · 黃金寶庫內容遷移 v1.0 · 2026-05-15
+   涵蓋 4 大新區塊:
+     1. hero-motto      Hero 內企業箴言垂直條
+     2. portal-grid     四大入口 (登入/代理/客服/熱線)
+     3. quotes-table    完整市場報價表
+     4. econ-calendar   本週財經日曆
+   ==================================================================== */
+
+/* ============ 1. hero-motto 企業箴言條 ============ */
+.hero-motto {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-faint);
+}
+.hero-motto-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  color: var(--t4);
+  margin-bottom: 12px;
+}
+.hero-motto-text {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 22px;
+  letter-spacing: 0.05em;
+  color: var(--t1);
+  font-weight: 300;
+}
+.hero-motto-text .dot { color: var(--accent); opacity: 0.55; font-size: 18px; }
+.hero-motto-text .sep { display: inline-block; width: 18px; }
+@media (max-width: 640px) {
+  .hero-motto { margin-top: 18px !important; padding-top: 16px !important; }
+  .hero-motto-label { font-size: 10px !important; margin-bottom: 10px !important; }
+  .hero-motto-text { font-size: 17px !important; gap: 5px !important; letter-spacing: 0.03em !important; }
+  .hero-motto-text .sep { width: 10px !important; }
+  .hero-motto-text .dot { font-size: 14px !important; }
+}
+
+/* ============ 2. portal-grid 四大入口 ============ */
+.portal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.portal-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 24px 22px;
+  text-decoration: none;
+  transition: all 220ms;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+.portal-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 220ms;
+}
+.portal-card:hover {
+  border-color: var(--line-strong);
+  background: var(--bg-3);
+  transform: translateY(-2px);
+}
+.portal-card:hover::before { transform: scaleY(1); }
+.portal-card-num {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--t4);
+  letter-spacing: 0.15em;
+  margin-bottom: 14px;
+}
+.portal-card-icon {
+  color: var(--accent);
+  margin-bottom: 14px;
+  display: flex;
+}
+.portal-card-icon svg { display: block; }
+.portal-card-title {
+  font-size: 17px;
+  color: var(--t1);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.portal-card-en {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--t4);
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+.portal-card-desc {
+  font-size: 12.5px;
+  color: var(--t3);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  flex: 1;
+}
+.portal-card-cta {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-top: auto;
+}
+@media (max-width: 900px) {
+  .portal-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
+@media (max-width: 480px) {
+  .portal-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .portal-card { padding: 20px 18px !important; }
+  .portal-card-title { font-size: 16px !important; }
+  .portal-card-desc { font-size: 12.5px !important; }
+}
+
+/* ============ 3. quotes-table 完整市場報價表 ============ */
+.quotes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.quote-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px;
+  min-width: 0;
+  transition: border-color 200ms;
+}
+.quote-card:hover { border-color: var(--line-strong); }
+.quote-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+.quote-card-sym {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--t1);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.quote-card-time {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--t4);
+}
+.quote-card-price {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  color: var(--t1);
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.quote-card-change {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.quote-card-change.up { color: var(--bid-up); }
+.quote-card-change.down { color: var(--bid-down); }
+.quote-card-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-faint);
+  font-size: 11px;
+}
+.quote-card-meta-cell { min-width: 0; }
+.quote-card-meta-lbl {
+  font-family: var(--font-mono);
+  color: var(--t4);
+  letter-spacing: 0.08em;
+  margin-bottom: 3px;
+  font-size: 9.5px;
+}
+.quote-card-meta-val {
+  font-family: var(--font-mono);
+  color: var(--t2);
+  font-size: 11.5px;
+}
+@media (max-width: 900px) {
+  .quotes-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+}
+@media (max-width: 540px) {
+  .quotes-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .quote-card { padding: 16px !important; }
+  .quote-card-price { font-size: 22px !important; }
+  .quote-card-meta-val { font-size: 11px !important; }
+}
+
+/* ============ 4. econ-calendar 本週財經日曆 ============ */
+.econ-list {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+.econ-row {
+  display: grid;
+  grid-template-columns: 90px 70px 1fr 100px 60px;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line-faint);
+  align-items: center;
+  transition: background 200ms;
+  text-decoration: none;
+  color: inherit;
+}
+.econ-row:last-child { border-bottom: none; }
+.econ-row:hover { background: var(--bg-3); }
+.econ-date {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--t4);
+  letter-spacing: 0.04em;
+}
+.econ-time {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--t2);
+}
+.econ-event {
+  font-size: 13.5px;
+  color: var(--t1);
+  line-height: 1.4;
+  min-width: 0;
+}
+.econ-flag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--t3);
+  letter-spacing: 0.08em;
+}
+.econ-impact {
+  display: flex;
+  gap: 3px;
+  justify-content: flex-end;
+}
+.econ-impact-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+.econ-impact-dot.active { background: var(--accent); }
+.econ-impact-dot.high { background: var(--bid-down); }
+@media (max-width: 767px) {
+  .econ-row {
+    grid-template-columns: 1fr auto !important;
+    grid-template-rows: auto auto !important;
+    gap: 4px 12px !important;
+    padding: 12px 14px !important;
+  }
+  .econ-date {
+    grid-column: 1 / 2; grid-row: 1;
+    font-size: 11px !important;
+  }
+  .econ-flag {
+    grid-column: 2 / 3; grid-row: 1;
+    font-size: 10px !important;
+  }
+  .econ-event {
+    grid-column: 1 / 2; grid-row: 2;
+    font-size: 13px !important;
+  }
+  .econ-impact {
+    grid-column: 2 / 3; grid-row: 2;
+    justify-content: flex-end;
+  }
+  .econ-time { display: none; }
+}
+</style>
 </head>
 <body data-page="home">
 
@@ -62,6 +353,12 @@
           <p class="hero-sub">
             CD Markets 為香港黃金交易所第 125 號會員、香港海關 A 類註冊。業務行為受香港法律及交易所規則的嚴格監管，客戶資金於持牌銀行隔離存管。
           </p>
+          <div class="hero-motto">
+            <span class="hero-motto-label">MOTTO · 企業箴言</span>
+            <div class="hero-motto-text">
+              <span>黃</span><span class="dot">·</span><span>金</span><span class="dot">·</span><span>承</span><span class="dot">·</span><span>傳</span><span class="sep"></span><span>寶</span><span class="dot">·</span><span>富</span><span class="dot">·</span><span>永</span><span class="dot">·</span><span>增</span>
+            </div>
+          </div>
         </div>
 
         <div class="hero-creds">
@@ -155,6 +452,68 @@
           <a href="#">查看完整行情</a>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     B'. Quick Portals · 四大入口（黃金寶庫 → CD Markets 化遷移）
+     ============================================================ -->
+<section class="section" id="portals">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-head-l">
+        <span class="section-eyebrow">Quick Access · 快速入口</span>
+        <h2 class="section-title">四個入口，連結您的下一步</h2>
+      </div>
+      <div class="section-head-r">24 / 5 SUPPORT</div>
+    </div>
+
+    <div class="portal-grid reveal">
+      <a href="account.html#center" class="portal-card">
+        <div class="portal-card-num">PORTAL 01</div>
+        <div class="portal-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="portal-card-title">客戶登入</div>
+        <div class="portal-card-en">CLIENT PORTAL</div>
+        <div class="portal-card-desc">登入 CD Markets 客戶帳戶系統，管理帳戶資訊、查詢交易記錄與申請出入金。</div>
+        <div class="portal-card-cta">前往登入 →</div>
+      </a>
+
+      <a href="mailto:ib@cd-markets.com" class="portal-card">
+        <div class="portal-card-num">PORTAL 02</div>
+        <div class="portal-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="portal-card-title">代理之家</div>
+        <div class="portal-card-en">IB · INTRODUCING BROKER</div>
+        <div class="portal-card-desc">IB 代理申請與業務管理，為您的客戶資源提供持牌交易商級別的後台支援。</div>
+        <div class="portal-card-cta">申請代理 →</div>
+      </a>
+
+      <a href="support.html" class="portal-card">
+        <div class="portal-card-num">PORTAL 03</div>
+        <div class="portal-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <div class="portal-card-title">即時客服</div>
+        <div class="portal-card-en">LIVE CHAT</div>
+        <div class="portal-card-desc">線上專員一對一即時解答開戶、交易與技術問題，週一至週五全天候服務。</div>
+        <div class="portal-card-cta">開始對話 →</div>
+      </a>
+
+      <a href="tel:+85235210369" class="portal-card">
+        <div class="portal-card-num">PORTAL 04</div>
+        <div class="portal-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="portal-card-title">客服熱線</div>
+        <div class="portal-card-en">HOTLINE · HK</div>
+        <div class="portal-card-desc">電話直撥香港總部，由 CD Markets 客戶經理為您解答各類疑問與需求。</div>
+        <div class="portal-card-cta">+852 3521 0369 →</div>
+      </a>
     </div>
   </div>
 </section>
@@ -258,6 +617,149 @@
           <div class="product-spec-row"><dt>切換</dt><dd>單帳戶</dd></div>
         </div>
         <a href="#" class="product-cta">查看詳情</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     D'. Market Quotes Grid · 完整市場報價（黃金寶庫遷移）
+     ============================================================ -->
+<section class="section" id="quotes">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-head-l">
+        <span class="section-eyebrow">Market Quotes · 即時報價</span>
+        <h2 class="section-title">九個全球核心交易品種</h2>
+      </div>
+      <div class="section-head-r">LIVE · 僅供參考</div>
+    </div>
+
+    <div class="quotes-grid reveal">
+      <div class="quote-card" data-sym="XAU/USD">
+        <div class="quote-card-head">
+          <span class="quote-card-sym">XAU / USD</span>
+          <span class="quote-card-time">—</span>
+        </div>
+        <div class="quote-card-price">—</div>
+        <div class="quote-card-change up">—</div>
+        <div class="quote-card-meta">
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">OPEN</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">HIGH</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">LOW</div><div class="quote-card-meta-val">—</div></div>
+        </div>
+      </div>
+
+      <div class="quote-card" data-sym="XAG/USD">
+        <div class="quote-card-head">
+          <span class="quote-card-sym">XAG / USD</span>
+          <span class="quote-card-time">—</span>
+        </div>
+        <div class="quote-card-price">—</div>
+        <div class="quote-card-change up">—</div>
+        <div class="quote-card-meta">
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">OPEN</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">HIGH</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">LOW</div><div class="quote-card-meta-val">—</div></div>
+        </div>
+      </div>
+
+      <div class="quote-card" data-sym="BTC/USD">
+        <div class="quote-card-head">
+          <span class="quote-card-sym">BTC / USD</span>
+          <span class="quote-card-time">—</span>
+        </div>
+        <div class="quote-card-price">—</div>
+        <div class="quote-card-change down">—</div>
+        <div class="quote-card-meta">
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">OPEN</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">HIGH</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">LOW</div><div class="quote-card-meta-val">—</div></div>
+        </div>
+      </div>
+
+      <div class="quote-card" data-sym="EUR/USD">
+        <div class="quote-card-head">
+          <span class="quote-card-sym">EUR / USD</span>
+          <span class="quote-card-time">—</span>
+        </div>
+        <div class="quote-card-price">—</div>
+        <div class="quote-card-change up">—</div>
+        <div class="quote-card-meta">
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">OPEN</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">HIGH</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">LOW</div><div class="quote-card-meta-val">—</div></div>
+        </div>
+      </div>
+
+      <div class="quote-card" data-sym="GBP/USD">
+        <div class="quote-card-head">
+          <span class="quote-card-sym">GBP / USD</span>
+          <span class="quote-card-time">—</span>
+        </div>
+        <div class="quote-card-price">—</div>
+        <div class="quote-card-change down">—</div>
+        <div class="quote-card-meta">
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">OPEN</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">HIGH</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">LOW</div><div class="quote-card-meta-val">—</div></div>
+        </div>
+      </div>
+
+      <div class="quote-card" data-sym="USD/JPY">
+        <div class="quote-card-head">
+          <span class="quote-card-sym">USD / JPY</span>
+          <span class="quote-card-time">—</span>
+        </div>
+        <div class="quote-card-price">—</div>
+        <div class="quote-card-change down">—</div>
+        <div class="quote-card-meta">
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">OPEN</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">HIGH</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">LOW</div><div class="quote-card-meta-val">—</div></div>
+        </div>
+      </div>
+
+      <div class="quote-card" data-sym="USD/CHF">
+        <div class="quote-card-head">
+          <span class="quote-card-sym">USD / CHF</span>
+          <span class="quote-card-time">—</span>
+        </div>
+        <div class="quote-card-price">—</div>
+        <div class="quote-card-change up">—</div>
+        <div class="quote-card-meta">
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">OPEN</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">HIGH</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">LOW</div><div class="quote-card-meta-val">—</div></div>
+        </div>
+      </div>
+
+      <div class="quote-card" data-sym="AUD/USD">
+        <div class="quote-card-head">
+          <span class="quote-card-sym">AUD / USD</span>
+          <span class="quote-card-time">—</span>
+        </div>
+        <div class="quote-card-price">—</div>
+        <div class="quote-card-change up">—</div>
+        <div class="quote-card-meta">
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">OPEN</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">HIGH</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">LOW</div><div class="quote-card-meta-val">—</div></div>
+        </div>
+      </div>
+
+      <div class="quote-card" data-sym="USD/CAD">
+        <div class="quote-card-head">
+          <span class="quote-card-sym">USD / CAD</span>
+          <span class="quote-card-time">—</span>
+        </div>
+        <div class="quote-card-price">—</div>
+        <div class="quote-card-change down">—</div>
+        <div class="quote-card-meta">
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">OPEN</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">HIGH</div><div class="quote-card-meta-val">—</div></div>
+          <div class="quote-card-meta-cell"><div class="quote-card-meta-lbl">LOW</div><div class="quote-card-meta-val">—</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -381,6 +883,101 @@
     <div class="steps-cta-row reveal">
       <div class="steps-cta-row-text">如有疑問，歡迎聯繫客服 · <strong>+852 3521 0369</strong></div>
       <a href="#" class="steps-cta-btn">立即開戶</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     G'. Economic Calendar · 本週財經日曆（黃金寶庫遷移）
+     ============================================================ -->
+<section class="section" id="econ-calendar">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-head-l">
+        <span class="section-eyebrow">Economic Calendar · 財經日曆</span>
+        <h2 class="section-title">本週重點經濟事件</h2>
+      </div>
+      <div class="section-head-r"><a href="news.html">完整財經日曆 →</a></div>
+    </div>
+
+    <div class="econ-list reveal">
+      <a href="news.html" class="econ-row">
+        <span class="econ-date">05 / 14 · WED</span>
+        <span class="econ-time">20:30</span>
+        <span class="econ-event">美國 4 月 CPI 月率 / 核心 CPI 年率</span>
+        <span class="econ-flag">USD · 美國</span>
+        <span class="econ-impact">
+          <span class="econ-impact-dot high"></span>
+          <span class="econ-impact-dot high"></span>
+          <span class="econ-impact-dot high"></span>
+        </span>
+      </a>
+      <a href="news.html" class="econ-row">
+        <span class="econ-date">05 / 14 · WED</span>
+        <span class="econ-time">22:30</span>
+        <span class="econ-event">美國原油庫存週報（EIA）</span>
+        <span class="econ-flag">USD · 美國</span>
+        <span class="econ-impact">
+          <span class="econ-impact-dot active"></span>
+          <span class="econ-impact-dot active"></span>
+          <span class="econ-impact-dot"></span>
+        </span>
+      </a>
+      <a href="news.html" class="econ-row">
+        <span class="econ-date">05 / 15 · THU</span>
+        <span class="econ-time">20:30</span>
+        <span class="econ-event">美國 5 月初請失業金人數</span>
+        <span class="econ-flag">USD · 美國</span>
+        <span class="econ-impact">
+          <span class="econ-impact-dot active"></span>
+          <span class="econ-impact-dot active"></span>
+          <span class="econ-impact-dot"></span>
+        </span>
+      </a>
+      <a href="news.html" class="econ-row">
+        <span class="econ-date">05 / 15 · THU</span>
+        <span class="econ-time">22:00</span>
+        <span class="econ-event">聯儲局主席 Powell 公開講話</span>
+        <span class="econ-flag">USD · 美國</span>
+        <span class="econ-impact">
+          <span class="econ-impact-dot high"></span>
+          <span class="econ-impact-dot high"></span>
+          <span class="econ-impact-dot high"></span>
+        </span>
+      </a>
+      <a href="news.html" class="econ-row">
+        <span class="econ-date">05 / 16 · FRI</span>
+        <span class="econ-time">14:00</span>
+        <span class="econ-event">英國 Q1 GDP 季率初值</span>
+        <span class="econ-flag">GBP · 英國</span>
+        <span class="econ-impact">
+          <span class="econ-impact-dot high"></span>
+          <span class="econ-impact-dot high"></span>
+          <span class="econ-impact-dot"></span>
+        </span>
+      </a>
+      <a href="news.html" class="econ-row">
+        <span class="econ-date">05 / 16 · FRI</span>
+        <span class="econ-time">20:30</span>
+        <span class="econ-event">美國 4 月零售銷售月率</span>
+        <span class="econ-flag">USD · 美國</span>
+        <span class="econ-impact">
+          <span class="econ-impact-dot high"></span>
+          <span class="econ-impact-dot high"></span>
+          <span class="econ-impact-dot high"></span>
+        </span>
+      </a>
+      <a href="news.html" class="econ-row">
+        <span class="econ-date">05 / 17 · SAT</span>
+        <span class="econ-time">02:00</span>
+        <span class="econ-event">美國當週鑽井平台數（Baker Hughes）</span>
+        <span class="econ-flag">USD · 美國</span>
+        <span class="econ-impact">
+          <span class="econ-impact-dot active"></span>
+          <span class="econ-impact-dot"></span>
+          <span class="econ-impact-dot"></span>
+        </span>
+      </a>
     </div>
   </div>
 </section>
