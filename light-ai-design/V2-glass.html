@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Light Ai · Vision Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/font/Lucide.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg-base:#06060a;--glass-bg:rgba(255,255,255,0.06);--glass-border:rgba(255,255,255,0.12);--text:#f5f5f7;--text-sub:rgba(245,245,247,0.65);--text-mut:rgba(245,245,247,0.4);--accent-1:#7b8cff;--accent-2:#c084fc;--accent-3:#22d3ee;--up:#34d399;--down:#fb7185}
+html,body{background:var(--bg-base);color:var(--text);font-family:'Inter','Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.5}
+body{position:relative;min-height:100vh}
+.aurora{position:fixed;inset:-20%;z-index:0;filter:blur(80px);opacity:0.55;pointer-events:none}
+.aurora .blob{position:absolute;border-radius:50%;mix-blend-mode:screen}
+.aurora .b1{width:480px;height:480px;background:radial-gradient(circle,#7b8cff 0%,transparent 70%);top:-10%;left:-20%;animation:float1 22s ease-in-out infinite}
+.aurora .b2{width:520px;height:520px;background:radial-gradient(circle,#c084fc 0%,transparent 70%);top:30%;right:-25%;animation:float2 28s ease-in-out infinite}
+.aurora .b3{width:420px;height:420px;background:radial-gradient(circle,#22d3ee 0%,transparent 70%);bottom:-10%;left:10%;animation:float3 26s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(80px,60px) scale(1.15)}}
+@keyframes float2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-60px,80px) scale(1.1)}}
+@keyframes float3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-50px) scale(1.2)}}
+.container{position:relative;z-index:2;max-width:100%}
+.glass{background:var(--glass-bg);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border:1px solid var(--glass-border);border-radius:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),0 8px 32px rgba(0,0,0,0.4)}
+header{position:sticky;top:14px;margin:14px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;z-index:20}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#7b8cff,#c084fc);display:grid;place-items:center;box-shadow:0 8px 24px rgba(123,140,255,0.4),inset 0 1px 0 rgba(255,255,255,0.4)}
+.brand-mark i{color:#fff;font-size:22px}
+.brand-text .name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;letter-spacing:-0.02em;background:linear-gradient(180deg,#fff,#b8b8c4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.brand-text .sub{font-size:9.5px;letter-spacing:0.24em;color:var(--text-mut);text-transform:uppercase;margin-top:2px}
+.menu-btn{width:42px;height:42px;border-radius:14px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--text);display:grid;place-items:center;font-size:18px}
+.hero{padding:30px 20px 16px}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 14px 7px 10px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:100px;font-size:11.5px;color:var(--text-sub);margin-bottom:28px}
+.hero-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--up);box-shadow:0 0 8px var(--up)}
+.hero-pill .grad{background:linear-gradient(90deg,#7b8cff,#c084fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:600}
+.hero h1{font-weight:200;font-size:46px;line-height:1.05;letter-spacing:-0.035em;color:#fff;margin-bottom:16px}
+.hero h1 .strong{font-weight:700;background:linear-gradient(135deg,#fff 0%,#a5b4fc 40%,#c084fc 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:inline-block}
+.hero h1 .light{font-weight:300}
+.hero .desc{font-size:16px;line-height:1.6;color:var(--text-sub);margin-bottom:28px;font-weight:300}
+.cta-stack{display:flex;flex-direction:column;gap:10px;margin-bottom:36px}
+.btn{padding:16px 22px;border-radius:18px;font-size:15px;font-weight:500;cursor:pointer;border:none;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;position:relative;overflow:hidden}
+.btn-primary{background:linear-gradient(135deg,#7b8cff 0%,#c084fc 100%);color:#fff;box-shadow:0 8px 32px rgba(123,140,255,0.4),inset 0 1px 0 rgba(255,255,255,0.3)}
+.btn-secondary{background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text)}
+.btn i{font-size:18px}
+.live-card{margin:0 14px 36px;padding:18px}
+.live-card .card-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:14px}
+.live-card .card-title{font-size:13px;font-weight:600;color:var(--text)}
+.live-card .card-title .live{display:inline-flex;align-items:center;gap:5px;margin-right:8px;font-size:10px;color:var(--up)}
+.live-card .card-title .live::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--up);box-shadow:0 0 6px var(--up);animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:0.4}}
+.live-card .card-time{font-size:10.5px;color:var(--text-mut)}
+.live-rows{display:flex;flex-direction:column;gap:11px}
+.live-row{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:10px}
+.live-row .sym{font-size:12px;font-weight:600;color:var(--text)}
+.live-row .px{font-size:13.5px;color:var(--text);font-weight:500;text-align:right}
+.live-row .ch{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;text-align:center;min-width:60px}
+.live-row .ch.up{color:#34d399;background:rgba(52,211,153,0.12)}
+.live-row .ch.dn{color:#fb7185;background:rgba(251,113,133,0.12)}
+.section{padding:46px 20px 12px}
+.section-eyebrow{font-size:11px;letter-spacing:0.24em;color:var(--text-mut);text-transform:uppercase;margin-bottom:10px;font-weight:500}
+.section-title{font-size:34px;line-height:1.1;font-weight:200;letter-spacing:-0.035em;color:#fff;margin-bottom:8px}
+.section-title .strong{font-weight:700;background:linear-gradient(135deg,#a5b4fc,#c084fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.section-sub{font-size:14.5px;color:var(--text-sub);line-height:1.55;margin-bottom:24px;font-weight:300}
+.features{display:flex;flex-direction:column;gap:14px}
+.feature{padding:24px 22px;position:relative;overflow:hidden}
+.feature::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)}
+.feature-ic-wrap{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,rgba(123,140,255,0.2),rgba(192,132,252,0.2));border:1px solid rgba(255,255,255,0.12);display:grid;place-items:center;margin-bottom:18px}
+.feature-ic-wrap i{color:#fff;font-size:22px;filter:drop-shadow(0 0 8px rgba(123,140,255,0.6))}
+.feature h3{font-size:21px;font-weight:600;color:#fff;margin-bottom:8px}
+.feature p{font-size:14px;line-height:1.55;color:var(--text-sub);font-weight:300;margin-bottom:14px}
+.feature-stat{display:flex;gap:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08)}
+.feature-stat .val{font-size:16px;font-weight:600;color:#fff;font-family:'Space Grotesk',sans-serif;display:block}
+.feature-stat .lbl{font-size:10px;color:var(--text-mut);letter-spacing:0.08em;text-transform:uppercase}
+.feature-2{background:linear-gradient(135deg,rgba(123,140,255,0.06),rgba(192,132,252,0.06))}
+.stats-band{padding:36px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat-tile{padding:20px 14px;text-align:center}
+.stat-tile .num{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;letter-spacing:-0.04em;background:linear-gradient(180deg,#fff,#a5b4fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.stat-tile .num .unit{font-size:18px;-webkit-text-fill-color:#a5b4fc}
+.stat-tile .lbl{font-size:10px;color:var(--text-mut);letter-spacing:0.18em;text-transform:uppercase;margin-top:8px;font-weight:500}
+.plans-section{padding:46px 20px}
+.plans-grid{display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.plan{padding:28px 24px;position:relative}
+.plan.featured{background:linear-gradient(135deg,rgba(123,140,255,0.12),rgba(192,132,252,0.12));border-color:rgba(165,180,252,0.3)}
+.plan-tag{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#7b8cff,#c084fc);color:#fff;font-size:9.5px;font-weight:700;padding:6px 14px;border-radius:0 0 10px 10px;letter-spacing:0.16em;text-transform:uppercase;box-shadow:0 4px 12px rgba(123,140,255,0.4)}
+.plan-name{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:500;color:#fff;margin-bottom:4px}
+.plan-tier{font-size:11px;letter-spacing:0.18em;color:var(--text-mut);text-transform:uppercase;margin-bottom:18px}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:22px}
+.plan-price .currency{font-size:18px;color:var(--text-sub)}
+.plan-price .amt{font-family:'Space Grotesk',sans-serif;font-size:50px;font-weight:600;letter-spacing:-0.04em;background:linear-gradient(180deg,#fff,#a5b4fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.plan-price .per{font-size:13px;color:var(--text-mut);margin-left:4px}
+.plan-features{list-style:none;margin-bottom:24px}
+.plan-features li{font-size:13.5px;line-height:1.5;color:var(--text-sub);padding:7px 0;display:flex;align-items:flex-start;gap:10px;font-weight:300}
+.plan-features li i{color:#a5b4fc;font-size:15px;margin-top:1px;flex-shrink:0}
+.plan-cta{width:100%;padding:14px;border-radius:14px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--glass-border);background:var(--glass-bg);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit}
+.plan-cta.featured-cta{background:linear-gradient(135deg,#7b8cff,#c084fc);border:none;box-shadow:0 8px 24px rgba(123,140,255,0.4)}
+.coverage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:24px}
+.cov-card{padding:22px 16px;text-align:center}
+.cov-card .ic{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,rgba(123,140,255,0.2),rgba(192,132,252,0.2));border:1px solid rgba(255,255,255,0.12);display:grid;place-items:center;margin:0 auto 12px}
+.cov-card .ic i{color:#fff;font-size:20px;filter:drop-shadow(0 0 6px rgba(165,180,252,0.5))}
+.cov-card .name{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px}
+.cov-card .meta{font-size:10px;color:var(--text-mut);letter-spacing:0.16em;text-transform:uppercase}
+.cta-section{padding:60px 20px}
+.cta-card{padding:36px 26px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(123,140,255,0.15),rgba(192,132,252,0.15))}
+.cta-card h2{font-size:30px;font-weight:300;line-height:1.15;margin-bottom:14px;color:#fff;position:relative}
+.cta-card h2 .strong{font-weight:700;background:linear-gradient(135deg,#fff,#a5b4fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cta-card p{font-size:14.5px;color:var(--text-sub);font-weight:300;line-height:1.55;margin-bottom:24px;position:relative}
+footer{padding:50px 22px 32px;margin-top:30px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.6))}
+.foot-brand{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:600;background:linear-gradient(180deg,#fff,#a5b4fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.foot-tag{font-size:11px;letter-spacing:0.18em;color:var(--text-mut);text-transform:uppercase;margin-bottom:32px;font-weight:500}
+.foot-cols{display:flex;flex-direction:column;gap:28px}
+.foot-col h4{font-size:11px;letter-spacing:0.18em;color:#fff;text-transform:uppercase;font-weight:600;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.foot-col a{display:block;font-size:14px;color:var(--text-sub);padding:7px 0;text-decoration:none;font-weight:300}
+.foot-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,0.08);text-align:center;font-size:11px;color:var(--text-mut);line-height:1.8}
+.disclaimer{margin-top:22px;padding:16px 18px;font-size:10.5px;line-height:1.65;color:var(--text-mut);text-align:justify;font-weight:300}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="container">
+<header class="glass">
+<div class="brand"><div class="brand-mark"><i class="lucide lucide-sparkles"></i></div><div class="brand-text"><div class="name">Light Ai</div><div class="sub">Algorithmic Intelligence</div></div></div>
+<button class="menu-btn"><i class="lucide lucide-menu"></i></button>
+</header>
+<section class="hero">
+<div class="hero-pill"><span class="dot"></span><span>Trusted by <span class="grad">2,500+</span> professional traders</span></div>
+<h1><span class="light">跨資產</span><br><span class="strong">超額信號</span><br><span class="light">智能分析終端</span></h1>
+<p class="desc">融合多維度量化算法，為每一筆交易決策注入機構級數據支撐 — 像一位永不下班的副駕駛。</p>
+<div class="cta-stack">
+<button class="btn btn-primary"><span>進入終端</span><i class="lucide lucide-arrow-right"></i></button>
+<button class="btn btn-secondary"><span>探索智能跟單</span><i class="lucide lucide-activity"></i></button>
+</div>
+</section>
+<div class="live-card glass">
+<div class="card-head"><div class="card-title"><span class="live">LIVE</span>即時行情</div><div class="card-time" id="utc-time">UTC+8 · 23:59</div></div>
+<div class="live-rows">
+<div class="live-row"><span class="sym">EUR/USD</span><span class="px">1.16253</span><span class="ch up">+0.42%</span></div>
+<div class="live-row"><span class="sym">XAU/USD</span><span class="px">2,648.20</span><span class="ch up">+1.24%</span></div>
+<div class="live-row"><span class="sym">BTC/USD</span><span class="px">79,129</span><span class="ch up">+0.84%</span></div>
+<div class="live-row"><span class="sym">XAG/USD</span><span class="px">30.85</span><span class="ch dn">-2.31%</span></div>
+<div class="live-row"><span class="sym">SPX500</span><span class="px">5,847.21</span><span class="ch up">+0.31%</span></div>
+</div>
+</div>
+<section class="section">
+<div class="section-eyebrow">CORE CAPABILITIES</div>
+<h2 class="section-title">四大<span class="strong">核心優勢</span></h2>
+<p class="section-sub">將機構級研究方法論濃縮為日常可用的決策工具。</p>
+<div class="features">
+<div class="feature glass feature-2"><div class="feature-ic-wrap"><i class="lucide lucide-layers-3"></i></div><h3>多維超額矩陣</h3><p>融合趨勢、波動、相關性、機構流向四維信號，跨資產捕捉系統性 Alpha。</p><div class="feature-stat"><div><span class="val">5 Layer</span><span class="lbl">Engine</span></div><div><span class="val">Real-time</span><span class="lbl">Streaming</span></div></div></div>
+<div class="feature glass"><div class="feature-ic-wrap"><i class="lucide lucide-radar"></i></div><h3>毫秒級盤面監控</h3><p>分布式行情接入架構，全球延遲控制 12ms 內，異動信號毫秒觸發。</p><div class="feature-stat"><div><span class="val">&lt; 12ms</span><span class="lbl">Latency</span></div><div><span class="val">Global</span><span class="lbl">Coverage</span></div></div></div>
+<div class="feature glass"><div class="feature-ic-wrap"><i class="lucide lucide-shield-check"></i></div><h3>精準風控策略</h3><p>三層守門員：信號清晰度、風險回報比、波動衰減 — 自動過濾低勝率窗口。</p><div class="feature-stat"><div><span class="val">3-Layer</span><span class="lbl">Guard</span></div><div><span class="val">AI</span><span class="lbl">Filter</span></div></div></div>
+<div class="feature glass"><div class="feature-ic-wrap"><i class="lucide lucide-newspaper"></i></div><h3>機構級研判報告</h3><p>每日早晚雙刊，覆蓋 28 主流品種，含技術 / 基本面 / 情緒面三軸研判。</p><div class="feature-stat"><div><span class="val">2× Daily</span><span class="lbl">Publish</span></div><div><span class="val">28</span><span class="lbl">Symbols</span></div></div></div>
+</div>
+</section>
+<div class="stats-band">
+<div class="stat-tile glass"><div class="num">70<span class="unit">%</span></div><div class="lbl">Win Rate</div></div>
+<div class="stat-tile glass"><div class="num">2.5K<span class="unit">+</span></div><div class="lbl">Active Users</div></div>
+<div class="stat-tile glass"><div class="num">28</div><div class="lbl">Instruments</div></div>
+</div>
+<section class="plans-section">
+<div class="section-eyebrow">SUBSCRIPTION TIERS</div>
+<h2 class="section-title">算力<span class="strong">配額方案</span></h2>
+<p class="section-sub">依使用深度自選方案，隨時可升級。</p>
+<div class="plans-grid">
+<div class="plan glass"><div class="plan-name">Starter</div><div class="plan-tier">體驗版 · Tier I</div><div class="plan-price"><span class="currency">$</span><span class="amt">19</span><span class="per">/月</span></div><ul class="plan-features"><li><i class="lucide lucide-check"></i>500 算力 · 約 50 次深度分析</li><li><i class="lucide lucide-check"></i>每日早晚雙刊 PDF 推送</li><li><i class="lucide lucide-check"></i>核心 8 品種覆蓋</li><li><i class="lucide lucide-check"></i>基礎技術 + 情緒面研判</li></ul><button class="plan-cta"><span>選擇方案</span><i class="lucide lucide-arrow-right"></i></button></div>
+<div class="plan glass featured"><div class="plan-tag">Most Popular</div><div class="plan-name">Professional</div><div class="plan-tier">專業版 · Tier II</div><div class="plan-price"><span class="currency">$</span><span class="amt">49</span><span class="per">/月</span></div><ul class="plan-features"><li><i class="lucide lucide-check"></i>2,000 算力 · 約 200 次深度分析</li><li><i class="lucide lucide-check"></i>全 28 品種 + 加密貨幣</li><li><i class="lucide lucide-check"></i>智能跟單功能解鎖</li><li><i class="lucide lucide-check"></i>三軸研判 + 機構流向追蹤</li><li><i class="lucide lucide-check"></i>優先客服支援</li></ul><button class="plan-cta featured-cta"><span>立即升級</span><i class="lucide lucide-arrow-right"></i></button></div>
+<div class="plan glass"><div class="plan-name">Whale</div><div class="plan-tier">機構版 · Tier III</div><div class="plan-price"><span class="currency">$</span><span class="amt">99</span><span class="per">/月</span></div><ul class="plan-features"><li><i class="lucide lucide-check"></i>6,000 算力 · 約 600 次深度分析</li><li><i class="lucide lucide-check"></i>專屬研判團隊直線接觸</li><li><i class="lucide lucide-check"></i>機構級風控報告</li><li><i class="lucide lucide-check"></i>API 全功能調用</li><li><i class="lucide lucide-check"></i>白手套客戶經理</li></ul><button class="plan-cta"><span>洽詢方案</span><i class="lucide lucide-arrow-right"></i></button></div>
+</div>
+</section>
+<section class="section">
+<div class="section-eyebrow">ASSET COVERAGE</div>
+<h2 class="section-title">全資產<span class="strong">研判覆蓋</span></h2>
+<p class="section-sub">從外匯到加密貨幣，一個介面看全市場。</p>
+<div class="coverage-grid">
+<div class="cov-card glass"><div class="ic"><i class="lucide lucide-arrow-left-right"></i></div><div class="name">外匯</div><div class="meta">14 Major Pairs</div></div>
+<div class="cov-card glass"><div class="ic"><i class="lucide lucide-bitcoin"></i></div><div class="name">加密貨幣</div><div class="meta">8 Top Caps</div></div>
+<div class="cov-card glass"><div class="ic"><i class="lucide lucide-gem"></i></div><div class="name">貴金屬</div><div class="meta">Gold · Silver · Pt</div></div>
+<div class="cov-card glass"><div class="ic"><i class="lucide lucide-trending-up"></i></div><div class="name">全球指數</div><div class="meta">SPX · NDX · DAX</div></div>
+</div>
+</section>
+<section class="cta-section">
+<div class="cta-card glass"><h2><span style="font-weight:300">開始你的</span><br><span class="strong">智能交易旅程</span></h2><p>新會員免費體驗 5 次深度分析 + 5 次 PDF 下載，無需信用卡。</p><button class="btn btn-primary"><span>立即免費體驗</span><i class="lucide lucide-arrow-right"></i></button></div>
+</section>
+<footer>
+<div class="foot-brand">Light Ai</div>
+<div class="foot-tag">Algorithmic Intelligence · Est. 2024</div>
+<div class="foot-cols">
+<div class="foot-col"><h4>Platform</h4><a href="#">交易終端</a><a href="#">智能跟單</a><a href="#">每日精選</a><a href="#">新聞中心</a></div>
+<div class="foot-col"><h4>Support</h4><a href="#">技術文件</a><a href="#">客戶後台</a><a href="#">常見問題</a><a href="#">聯繫客服</a></div>
+<div class="foot-col"><h4>Legal</h4><a href="#">服務條款</a><a href="#">隱私政策</a><a href="#">風險揭露</a><a href="#">dpo@lightai.dpdns.org</a></div>
+</div>
+<div class="disclaimer">金融市場交易涉及重大風險，可能導致部分或全部本金損失。Light Ai 提供的所有研判內容僅供參考，不構成任何投資建議、招攬或要約。歷史表現不代表未來收益。投資前請充分評估個人風險承受能力，並諮詢合資格專業顧問。</div>
+<div class="foot-bottom">© 2026 Light Ai Research · All Rights Reserved<br>Hong Kong · Singapore · Dubai</div>
+</footer>
+</div>
+<script>function tick(){const d=new Date(Date.now()+(8*60-new Date().getTimezoneOffset())*60000);document.getElementById('utc-time').textContent='UTC+8 · '+d.toISOString().substr(11,5)}tick();setInterval(tick,1000);</script>
+</body>
+</html>
