@@ -129,7 +129,9 @@
   background: var(--bg-3);
   border-radius: 50%;
   font-size: 24px;
+  color: var(--accent);
 }
+.deriv-cat-icon svg { display: block; }
 .deriv-cat-icon img {
   width: 32px;
   height: 32px;
@@ -169,7 +171,7 @@
     <div class="subhero-eyebrow">PRODUCTS · 四大產品線</div>
     <h1 class="subhero-title">
       貴金屬與衍生品<br>
-      <span class="light">為投資者打開全球市場的大門。</span>
+      <span class="light">為投資者連結全球市場。</span>
     </h1>
     <p class="subhero-sub">
       從實物黃金到倫敦現貨，從六大類國際期貨到投資學堂，CD Markets 為您提供完整的貴金屬與金融衍生品交易服務，搭配香港持牌交易商級別的合規與風控保障。
@@ -204,7 +206,7 @@
             <img src="assets/img/gold-bar-1kg.png"
                  alt="港金公斤條 999.9 純金 1KG"
                  loading="lazy"
-                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:64px;color:var(--accent);\'>🪙</div>';">
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:48px;color:var(--accent);font-family:var(--font-mono);letter-spacing:0.05em;font-weight:600;\'>Au<br><span style=\'font-size:11px;color:var(--t4);letter-spacing:0.2em;\'>999.9</span></div>';">
           </div>
           <div class="product-info-side">
             <div>
@@ -232,7 +234,7 @@
             <img src="assets/img/gold-bar-5tael.png"
                  alt="五兩 999.9 金條 250g"
                  loading="lazy"
-                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:64px;color:var(--accent);\'>🪙</div>';">
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:48px;color:var(--accent);font-family:var(--font-mono);letter-spacing:0.05em;font-weight:600;\'>Au<br><span style=\'font-size:11px;color:var(--t4);letter-spacing:0.2em;\'>999.9</span></div>';">
           </div>
           <div class="product-info-side">
             <div>
@@ -287,7 +289,7 @@
             <div class="spec-card-tag up">XAUUSD</div>
           </div>
           <div class="spec-card-meta">合約單位 100 盎司 · 5% 保證金</div>
-          <div class="spec-card-desc">全球貴金屬市場核心交易品種，T+0、24 小時交易、收益潛力大。</div>
+          <div class="spec-card-desc">全球貴金屬市場核心交易品種，T+0、24 小時交易、流動性極佳。</div>
         </div>
         <div class="spec-card">
           <div class="spec-card-head">
@@ -304,7 +306,7 @@
         <span class="chip up">避險、對沖、套利</span>
         <span class="chip up">T+0 槓桿交易</span>
         <span class="chip">交易十分活躍</span>
-        <span class="chip accent">收益潛力大</span>
+        <span class="chip accent">適合對沖</span>
       </div>
 
       <h3 style="font-size:18px; color:var(--t1); margin-bottom:14px;">關於風險</h3>
@@ -354,7 +356,7 @@
       <div class="section-eyebrow">DERIVATIVES · 衍生品</div>
       <h2 class="section-title">衍生品 / Derivatives</h2>
       <p class="section-lead">
-        衍生品是金融市場中一種重要而特別的工具。它的原始功能是對沖期貨合約風險，但因其以保證金形式操作全量合約當量的交易，因此天然地存在槓桿效應，單獨作為交易商品進行買賣獲利也是十分活躍的市場現象。
+        衍生品是金融市場中一種重要而特別的工具。它的原始功能是對沖期貨合約風險，但因其以保證金形式操作全量合約當量的交易，因此天然地存在槓桿效應，作為獨立交易商品也具高活躍度。
       </p>
 
       <div class="chips" style="margin-bottom:34px;">
@@ -365,41 +367,47 @@
       </div>
 
       <h3 style="font-size:18px; color:var(--t1); margin-bottom:14px;">六大類期貨合約</h3>
-      <p style="font-size:13.5px; color:var(--t3); margin-bottom:24px;">所有合約以美元計價結算，開倉/平倉手續費統一為 USD 6 / 手。</p>
+      <p style="font-size:13.5px; color:var(--t3); margin-bottom:24px;">所有衍生品期貨合約以美元計價結算，開倉/平倉手續費統一為 USD 6 / 手（倫敦金銀現貨另計，詳見開戶交易頁）。</p>
 
       <div class="deriv-category-grid">
         <a href="#cat-index" class="deriv-cat-card">
-          <div class="deriv-cat-icon">📊</div>
+          <div class="deriv-cat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M3 3v18h18"/><path d="M7 16l4-4 3 3 5-7"/></svg>
+          </div>
           <div class="deriv-cat-name">國際指數期貨</div>
           <div class="deriv-cat-en">INDEX</div>
         </a>
         <a href="#cat-metal" class="deriv-cat-card">
-          <div class="deriv-cat-icon">🥇</div>
+          <div class="deriv-cat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><rect x="4" y="9" width="16" height="9" rx="1"/><path d="M7 9V6h10v3"/><path d="M9 13h6"/></svg>
+          </div>
           <div class="deriv-cat-name">金屬期貨</div>
           <div class="deriv-cat-en">METAL</div>
         </a>
         <a href="#cat-forex" class="deriv-cat-card">
-          <div class="deriv-cat-icon">💱</div>
+          <div class="deriv-cat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M16 3l4 4-4 4"/><path d="M20 7H6"/><path d="M8 21l-4-4 4-4"/><path d="M4 17h14"/></svg>
+          </div>
           <div class="deriv-cat-name">外匯期貨</div>
           <div class="deriv-cat-en">FOREX</div>
         </a>
         <a href="#cat-energy" class="deriv-cat-card">
           <div class="deriv-cat-icon">
-            <img src="assets/img/icon-energy.png" alt="能源" loading="lazy" onerror="this.parentElement.textContent='⛽';">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>
           </div>
           <div class="deriv-cat-name">能源期貨</div>
           <div class="deriv-cat-en">ENERGIES</div>
         </a>
         <a href="#cat-agri" class="deriv-cat-card">
           <div class="deriv-cat-icon">
-            <img src="assets/img/icon-agri.png" alt="農產品" loading="lazy" onerror="this.parentElement.textContent='🌾';">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M12 22V8"/><path d="M12 8c-3 0-5-2-5-5 3 0 5 2 5 5z"/><path d="M12 8c3 0 5-2 5-5-3 0-5 2-5 5z"/><path d="M12 14c-3 0-5-2-5-5 3 0 5 2 5 5z"/><path d="M12 14c3 0 5-2 5-5-3 0-5 2-5 5z"/></svg>
           </div>
           <div class="deriv-cat-name">農產品期貨</div>
           <div class="deriv-cat-en">AGRI</div>
         </a>
         <a href="#cat-rate" class="deriv-cat-card">
           <div class="deriv-cat-icon">
-            <img src="assets/img/icon-rate.png" alt="利率" loading="lazy" onerror="this.parentElement.textContent='📈';">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>
           </div>
           <div class="deriv-cat-name">利率期貨</div>
           <div class="deriv-cat-en">RATE</div>
@@ -531,7 +539,7 @@
       <div class="section-eyebrow">ACADEMY · 投資學堂</div>
       <h2 class="section-title">金融學堂 / Financial Academy</h2>
       <p class="section-lead">
-        正確的金融投資姿勢，金融知識是不可或缺的。為了讓投資者更全面了解金融投資，我們特意準備了一系列的金融相關知識講解。
+        正確的金融投資觀念，建立在不可或缺的金融知識之上。為了讓投資者更全面了解金融投資，我們特意準備了一系列的金融相關知識講解。
       </p>
 
       <div class="card-grid cols-4" style="margin-bottom:34px;">

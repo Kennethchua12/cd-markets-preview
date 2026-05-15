@@ -18,7 +18,7 @@
 
   // ===== 7 項菜單定義 (改一次,7 個分頁同步) ===== //
   const NAV_ITEMS = [
-    { key: 'home',      label: '港金通',   href: 'index.html'    },
+    { key: 'home',      label: '首頁',     href: 'index.html'    },
     { key: 'products',  label: '產品介紹', href: 'products.html' },
     { key: 'news',      label: '資訊中心', href: 'news.html'     },
     { key: 'account',   label: '開戶交易', href: 'account.html'  },
@@ -172,7 +172,7 @@
       + '      </div>\n'
       + '      <div class="footer-contact-cell">\n'
       + '        <div class="lbl">Correspondence</div>\n'
-      + '        <div class="val mono">info / acc / cs / ib @ cd-markets.com</div>\n'
+      + '        <div class="val mono"><a href="mailto:info@cd-markets.com">info</a> · <a href="mailto:acc@cd-markets.com">acc</a> · <a href="mailto:cs@cd-markets.com">cs</a> · <a href="mailto:ib@cd-markets.com">ib</a>&nbsp;@cd-markets.com</div>\n'
       + '      </div>\n'
       + '    </div>\n'
       + '\n'
