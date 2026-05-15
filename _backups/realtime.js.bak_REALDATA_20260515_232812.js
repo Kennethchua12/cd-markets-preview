@@ -26,7 +26,6 @@
     { id: 'USD/JPY', cc: 'JPY',  invert: true,  dp: 2, comma: true,  hasHistory: true  },
     { id: 'AUD/USD', cc: 'AUD',  invert: false, dp: 4, comma: false, hasHistory: true  },
     { id: 'USD/CHF', cc: 'CHF',  invert: true,  dp: 4, comma: false, hasHistory: true  },
-    { id: 'USD/CAD', cc: 'CAD',  invert: true,  dp: 4, comma: false, hasHistory: true  },
     { id: 'BTC/USD', cc: 'BTC',  invert: false, dp: 2, comma: true,  hasHistory: true  },
     { id: 'ETH/USD', cc: 'ETH',  invert: false, dp: 2, comma: true,  hasHistory: true  },
   ];
@@ -71,25 +70,19 @@
   // ===== DOM 更新: 價格 + 漲跌 ===== //
   const lastPriceMap = {};
 
-  function updateSymbol(symCfg, price, pct, open, high, low) {
+  function updateSymbol(symCfg, price, pct) {
     if (isNaN(price)) return;
     const change = price * pct / 100;
     const isUp = pct >= 0;
     const priceStr = fmt(price, symCfg.dp, symCfg.comma);
     const changeStr = fmtChange(change, symCfg.dp);
     const pctStr = fmtPct(pct);
-    const openStr = open !== null && open !== undefined ? fmt(open, symCfg.dp, symCfg.comma) : '—';
-    const highStr = high !== null && high !== undefined ? fmt(high, symCfg.dp, symCfg.comma) : '—';
-    const lowStr  = low  !== null && low  !== undefined ? fmt(low,  symCfg.dp, symCfg.comma) : '—';
 
     const prevPrice = lastPriceMap[symCfg.id];
     const priceFlashDir = prevPrice !== undefined ? (price >= prevPrice) : isUp;
     lastPriceMap[symCfg.id] = price;
 
-    const now = new Date();
-    const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-
-    // Hero Dashboard (.quote)
+    // Hero Dashboard
     const heroQuote = document.querySelector('.quote[data-sym="' + symCfg.id + '"]');
     if (heroQuote) {
       const priceEl = heroQuote.querySelector('.quote-price');
@@ -104,35 +97,13 @@
         changeEl.classList.remove('up', 'down');
         changeEl.classList.add(isUp ? 'up' : 'down');
       }
-      if (timeEl) timeEl.textContent = timeStr;
+      if (timeEl) {
+        const now = new Date();
+        timeEl.textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      }
     }
 
-    // Market Quotes Grid (.quote-card) - 9 個首頁新區塊
-    document.querySelectorAll('.quote-card[data-sym="' + symCfg.id + '"]').forEach(function (card) {
-      const priceEl = card.querySelector('.quote-card-price');
-      const changeEl = card.querySelector('.quote-card-change');
-      const timeEl = card.querySelector('.quote-card-time');
-      const metaVals = card.querySelectorAll('.quote-card-meta-val');
-
-      if (priceEl && priceEl.textContent !== priceStr) {
-        priceEl.textContent = priceStr;
-        flashEl(priceEl, priceFlashDir);
-      }
-      if (changeEl) {
-        changeEl.textContent = changeStr + ' · ' + pctStr;
-        changeEl.classList.remove('up', 'down');
-        changeEl.classList.add(isUp ? 'up' : 'down');
-      }
-      if (timeEl) timeEl.textContent = timeStr;
-      // metaVals 順序: [OPEN, HIGH, LOW]
-      if (metaVals.length >= 3) {
-        if (metaVals[0].textContent !== openStr) metaVals[0].textContent = openStr;
-        if (metaVals[1].textContent !== highStr) metaVals[1].textContent = highStr;
-        if (metaVals[2].textContent !== lowStr)  metaVals[2].textContent = lowStr;
-      }
-    });
-
-    // Ticker (.tk-item)
+    // Ticker
     document.querySelectorAll('.tk-item[data-sym="' + symCfg.id + '"]').forEach(function (item) {
       const pxEl = item.querySelector('.tk-px');
       const chEl = item.querySelector('.tk-ch');
@@ -175,21 +146,11 @@
         if (u && typeof u.PRICE === 'number') {
           let price = u.PRICE;
           let pct = typeof u.CHANGEPCT24HOUR === 'number' ? u.CHANGEPCT24HOUR : 0;
-          let open = typeof u.OPEN24HOUR === 'number' ? u.OPEN24HOUR : null;
-          let high = typeof u.HIGH24HOUR === 'number' ? u.HIGH24HOUR : null;
-          let low  = typeof u.LOW24HOUR  === 'number' ? u.LOW24HOUR  : null;
           if (symCfg.invert) {
             price = 1 / price;
             pct = -pct;
-            // OHL 反向: invert symbol 的 OPEN/HIGH/LOW 也要倒數，且 HIGH/LOW 互換
-            const _open = open !== null ? 1 / open : null;
-            const _high = low  !== null ? 1 / low  : null;  // 原 LOW 倒數 = invert 後的 HIGH
-            const _low  = high !== null ? 1 / high : null;  // 原 HIGH 倒數 = invert 後的 LOW
-            open = _open;
-            high = _high;
-            low  = _low;
           }
-          updateSymbol(symCfg, price, pct, open, high, low);
+          updateSymbol(symCfg, price, pct);
           okCount++;
         } else {
           console.warn('[realtime] ' + symCfg.id + ' (' + symCfg.cc + ') not in response');

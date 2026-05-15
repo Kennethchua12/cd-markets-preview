@@ -220,85 +220,20 @@
   .quote-card-meta-val { font-size: 11px !important; }
 }
 
-/* ============ 4. econ-calendar 本週財經日曆 ============ */
-.econ-list {
+/* ============ 4. econ-calendar 本週財經日曆 · TradingView Widget ============ */
+.tv-calendar-wrap {
   border: 1px solid var(--line);
   border-radius: 10px;
   overflow: hidden;
   background: var(--bg-2);
+  min-height: 490px;
 }
-.econ-row {
-  display: grid;
-  grid-template-columns: 90px 70px 1fr 100px 60px;
-  gap: 14px;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--line-faint);
-  align-items: center;
-  transition: background 200ms;
-  text-decoration: none;
-  color: inherit;
+.tv-calendar-wrap .tradingview-widget-container {
+  width: 100%;
+  height: 100%;
 }
-.econ-row:last-child { border-bottom: none; }
-.econ-row:hover { background: var(--bg-3); }
-.econ-date {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--t4);
-  letter-spacing: 0.04em;
-}
-.econ-time {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--t2);
-}
-.econ-event {
-  font-size: 13.5px;
-  color: var(--t1);
-  line-height: 1.4;
-  min-width: 0;
-}
-.econ-flag {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--t3);
-  letter-spacing: 0.08em;
-}
-.econ-impact {
-  display: flex;
-  gap: 3px;
-  justify-content: flex-end;
-}
-.econ-impact-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--line-strong);
-}
-.econ-impact-dot.active { background: var(--accent); }
-.econ-impact-dot.high { background: var(--bid-down); }
-@media (max-width: 767px) {
-  .econ-row {
-    grid-template-columns: 1fr auto !important;
-    grid-template-rows: auto auto !important;
-    gap: 4px 12px !important;
-    padding: 12px 14px !important;
-  }
-  .econ-date {
-    grid-column: 1 / 2; grid-row: 1;
-    font-size: 11px !important;
-  }
-  .econ-flag {
-    grid-column: 2 / 3; grid-row: 1;
-    font-size: 10px !important;
-  }
-  .econ-event {
-    grid-column: 1 / 2; grid-row: 2;
-    font-size: 13px !important;
-  }
-  .econ-impact {
-    grid-column: 2 / 3; grid-row: 2;
-    justify-content: flex-end;
-  }
-  .econ-time { display: none; }
+@media (max-width: 640px) {
+  .tv-calendar-wrap { min-height: 540px; }
 }
 </style>
 </head>
@@ -650,9 +585,9 @@
         </div>
       </div>
 
-      <div class="quote-card" data-sym="XAG/USD">
+      <div class="quote-card" data-sym="XPT/USD">
         <div class="quote-card-head">
-          <span class="quote-card-sym">XAG / USD</span>
+          <span class="quote-card-sym">XPT / USD</span>
           <span class="quote-card-time">—</span>
         </div>
         <div class="quote-card-price">—</div>
@@ -900,84 +835,26 @@
       <div class="section-head-r"><a href="news.html">完整財經日曆 →</a></div>
     </div>
 
-    <div class="econ-list reveal">
-      <a href="news.html" class="econ-row">
-        <span class="econ-date">05 / 14 · WED</span>
-        <span class="econ-time">20:30</span>
-        <span class="econ-event">美國 4 月 CPI 月率 / 核心 CPI 年率</span>
-        <span class="econ-flag">USD · 美國</span>
-        <span class="econ-impact">
-          <span class="econ-impact-dot high"></span>
-          <span class="econ-impact-dot high"></span>
-          <span class="econ-impact-dot high"></span>
-        </span>
-      </a>
-      <a href="news.html" class="econ-row">
-        <span class="econ-date">05 / 14 · WED</span>
-        <span class="econ-time">22:30</span>
-        <span class="econ-event">美國原油庫存週報（EIA）</span>
-        <span class="econ-flag">USD · 美國</span>
-        <span class="econ-impact">
-          <span class="econ-impact-dot active"></span>
-          <span class="econ-impact-dot active"></span>
-          <span class="econ-impact-dot"></span>
-        </span>
-      </a>
-      <a href="news.html" class="econ-row">
-        <span class="econ-date">05 / 15 · THU</span>
-        <span class="econ-time">20:30</span>
-        <span class="econ-event">美國 5 月初請失業金人數</span>
-        <span class="econ-flag">USD · 美國</span>
-        <span class="econ-impact">
-          <span class="econ-impact-dot active"></span>
-          <span class="econ-impact-dot active"></span>
-          <span class="econ-impact-dot"></span>
-        </span>
-      </a>
-      <a href="news.html" class="econ-row">
-        <span class="econ-date">05 / 15 · THU</span>
-        <span class="econ-time">22:00</span>
-        <span class="econ-event">聯儲局主席 Powell 公開講話</span>
-        <span class="econ-flag">USD · 美國</span>
-        <span class="econ-impact">
-          <span class="econ-impact-dot high"></span>
-          <span class="econ-impact-dot high"></span>
-          <span class="econ-impact-dot high"></span>
-        </span>
-      </a>
-      <a href="news.html" class="econ-row">
-        <span class="econ-date">05 / 16 · FRI</span>
-        <span class="econ-time">14:00</span>
-        <span class="econ-event">英國 Q1 GDP 季率初值</span>
-        <span class="econ-flag">GBP · 英國</span>
-        <span class="econ-impact">
-          <span class="econ-impact-dot high"></span>
-          <span class="econ-impact-dot high"></span>
-          <span class="econ-impact-dot"></span>
-        </span>
-      </a>
-      <a href="news.html" class="econ-row">
-        <span class="econ-date">05 / 16 · FRI</span>
-        <span class="econ-time">20:30</span>
-        <span class="econ-event">美國 4 月零售銷售月率</span>
-        <span class="econ-flag">USD · 美國</span>
-        <span class="econ-impact">
-          <span class="econ-impact-dot high"></span>
-          <span class="econ-impact-dot high"></span>
-          <span class="econ-impact-dot high"></span>
-        </span>
-      </a>
-      <a href="news.html" class="econ-row">
-        <span class="econ-date">05 / 17 · SAT</span>
-        <span class="econ-time">02:00</span>
-        <span class="econ-event">美國當週鑽井平台數（Baker Hughes）</span>
-        <span class="econ-flag">USD · 美國</span>
-        <span class="econ-impact">
-          <span class="econ-impact-dot active"></span>
-          <span class="econ-impact-dot"></span>
-          <span class="econ-impact-dot"></span>
-        </span>
-      </a>
+    <div class="tv-calendar-wrap reveal">
+      <!-- TradingView Widget BEGIN -->
+      <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <div class="tradingview-widget-copyright" style="font-family:var(--font-mono);font-size:10.5px;color:var(--t4);letter-spacing:0.08em;padding:10px 14px;text-align:right;">
+          <a href="https://www.tradingview.com/economic-calendar/" rel="noopener nofollow" target="_blank" style="color:var(--t3);">DATA SOURCE · TRADINGVIEW</a>
+        </div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+        {
+          "colorTheme": "dark",
+          "isTransparent": true,
+          "locale": "zh_TW",
+          "width": "100%",
+          "height": "490",
+          "importanceFilter": "0,1",
+          "countryFilter": "us,eu,gb,jp,cn,hk,au,de,fr"
+        }
+        </script>
+      </div>
+      <!-- TradingView Widget END -->
     </div>
   </div>
 </section>
