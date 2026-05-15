@@ -10,137 +10,60 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/main.css">
 <style>
-.cert-card {
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 220ms;
-}
-.cert-card:hover {
-  border-color: var(--line-strong);
-  transform: translateY(-2px);
-}
-.cert-img-wrap {
-  position: relative;
-  background: linear-gradient(135deg, rgba(254,201,73,0.06) 0%, rgba(10,11,13,0.4) 100%);
-  height: 280px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid var(--line);
-  cursor: zoom-in;
-  overflow: hidden;
-}
-.cert-img-wrap img {
-  max-height: 240px;
-  max-width: 80%;
-  object-fit: contain;
-  filter: drop-shadow(0 12px 28px rgba(0,0,0,0.4));
-  transition: transform 280ms;
-}
+.cert-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; transition: all 220ms; }
+.cert-card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+.cert-img-wrap { position: relative; background: linear-gradient(135deg, rgba(254,201,73,0.06) 0%, rgba(10,11,13,0.4) 100%); height: 280px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--line); cursor: zoom-in; overflow: hidden; }
+.cert-img-wrap img { max-height: 240px; max-width: 80%; object-fit: contain; filter: drop-shadow(0 12px 28px rgba(0,0,0,0.4)); transition: transform 280ms; }
 .cert-img-wrap:hover img { transform: scale(1.04); }
-.cert-img-wrap::after {
-  content: '🔍 點擊放大';
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  color: var(--t1);
-  background: rgba(10,11,13,0.7);
-  padding: 5px 10px;
-  border-radius: 4px;
-  backdrop-filter: blur(8px);
-  opacity: 0;
-  transition: opacity 200ms;
-}
+.cert-img-wrap::after { content: '🔍 點擊放大'; position: absolute; top: 14px; right: 14px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; color: var(--t1); background: rgba(10,11,13,0.7); padding: 5px 10px; border-radius: 4px; backdrop-filter: blur(8px); opacity: 0; transition: opacity 200ms; }
 .cert-img-wrap:hover::after { opacity: 1; }
 .cert-body { padding: 24px; }
-.cert-fallback {
-  font-size: 14px;
-  color: var(--t3);
-  text-align: center;
-  padding: 24px;
-}
-.cert-fallback-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-  color: var(--accent);
-}
-
-.cert-lightbox {
-  position: fixed;
-  inset: 0;
-  background: rgba(10,11,13,0.92);
-  backdrop-filter: blur(6px);
-  z-index: 1000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  cursor: zoom-out;
-}
+.cert-fallback { font-size: 14px; color: var(--t3); text-align: center; padding: 24px; }
+.cert-fallback-icon { font-size: 48px; margin-bottom: 12px; color: var(--accent); }
+.cert-lightbox { position: fixed; inset: 0; background: rgba(10,11,13,0.92); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 40px; cursor: zoom-out; }
 .cert-lightbox.is-open { display: flex; }
-.cert-lightbox img {
-  max-width: 90vw;
-  max-height: 88vh;
-  border-radius: 8px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-}
-.cert-lightbox-close {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  width: 44px;
-  height: 44px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 50%;
-  color: var(--t1);
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
+.cert-lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+.cert-lightbox-close { position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; background: rgba(255,255,255,0.08); border-radius: 50%; color: var(--t1); font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .cert-lightbox-close:hover { background: rgba(255,255,255,0.16); }
+.about-hero-visual { margin-top: 28px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 460px; }
+.about-hero-badge { background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+.about-hero-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bid-up); box-shadow: 0 0 8px var(--bid-up); flex-shrink: 0; }
+.about-hero-badge-text { font-size: 11.5px; color: var(--t2); font-family: var(--font-mono); letter-spacing: 0.04em; }
+
+/* === 聯繫我們區（form + 聯絡資訊雙欄） === */
+.contact-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; margin-bottom: 34px; }
+.contact-form-box { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 28px; min-width: 0; }
+.contact-form-box h3 { font-size: 16px; color: var(--t1); margin-bottom: 18px; }
+.contact-form { display: grid; gap: 14px; }
+.contact-name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.contact-form input, .contact-form select, .contact-form textarea {
+  padding: 11px 14px; background: var(--bg-3); border: 1px solid var(--line); border-radius: 6px;
+  color: var(--t1); font-size: 13.5px; font-family: inherit; width: 100%; min-width: 0;
+}
+.contact-form textarea { resize: vertical; }
+.contact-info-col { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.contact-info-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+.contact-info-card .lbl { font-size: 11px; color: var(--t4); font-family: var(--font-mono); letter-spacing: 0.1em; margin-bottom: 8px; }
+.contact-info-card .hotline { font-size: 20px; color: var(--t1); font-family: var(--font-mono); font-weight: 600; }
+.contact-info-card .addr { font-size: 14px; color: var(--t1); line-height: 1.55; }
+.contact-info-card .meta { font-size: 12px; color: var(--t3); margin-top: 8px; }
 
 @media (max-width: 640px) {
   .cert-img-wrap { height: 220px; }
   .cert-img-wrap img { max-height: 180px; max-width: 85%; }
+  .contact-grid { grid-template-columns: 1fr !important; gap: 18px !important; margin-bottom: 28px !important; }
+  .contact-form-box { padding: 22px 18px !important; }
+  .contact-form-box h3 { font-size: 15px !important; margin-bottom: 14px !important; }
+  .contact-form { gap: 12px !important; }
+  .contact-form input, .contact-form select, .contact-form textarea {
+    font-size: 16px !important; padding: 12px 14px !important;
+  }
+  .contact-name-row { gap: 10px !important; }
+  .contact-info-card { padding: 18px 16px !important; }
+  .contact-info-card .hotline { font-size: 18px !important; }
+  .contact-info-card .addr { font-size: 13.5px !important; }
 }
-
-.about-hero-visual {
-  margin-top: 28px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  max-width: 460px;
-}
-.about-hero-badge {
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.about-hero-badge-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--bid-up);
-  box-shadow: 0 0 8px var(--bid-up);
-  flex-shrink: 0;
-}
-.about-hero-badge-text {
-  font-size: 11.5px;
-  color: var(--t2);
-  font-family: var(--font-mono);
-  letter-spacing: 0.04em;
-}
+@media (max-width: 419px) { .contact-form-box { padding: 18px 14px !important; } }
 </style>
 </head>
 <body data-page="about">
@@ -226,9 +149,7 @@
   <div class="page-section-inner">
     <div class="section-eyebrow">VALUES · 企業價值觀</div>
     <h2 class="section-title">成人 達己</h2>
-    <p class="section-lead" style="font-size:17px; color:var(--t2);">
-      當我們為他人服務時，我們真正成就了自己。
-    </p>
+    <p class="section-lead" style="font-size:17px; color:var(--t2);">當我們為他人服務時，我們真正成就了自己。</p>
 
     <div class="prose" style="margin-bottom:40px;">
       <p>我們相信，成人是一種更為精彩和神奇的達己。歷史長河中，一直可以找到無數這樣的見證。金融翹楚巴菲特說：<em style="color:var(--t1);">「如果你屬於人類中那最幸運的 1%，那麼你就應該考慮其他 99% 的人，這是你應該做的。」</em>若塵一般微弱的價值觀，卻是巴菲特成就的原因之一。</p>
@@ -358,38 +279,38 @@
       讓可能的機會在探討中浮現。現實中潛藏著很多不易覺察的機會，也存在很多容易忽視的風險，我們可以協助您運用適當的工具，在合適的時間，部署合理的投資。
     </p>
 
-    <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:32px; margin-bottom:34px;">
-      <div style="background:var(--bg-2); border:1px solid var(--line); border-radius:12px; padding:28px;">
-        <h3 style="font-size:16px; color:var(--t1); margin-bottom:18px;">便捷郵件</h3>
-        <form onsubmit="event.preventDefault(); alert('Demo 站表單,實際版會接通客服 CRM');" style="display:grid; gap:14px;">
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-            <input type="text" placeholder="姓氏" required style="padding:11px 14px; background:var(--bg-3); border:1px solid var(--line); border-radius:6px; color:var(--t1); font-size:13.5px; font-family:inherit;">
-            <input type="text" placeholder="名字" required style="padding:11px 14px; background:var(--bg-3); border:1px solid var(--line); border-radius:6px; color:var(--t1); font-size:13.5px; font-family:inherit;">
+    <div class="contact-grid">
+      <div class="contact-form-box">
+        <h3>便捷郵件</h3>
+        <form class="contact-form" onsubmit="event.preventDefault(); alert('Demo 站表單,實際版會接通客服 CRM');">
+          <div class="contact-name-row">
+            <input type="text" placeholder="姓氏" required>
+            <input type="text" placeholder="名字" required>
           </div>
-          <input type="email" placeholder="電子郵件" required style="padding:11px 14px; background:var(--bg-3); border:1px solid var(--line); border-radius:6px; color:var(--t1); font-size:13.5px; font-family:inherit;">
-          <input type="text" placeholder="電話 / 微信 / WhatsApp" style="padding:11px 14px; background:var(--bg-3); border:1px solid var(--line); border-radius:6px; color:var(--t1); font-size:13.5px; font-family:inherit;">
-          <select required style="padding:11px 14px; background:var(--bg-3); border:1px solid var(--line); border-radius:6px; color:var(--t1); font-size:13.5px; font-family:inherit;">
+          <input type="email" placeholder="電子郵件" required>
+          <input type="text" placeholder="電話 / 微信 / WhatsApp">
+          <select required>
             <option value="">請選擇您的事項</option>
             <option>希望回覆</option>
             <option>開戶咨詢</option>
             <option>預約訪談</option>
             <option>活動報名</option>
           </select>
-          <textarea rows="4" placeholder="留言信息" style="padding:11px 14px; background:var(--bg-3); border:1px solid var(--line); border-radius:6px; color:var(--t1); font-size:13.5px; resize:vertical; font-family:inherit;"></textarea>
+          <textarea rows="4" placeholder="留言信息"></textarea>
           <button type="submit" class="big-btn" style="justify-content:center;">提交 →</button>
         </form>
       </div>
 
-      <div style="display:grid; gap:14px; align-content:start;">
-        <div style="background:var(--bg-2); border:1px solid var(--line); border-radius:10px; padding:20px;">
-          <div style="font-size:11px; color:var(--t4); font-family:var(--font-mono); letter-spacing:0.1em; margin-bottom:8px;">咨詢熱線</div>
-          <div style="font-size:20px; color:var(--t1); font-family:var(--font-mono); font-weight:600;">+852 · 3521 · 0369</div>
-          <div style="font-size:12px; color:var(--t3); margin-top:6px;">服務時間：週一至週五 09:00 – 18:00</div>
+      <div class="contact-info-col">
+        <div class="contact-info-card">
+          <div class="lbl">咨詢熱線</div>
+          <div class="hotline">+852 · 3521 · 0369</div>
+          <div class="meta">服務時間：週一至週五 09:00 – 18:00</div>
         </div>
-        <div style="background:var(--bg-2); border:1px solid var(--line); border-radius:10px; padding:20px;">
-          <div style="font-size:11px; color:var(--t4); font-family:var(--font-mono); letter-spacing:0.1em; margin-bottom:8px;">辦公地址</div>
-          <div style="font-size:14px; color:var(--t1); line-height:1.55;">香港灣仔海傍告士打道 128 號<br>祥豐大廈 21 樓 E 室</div>
-          <div style="font-size:12px; color:var(--t3); margin-top:8px;">事先請以任何方式預約安排</div>
+        <div class="contact-info-card">
+          <div class="lbl">辦公地址</div>
+          <div class="addr">香港灣仔海傍告士打道 128 號<br>祥豐大廈 21 樓 E 室</div>
+          <div class="meta">事先請以任何方式預約安排</div>
         </div>
       </div>
     </div>
