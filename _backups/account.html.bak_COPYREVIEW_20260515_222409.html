@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>開戶交易 · CD Markets</title>
+<meta name="description" content="CD Markets 開戶流程、交易規則、交易方式、有關倉息與客戶中心。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/main.css">
+<style>
+/* 開戶頁專屬樣式 */
+
+/* 開戶 4 步驟 — PC 4 欄，平板 2 欄，手機 1 欄 */
+.account-steps-4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+@media (max-width: 900px) {
+  .account-steps-4col { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .account-steps-4col { grid-template-columns: 1fr !important; }
+}
+
+/* 一週倉息日曆 — PC 7 欄，平板 4 欄分行，手機 2 欄 */
+.interest-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 34px;
+}
+.interest-day {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 10px;
+  text-align: center;
+  position: relative;
+}
+.interest-day.is-big-rate {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  border-width: 1.5px;
+}
+.interest-day-tag {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: #0A0B0D;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.interest-day-en {
+  font-size: 11px;
+  color: var(--t4);
+  font-family: var(--font-mono);
+  margin-bottom: 8px;
+}
+.interest-day.is-big-rate .interest-day-en { color: var(--accent); }
+.interest-day-zh {
+  font-size: 13px;
+  color: var(--t2);
+}
+.interest-day.is-big-rate .interest-day-zh { color: var(--t1); font-weight: 600; }
+.interest-day-val {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.interest-day.is-big-rate .interest-day-val { font-size: 18px; font-weight: 700; }
+.interest-day-val.muted { color: var(--t4); font-weight: 400; }
+@media (max-width: 900px) {
+  .interest-week { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+}
+@media (max-width: 540px) {
+  .interest-week { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .interest-day { padding: 14px 8px; }
+  .interest-day-en { font-size: 10px; margin-bottom: 6px; }
+  .interest-day-zh { font-size: 12px; }
+  .interest-day-val { font-size: 12px; margin-top: 8px; }
+  .interest-day.is-big-rate .interest-day-val { font-size: 16px; }
+  .interest-day-tag { font-size: 9px; padding: 2px 6px; top: -8px; }
+}
+
+/* 合約規則 spec-table — 手機可橫向 scroll */
+.spec-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 16px;
+}
+
+/* CTA 雙按鈕區（Hero 下方） */
+.subhero-cta-row {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 480px) {
+  .subhero-cta-row { gap: 10px; }
+  .subhero-cta-row .big-btn { flex: 1 1 auto; justify-content: center; }
+}
+
+/* 客戶中心 login 卡 */
+.login-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto;
+}
+@media (max-width: 640px) {
+  .login-card { padding: 28px 22px; }
+}
+</style>
+</head>
+<body data-page="account">
+
+<div id="topbar-mount"></div>
+
+<section class="subhero">
+  <div class="subhero-inner">
+    <nav class="breadcrumb">
+      <a href="index.html">首頁</a>
+      <span class="sep">/</span>
+      <span>開戶交易</span>
+    </nav>
+    <div class="subhero-eyebrow">ACCOUNT &amp; TRADING · 開戶交易</div>
+    <h1 class="subhero-title">
+      開戶零門檻<br>
+      <span class="light">交易規則公開透明。</span>
+    </h1>
+    <p class="subhero-sub">
+      新開戶不收費、無最低資金要求。本頁完整列出 CD Markets 的開戶流程、合約規則、交易方式、倉息計算與帳戶管理規則，讓您在出手前對每一條規則都清楚明白。
+    </p>
+    <div class="subhero-cta-row">
+      <a href="#open" class="big-btn">立即開啟帳戶 →</a>
+      <a href="#rules" class="big-btn ghost">查看交易規則</a>
+    </div>
+  </div>
+</section>
+
+<!-- 1. 開啟實金帳戶 -->
+<section class="page-section" id="open">
+  <div class="page-section-inner">
+    <div class="section-eyebrow">STEP 1 · 開啟帳戶</div>
+    <h2 class="section-title">開啟實金帳戶</h2>
+    <p class="section-lead">
+      四步完成開戶。整個流程嚴格遵循「認識你的客戶」(KYC) 規範，保障每位客戶身份的安全性與真實性。
+    </p>
+
+    <div class="account-steps-4col">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-title">下載並填寫開戶表格</div>
+        <div class="step-desc">於「表格下載」頁面取得客戶協議、買賣條款及細則等文件，認真閱讀後填妥並簽署。</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-title">提交身份證明文件</div>
+        <div class="step-desc">提供身份證或護照副本、銀行卡或月結單副本、有效住址證明，連同開戶表格一併提交。</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-title">通過 KYC 審核</div>
+        <div class="step-desc">客服將就提供資料進行驗證程序，並於有需要時致電確認身份。審核通過後即可開立帳戶。</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-title">入金開始交易</div>
+        <div class="step-desc">透過電匯或快速匯款方式存入資金。款項到帳後，您即可登入交易平台開始貴金屬交易。</div>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:32px;">
+      <div class="note">
+        <strong>零門檻開戶</strong><br>
+        CD Markets 開戶不收費、新開戶零門檻、沒有最低資金要求。同時提供模擬帳戶供您熟悉交易平台操作。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 表格下載 -->
+<section class="page-section" id="forms">
+  <div class="page-section-inner">
+    <div class="section-eyebrow">DOCUMENTS · 表格下載</div>
+    <h2 class="section-title">客戶文件下載</h2>
+    <p class="section-lead">
+      請下載並認真閱讀有關協議，填妥及簽署有關文件後，連同所需文件提交給我們。所有文件提供簡體與繁體兩個版本。
+    </p>
+
+    <div class="spec-table-wrap">
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>文件名稱</th>
+            <th>更新日期</th>
+            <th>簡體版</th>
+            <th>繁體版</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>客戶協議</td>
+            <td class="value">2025-07-01</td>
+            <td><a href="#" style="color:var(--accent);">下載 ↓</a></td>
+            <td><a href="#" style="color:var(--accent);">下載 ↓</a></td>
+          </tr>
+          <tr>
+            <td>港金買賣條款及細則</td>
+            <td class="value">2025-07-01</td>
+            <td><a href="#" style="color:var(--accent);">下載 ↓</a></td>
+            <td><a href="#" style="color:var(--accent);">下載 ↓</a></td>
+          </tr>
+          <tr>
+            <td>客戶交易須知</td>
+            <td class="value">2025-07-01</td>
+            <td><a href="#" style="color:var(--accent);">下載 ↓</a></td>
+            <td><a href="#" style="color:var(--accent);">下載 ↓</a></td>
+          </tr>
+          <tr>
+            <td>變更個人資料表</td>
+            <td class="value">2025-07-01</td>
+            <td><a href="#" style="color:var(--accent);">下載 ↓</a></td>
+            <td><a href="#" style="color:var(--accent);">下載 ↓</a></td>
+          </tr>
+          <tr>
+            <td>提款申請表</td>
+            <td class="value">2025-07-01</td>
+            <td><a href="#" style="color:var(--accent);">下載 ↓</a></td>
+            <td><a href="#" style="color:var(--accent);">下載 ↓</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose" style="margin-top:24px;">
+      <div class="warn">
+        <strong>關於人民幣公斤條交易（中國地區客戶）</strong><br>
+        由於港金公斤條交易是以人民幣作為計價/結算單位，中國國內客戶不能直接電匯人民幣到香港，款項到港後會以美元或港幣形式存入，本公司收到款項後在中國銀行再兌換成人民幣，這就會產生匯差。換言之，若客戶存入人民幣 100,000 元，實到帳約為 98,500 元左右，視乎當天匯率而定。詳情可向客服或您的代理查詢。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 交易規則 -->
+<section class="page-section" id="rules">
+  <div class="page-section-inner">
+    <div class="section-eyebrow">CONTRACT SPECS · 交易規則</div>
+    <h2 class="section-title">合約交易規則</h2>
+    <p class="section-lead">
+      以下為倫敦金（GOLD）與港金公斤條（LKG）兩大主要合約的完整交易規則。更新日期：2025-03-01。
+    </p>
+
+    <!-- 倫敦金規則 -->
+    <h3 style="font-size:20px; color:var(--t1); margin:24px 0 14px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span class="chip accent" style="margin:0;">GOLD · 倫敦金</span>
+    </h3>
+    <div class="spec-table-wrap">
+      <table class="spec-table">
+        <tbody>
+          <tr><td class="label">合約單位</td><td class="value">100 盎司</td></tr>
+          <tr><td class="label">保證金</td><td class="value">US$ 3,000 / 手</td></tr>
+          <tr><td class="label">星期五或長假期保證金</td><td>收市時過市按金為 US$ 3,000 / 手。若帳戶淨值不足，本公司會以收市價為客戶減低持倉量直至帳戶淨值有足夠按金過市。</td></tr>
+          <tr><td class="label">開倉手續費</td><td class="value">US$ 0 – 50 / 手</td></tr>
+          <tr><td class="label">平倉手續費</td><td class="value">0</td></tr>
+          <tr><td class="label">報價點差</td><td>隨市場情況而定（浮動點差），一般約 40 美分左右</td></tr>
+          <tr><td class="label">限價掛單必需距市價</td><td class="value">200 美分</td></tr>
+          <tr><td class="label">持倉過市利息</td><td>週三為大息日，週三持倉過市收/付三天利息。星期六、日持倉過市不收取/支付利息。</td></tr>
+          <tr><td class="label">鎖單保證金</td><td class="value">US$ 500 / 套</td></tr>
+          <tr><td class="label">結算時間</td><td class="value">每天凌晨 04:55</td></tr>
+          <tr><td class="label">商品交易時間</td><td>週一 07:05 至週六 02:55（每天 04:55–07:05 為結算時間不予交易）</td></tr>
+          <tr><td class="label">強制平倉觸發</td><td><span class="chip down" style="margin:0;">淨值 / 佔用保證金 ≤ 10%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 公斤條規則 -->
+    <h3 style="font-size:20px; color:var(--t1); margin:34px 0 14px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span class="chip accent" style="margin:0;">LKG · 港金公斤條</span>
+    </h3>
+    <div class="spec-table-wrap">
+      <table class="spec-table">
+        <tbody>
+          <tr><td class="label">合約單位</td><td class="value">1,000 克 / 1 公斤</td></tr>
+          <tr><td class="label">保證金</td><td class="value">RMB 5,000 / 手</td></tr>
+          <tr><td class="label">開倉手續費</td><td class="value">RMB 200 / 手</td></tr>
+          <tr><td class="label">平倉手續費</td><td class="value">0</td></tr>
+          <tr><td class="label">報價點差</td><td>隨市場情況而定，一般為人民幣 0.20 元</td></tr>
+          <tr><td class="label">限價掛單必需距市價</td><td class="value">人民幣 2.00 元</td></tr>
+          <tr><td class="label">鎖單保證金</td><td class="value">RMB 5,000 / 套</td></tr>
+          <tr><td class="label">結算時間</td><td class="value">每天凌晨 03:30</td></tr>
+          <tr><td class="label">商品交易時間</td><td>週一 08:05 至週六 03:30（每天 03:30–08:05 為結算時間不予交易）</td></tr>
+          <tr><td class="label">強制平倉觸發</td><td><span class="chip down" style="margin:0;">淨值 / 佔用保證金 ≤ 20%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 盈虧公式 -->
+    <h3 style="font-size:18px; color:var(--t1); margin:34px 0 14px;">盈虧計算公式</h3>
+    <div class="formula">
+      ( 賣出價 − 買入價 ) × 合約單位 × 合約數量 ± 利息 − 手續費 = 盈虧
+    </div>
+
+    <div class="prose">
+      <p><strong>倫敦金範例</strong>：客戶在同一天內先沽出及其後買入 1 手本地倫敦金合約。賣出價每盎司 US$ 1,200，買入價每盎司 US$ 1,180。盈虧 = (1,200 − 1,180) × 100 × 1 − 50 = <strong style="color:var(--bid-up);">US$ 1,950</strong></p>
+      <p><strong>公斤條範例</strong>：客戶在同一天內先沽出及其後買入 1 手公斤條合約。賣出價 RMB 350.30，買入價 RMB 340.50。盈虧 = (350.30 − 340.50) × 1000 × 1 − 200 = <strong style="color:var(--bid-up);">RMB 9,600</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 交易方式 -->
+<section class="page-section" id="channels">
+  <div class="page-section-inner">
+    <div class="section-eyebrow">TRADING CHANNELS · 交易方式</div>
+    <h2 class="section-title">三種交易方式</h2>
+    <p class="section-lead">
+      CD Markets 提供 24 小時網上交易平台 MetaTrader 4，支援即時交易與限價交易兩種下單方式。
+    </p>
+
+    <div class="card-grid cols-3">
+      <div class="spec-card">
+        <div class="spec-card-head">
+          <div class="spec-card-title">交易工具</div>
+          <div class="spec-card-tag">MT4</div>
+        </div>
+        <div class="spec-card-desc">客戶使用本公司提供之 24 小時網上交易平台（MetaTrader 4）進行交易。支援桌面與行動裝置同步登入。</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-card-head">
+          <div class="spec-card-title">即時交易</div>
+          <div class="spec-card-tag accent">INSTANT</div>
+        </div>
+        <div class="spec-card-desc">雙擊交易平台報價視窗中的相應產品並點選買或賣方即可。彈出式視窗中的報價是用於國際實質交易的最新報價，行情波動時可能只在短時間內有效。</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-card-head">
+          <div class="spec-card-title">限價交易</div>
+          <div class="spec-card-tag accent">LIMIT</div>
+        </div>
+        <div class="spec-card-desc">在 MetaTrader 4 中設定限價單。LLG/LLS 以 G.T.W. 形式執行，LKG 以 G.T.T. 形式執行。詳細規則見下方說明。</div>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:32px;">
+      <p><strong>LLG / LLS（現貨黃金/白銀）— G.T.W. 模式</strong><br>
+      所有新限價單以 GOOD TILL WEEKEND（G.T.W.）形式執行，代表該指令將會一直有效至星期五收市或市場假期收市前，除非已經成交或客戶取消；但是在原有在倉單上加設的止損和止盈限價單將一直生效，直至成交或客戶取消。</p>
+
+      <p><strong>LKG（港金公斤條）— G.T.T. 模式</strong><br>
+      所有限價單以 GOOD TILL TODAY（G.T.T.）形式執行，代表該指令將會一直在當天有效直至成交或客戶取消為止。</p>
+
+      <div class="warn">
+        <strong>跳空風險聲明</strong><br>
+        如遇上市場劇烈波動時，價格產生較大變化導致跳空現象，有關指令的成交價不論盈虧將會以跳空後的第一口價執行。客戶將要為跳空後執行的成交價所產生的任何虧損負責。客戶以限價指令交易時，交易商品的限價必須設定在當時市價之外的市場差距點數，否則本公司將拒絕接受客戶的買賣指令。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 交易需知 -->
+<section class="page-section" id="attention">
+  <div class="page-section-inner">
+    <div class="section-eyebrow">TRADING ATTENTION · 交易需知</div>
+    <h2 class="section-title">異常交易的聲明及處理</h2>
+    <p class="section-lead">
+      為建立並提供一個公平及公正的交易平台讓客戶進行交易，公司將對客戶交易帳戶內出現的以下異常交易活動做出進一步審核。
+    </p>
+
+    <h3 style="font-size:17px; color:var(--t1); margin-bottom:14px;">六種異常交易類型</h3>
+    <div class="card-grid cols-3" style="margin-bottom:34px;">
+      <div class="spec-card">
+        <div class="spec-card-head"><div class="spec-card-title">01 · 高頻短炒</div></div>
+        <div class="spec-card-desc">於 180 秒或以內完成開倉平倉活動。</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-card-head"><div class="spec-card-title">02 · 外掛交易</div></div>
+        <div class="spec-card-desc">使用惡意交易或外掛軟件，同一帳戶、同一時間做出大量交易，總數超過任何產品的單一交易上限。</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-card-head"><div class="spec-card-title">03 · 多帳戶高頻</div></div>
+        <div class="spec-card-desc">使用同一裝置並以多個不同帳戶進行高頻交易。</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-card-head"><div class="spec-card-title">04 · 操控市場</div></div>
+        <div class="spec-card-desc">透過影響國際市場價格導致該產品出現急劇波動而非法獲利者。</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-card-head"><div class="spec-card-title">05 · 對沖套利</div></div>
+        <div class="spec-card-desc">以不同交易帳戶作不同方向交易對沖。</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-card-head"><div class="spec-card-title">06 · 突發大量</div></div>
+        <div class="spec-card-desc">突然間的大量交易，例如從 0.01 手突然變成 5-10 手左右的交易。</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:17px; color:var(--t1); margin-bottom:14px;">處理方式</h3>
+    <p style="font-size:14px; color:var(--t3); margin-bottom:18px;">如交易帳戶中出現以上異常交易情況，本公司風控部門會對該帳戶進行審核，期間將作出 <span class="chip down" style="margin:0; font-size:11px;">3 個月凍結處理</span>。若發現屬於不正當交易，將依下列方式處理：</p>
+
+    <div class="spec-table-wrap">
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>情況</th>
+            <th>處理方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>審核週期內交易單虧損達本金 6% 或以上</td>
+            <td>不作任何處理，客戶的取款金額將發放給客戶。</td>
+          </tr>
+          <tr>
+            <td>審核週期內交易單虧損低於本金 6%</td>
+            <td>收取取款金額的 <strong style="color:var(--bid-down);">6%</strong> 作為異常交易產生的成本費用，扣除手續費後餘額發放給客戶。</td>
+          </tr>
+          <tr>
+            <td>審核週期內交易單為盈利</td>
+            <td>扣除所有盈利並收取取款金額的 <strong style="color:var(--bid-down);">6%</strong> 作為異常交易成本費用，再將餘額發放給客戶。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose" style="margin-top:24px;">
+      <p style="font-size:13px; color:var(--t4);">如遇上述定義以外的疑似異常交易之帳戶，公司將可能在進一步審核後將其列入凍結名單。本公司保留最終的解釋及更改上述任何條款與細則的權利。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 有關倉息 -->
+<section class="page-section" id="interest">
+  <div class="page-section-inner">
+    <div class="section-eyebrow">OVERNIGHT INTEREST · 有關倉息</div>
+    <h2 class="section-title">過夜利息計算</h2>
+    <p class="section-lead">
+      根據國際銀行慣例，現貨國際金融商品交易在 2 個交易日後結算。每天紐約時間下午 17:00（北京時間凌晨 05:00）如果開倉部位沒有平倉，該部位將自動延展至下一個交易日並自動存入或扣除過市利息。
+    </p>
+
+    <!-- 一週日曆 -->
+    <h3 style="font-size:17px; color:var(--t1); margin-bottom:18px;">一週倉息日曆</h3>
+    <div class="interest-week">
+      <div class="interest-day">
+        <div class="interest-day-en">MON</div>
+        <div class="interest-day-zh">星期一</div>
+        <div class="interest-day-val">1 天</div>
+      </div>
+      <div class="interest-day">
+        <div class="interest-day-en">TUE</div>
+        <div class="interest-day-zh">星期二</div>
+        <div class="interest-day-val">1 天</div>
+      </div>
+      <div class="interest-day is-big-rate">
+        <div class="interest-day-tag">大息日</div>
+        <div class="interest-day-en">WED</div>
+        <div class="interest-day-zh">星期三</div>
+        <div class="interest-day-val">3 天</div>
+      </div>
+      <div class="interest-day">
+        <div class="interest-day-en">THU</div>
+        <div class="interest-day-zh">星期四</div>
+        <div class="interest-day-val">1 天</div>
+      </div>
+      <div class="interest-day">
+        <div class="interest-day-en">FRI</div>
+        <div class="interest-day-zh">星期五</div>
+        <div class="interest-day-val muted">—</div>
+      </div>
+      <div class="interest-day">
+        <div class="interest-day-en">SAT</div>
+        <div class="interest-day-zh">星期六</div>
+        <div class="interest-day-val">1 天</div>
+      </div>
+      <div class="interest-day">
+        <div class="interest-day-en">SUN</div>
+        <div class="interest-day-zh">星期日</div>
+        <div class="interest-day-val muted">—</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:17px; color:var(--t1); margin-bottom:14px;">Swap Value / 利息費率</h3>
+    <div class="spec-table-wrap">
+      <table class="spec-table" style="margin-bottom:0;">
+        <thead>
+          <tr>
+            <th>交易品種</th>
+            <th>買入 (US$ / 每日 / 手)</th>
+            <th>賣出 (US$ / 每日 / 手)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>GOLD · 倫敦金</td><td class="value down">-6.90</td><td class="value down">-1.70</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12px; color:var(--t4); font-family:var(--font-mono); margin: 16px 0 24px;">更新日期：2025-03-01</p>
+
+    <div class="prose">
+      <p><strong>結算邏輯</strong></p>
+      <ul>
+        <li>週一持倉到週二 → 結算日為週三到週四 → 支付/收取 <strong>1 天</strong>利息</li>
+        <li>週二持倉到週三 → 結算日為週四到週五 → 支付/收取 <strong>1 天</strong>利息</li>
+        <li><strong style="color:var(--accent);">週三持倉到週四 → 結算日為週五到下週一 → 支付/收取 3 天利息（含週末週日）</strong></li>
+        <li>週四持倉到週五 → 結算日為週一到週二 → 支付/收取 <strong>1 天</strong>利息</li>
+        <li>週五持倉到下週一 → 結算日為週二到週三 → 支付/收取 <strong>1 天</strong>利息</li>
+      </ul>
+      <div class="note">
+        <strong>大息日</strong>：星期三因跨越週末結算邏輯，被稱為大息日，一個星期的總利息是七天的總和。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. 客戶中心 -->
+<section class="page-section" id="center">
+  <div class="page-section-inner">
+    <div class="section-eyebrow">CLIENT PORTAL · 客戶中心</div>
+    <h2 class="section-title">客戶中心入口</h2>
+    <p class="section-lead">
+      已開戶客戶可透過下方入口登入 CD Markets CRM 系統，管理帳戶資訊、查詢交易記錄、申請出入金與聯絡客服。
+    </p>
+
+    <div class="login-card">
+      <div style="font-size:18px; color:var(--t1); margin-bottom:8px; font-weight:600;">用戶登錄</div>
+      <div style="font-size:13px; color:var(--t3); margin-bottom:24px;">接入登錄到用戶 CRM 系統</div>
+      <a href="#" class="big-btn" style="width:100%; justify-content:center;">前往登入頁面 →</a>
+      <div style="margin-top:18px; padding-top:18px; border-top:1px solid var(--line-faint);">
+        <a href="#open" style="font-size:13px; color:var(--accent);">尚未開戶？立即申請 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-mount"></div>
+<div id="drawer-mount"></div>
+
+<script src="assets/js/components.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>產品介紹 · CD Markets</title>
+<meta name="description" content="CD Markets 提供實金訂購、倫敦金銀現貨、衍生品期貨、投資學堂等貴金屬與金融衍生品交易服務。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/main.css">
+<style>
+/* 產品介紹頁面專屬樣式 */
+.product-with-image {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px;
+  transition: all 220ms;
+}
+.product-with-image:hover {
+  border-color: var(--line-strong);
+  background: var(--bg-3);
+  transform: translateY(-2px);
+}
+.product-img-box {
+  background: linear-gradient(135deg, rgba(254,201,73,0.08) 0%, rgba(254,201,73,0.02) 100%);
+  border: 1px solid rgba(254,201,73,0.15);
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+}
+.product-img-box img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(254,201,73,0.15));
+}
+.product-info-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+@media (max-width: 900px) {
+  .product-with-image { grid-template-columns: 1fr; gap: 20px; padding: 22px; }
+  .product-img-box { min-height: 200px; padding: 18px; }
+  .product-img-box img { max-height: 160px; }
+}
+
+/* 倫敦金銀 hero banner */
+.llg-hero-banner {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 220px;
+  margin-bottom: 28px;
+  background: var(--bg-2);
+}
+.llg-hero-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+.llg-hero-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(10,11,13,0.85) 0%, rgba(10,11,13,0.4) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 36px;
+}
+.llg-hero-banner-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.llg-hero-banner-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--t1);
+  letter-spacing: -0.01em;
+  max-width: 480px;
+  line-height: 1.25;
+}
+@media (max-width: 640px) {
+  .llg-hero-banner { height: 180px; }
+  .llg-hero-banner-overlay { padding: 20px 22px; }
+  .llg-hero-banner-title { font-size: 20px; }
+}
+
+/* 衍生品 6 類 icon 卡片 */
+.deriv-category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.deriv-cat-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 16px;
+  text-align: center;
+  transition: all 200ms;
+  cursor: default;
+}
+.deriv-cat-card:hover {
+  background: var(--bg-3);
+  border-color: var(--accent);
+}
+.deriv-cat-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-3);
+  border-radius: 50%;
+  font-size: 24px;
+}
+.deriv-cat-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+.deriv-cat-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t1);
+  margin-bottom: 2px;
+}
+.deriv-cat-en {
+  font-size: 10px;
+  color: var(--t4);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+}
+@media (max-width: 640px) {
+  .deriv-category-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body data-page="products">
+
+<div id="topbar-mount"></div>
+
+<!-- ============================================================
+     Subpage Hero
+     ============================================================ -->
+<section class="subhero">
+  <div class="subhero-inner">
+    <nav class="breadcrumb">
+      <a href="index.html">首頁</a>
+      <span class="sep">/</span>
+      <span>產品介紹</span>
+    </nav>
+    <div class="subhero-eyebrow">PRODUCTS · 四大產品線</div>
+    <h1 class="subhero-title">
+      貴金屬與衍生品<br>
+      <span class="light">為投資者打開全球市場的大門。</span>
+    </h1>
+    <p class="subhero-sub">
+      從實物黃金到倫敦現貨，從六大類國際期貨到投資學堂，CD Markets 為您提供完整的貴金屬與金融衍生品交易服務，搭配香港持牌交易商級別的合規與風控保障。
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     Tab 切換
+     ============================================================ -->
+<section class="page-section">
+  <div class="page-section-inner">
+    <div class="tabs" id="product-tabs">
+      <button class="tab-btn is-active" data-tab="gold">實金訂購</button>
+      <button class="tab-btn" data-tab="llg">倫敦金銀</button>
+      <button class="tab-btn" data-tab="derivatives">衍生品</button>
+      <button class="tab-btn" data-tab="academy">投資學堂</button>
+    </div>
+
+    <!-- Tab 1: 實金訂購 -->
+    <div class="tab-panel is-active" id="panel-gold">
+      <div class="section-eyebrow">PHYSICAL GOLD · 實物黃金</div>
+      <h2 class="section-title">實物黃金訂購</h2>
+      <p class="section-lead">
+        實物黃金是人類永恆的財富物，是資產和財富保值的第一選擇，能有效免疫國際地緣衝突等不可抗力風險。CD Markets 提供 CGSE 標準規格的實金訂購服務。
+      </p>
+
+      <div style="display:grid; gap:20px;">
+        <!-- 公斤條 -->
+        <div class="product-with-image reveal">
+          <div class="product-img-box">
+            <img src="assets/img/gold-bar-1kg.png"
+                 alt="港金公斤條 999.9 純金 1KG"
+                 loading="lazy"
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:64px;color:var(--accent);\'>🪙</div>';">
+          </div>
+          <div class="product-info-side">
+            <div>
+              <div class="spec-card-head">
+                <div class="spec-card-title" style="font-size:20px;">港金公斤條</div>
+                <div class="spec-card-tag accent">LKG · 1KG</div>
+              </div>
+              <div class="spec-card-meta">CGSE Standard · 999.9 Purity</div>
+              <ul class="spec-card-list" style="margin-top:12px;">
+                <li>成色:&nbsp;&nbsp;999.9%</li>
+                <li>重量:&nbsp;&nbsp;1 公斤 (1000 g)</li>
+                <li>香港黃金交易所認可規格</li>
+                <li>支援即時訂購與實物交收</li>
+              </ul>
+            </div>
+            <div style="margin-top:18px;">
+              <a href="account.html" class="big-btn ghost" style="font-size:13px; padding:10px 20px;">咨詢訂購 →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 五兩條 -->
+        <div class="product-with-image reveal">
+          <div class="product-img-box">
+            <img src="assets/img/gold-bar-5tael.png"
+                 alt="五兩 999.9 金條 250g"
+                 loading="lazy"
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:64px;color:var(--accent);\'>🪙</div>';">
+          </div>
+          <div class="product-info-side">
+            <div>
+              <div class="spec-card-head">
+                <div class="spec-card-title" style="font-size:20px;">五兩 999.9 金條</div>
+                <div class="spec-card-tag accent">5 TAEL · 250G</div>
+              </div>
+              <div class="spec-card-meta">CGSE Standard · 999.9 Purity</div>
+              <ul class="spec-card-list" style="margin-top:12px;">
+                <li>成色:&nbsp;&nbsp;999.9%</li>
+                <li>重量:&nbsp;&nbsp;五兩 (250 g)</li>
+                <li>傳統香港金條規格</li>
+                <li>適合中長線實物配置</li>
+              </ul>
+            </div>
+            <div style="margin-top:18px;">
+              <a href="account.html" class="big-btn ghost" style="font-size:13px; padding:10px 20px;">咨詢訂購 →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose" style="margin-top:34px;">
+        <div class="note">
+          <strong>關於實物黃金</strong><br>
+          實物黃金訂購需由客戶於交易帳戶完成相應金額存款後辦理。提取實物可選擇於本公司辦公地點親自領取，或委由本公司指定物流安排運送，相關手續費用以實際情況計算。
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: 倫敦金銀 -->
+    <div class="tab-panel" id="panel-llg">
+      <div class="llg-hero-banner">
+        <img src="assets/img/precious-metals-banner.jpg"
+             alt="倫敦金銀 貴金屬交易"
+             loading="lazy"
+             onerror="this.style.display='none';">
+        <div class="llg-hero-banner-overlay">
+          <div class="llg-hero-banner-eyebrow">LONDON SPOT · 倫敦現貨</div>
+          <h2 class="llg-hero-banner-title">貴金屬是人類最核心的<br>避險與投資金融品種</h2>
+        </div>
+      </div>
+
+      <p class="section-lead" style="margin-top:0;">
+        倫敦金銀價格是國際基準，屬即期交易合約，具備高流動性與避險屬性，是資產配置和對沖通脹的重要工具。
+      </p>
+
+      <div class="card-grid cols-2" style="margin-bottom:34px;">
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <div class="spec-card-title">倫敦黃金</div>
+            <div class="spec-card-tag up">XAUUSD</div>
+          </div>
+          <div class="spec-card-meta">合約單位 100 盎司 · 5% 保證金</div>
+          <div class="spec-card-desc">全球貴金屬市場核心交易品種，T+0、24 小時交易、收益潛力大。</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <div class="spec-card-title">倫敦白銀</div>
+            <div class="spec-card-tag up">XAGUSD</div>
+          </div>
+          <div class="spec-card-meta">合約單位 2500 盎司 · 5% 保證金</div>
+          <div class="spec-card-desc">流動性高、波動性顯著，是貴金屬投資組合的重要配置工具。</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:18px; color:var(--t1); margin-bottom:14px;">功能與特性</h3>
+      <div class="chips" style="margin-bottom:32px;">
+        <span class="chip up">避險、對沖、套利</span>
+        <span class="chip up">T+0 槓桿交易</span>
+        <span class="chip">交易十分活躍</span>
+        <span class="chip accent">收益潛力大</span>
+      </div>
+
+      <h3 style="font-size:18px; color:var(--t1); margin-bottom:14px;">關於風險</h3>
+      <div class="prose" style="max-width:880px;">
+        <p style="margin-bottom:14px;">
+          投資者不應盲目追求槓桿比的收益，因為倫敦金銀是國際最核心的交易商品，價格敏感，交易量大，因此投資者應保持密切關注市場動態，合理配置倉位並設定止損。
+        </p>
+      </div>
+      <div class="chips">
+        <span class="chip">1 : 300 ( 保證金 / 合約全量 )</span>
+        <span class="chip down">20% 損失鎖倉</span>
+        <span class="chip">技術性止損單</span>
+      </div>
+
+      <h3 style="font-size:18px; color:var(--t1); margin:34px 0 14px;">倫敦金銀合約規則</h3>
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>合約名稱</th>
+            <th>代號</th>
+            <th>合約單位</th>
+            <th>最小價格變動</th>
+            <th>保證金</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>現貨倫敦黃金</td>
+            <td class="value">XAU</td>
+            <td>100 盎司</td>
+            <td class="value">0.01 $</td>
+            <td>5% 每手合約</td>
+          </tr>
+          <tr>
+            <td>現貨倫敦白銀</td>
+            <td class="value">XAG</td>
+            <td>2500 盎司</td>
+            <td class="value">0.001 $</td>
+            <td>5% 每手合約</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tab 3: 衍生品 -->
+    <div class="tab-panel" id="panel-derivatives">
+      <div class="section-eyebrow">DERIVATIVES · 衍生品</div>
+      <h2 class="section-title">衍生品 / Derivatives</h2>
+      <p class="section-lead">
+        衍生品是金融市場中一種重要而特別的工具。它的原始功能是對沖期貨合約風險，但因其以保證金形式操作全量合約當量的交易，因此天然地存在槓桿效應，單獨作為交易商品進行買賣獲利也是十分活躍的市場現象。
+      </p>
+
+      <div class="chips" style="margin-bottom:34px;">
+        <span class="chip">期貨合約 Futures</span>
+        <span class="chip">期權合約 Options</span>
+        <span class="chip">掉期合約 Swaps</span>
+        <span class="chip">遠期合約 Forwards</span>
+      </div>
+
+      <h3 style="font-size:18px; color:var(--t1); margin-bottom:14px;">六大類期貨合約</h3>
+      <p style="font-size:13.5px; color:var(--t3); margin-bottom:24px;">所有合約以美元計價結算，開倉/平倉手續費統一為 USD 6 / 手。</p>
+
+      <div class="deriv-category-grid">
+        <a href="#cat-index" class="deriv-cat-card">
+          <div class="deriv-cat-icon">📊</div>
+          <div class="deriv-cat-name">國際指數期貨</div>
+          <div class="deriv-cat-en">INDEX</div>
+        </a>
+        <a href="#cat-metal" class="deriv-cat-card">
+          <div class="deriv-cat-icon">🥇</div>
+          <div class="deriv-cat-name">金屬期貨</div>
+          <div class="deriv-cat-en">METAL</div>
+        </a>
+        <a href="#cat-forex" class="deriv-cat-card">
+          <div class="deriv-cat-icon">💱</div>
+          <div class="deriv-cat-name">外匯期貨</div>
+          <div class="deriv-cat-en">FOREX</div>
+        </a>
+        <a href="#cat-energy" class="deriv-cat-card">
+          <div class="deriv-cat-icon">
+            <img src="assets/img/icon-energy.png" alt="能源" loading="lazy" onerror="this.parentElement.textContent='⛽';">
+          </div>
+          <div class="deriv-cat-name">能源期貨</div>
+          <div class="deriv-cat-en">ENERGIES</div>
+        </a>
+        <a href="#cat-agri" class="deriv-cat-card">
+          <div class="deriv-cat-icon">
+            <img src="assets/img/icon-agri.png" alt="農產品" loading="lazy" onerror="this.parentElement.textContent='🌾';">
+          </div>
+          <div class="deriv-cat-name">農產品期貨</div>
+          <div class="deriv-cat-en">AGRI</div>
+        </a>
+        <a href="#cat-rate" class="deriv-cat-card">
+          <div class="deriv-cat-icon">
+            <img src="assets/img/icon-rate.png" alt="利率" loading="lazy" onerror="this.parentElement.textContent='📈';">
+          </div>
+          <div class="deriv-cat-name">利率期貨</div>
+          <div class="deriv-cat-en">RATE</div>
+        </a>
+      </div>
+
+      <div id="cat-index" style="margin-bottom:30px; scroll-margin-top:80px;">
+        <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
+          <span class="chip accent">Index</span>
+          <span style="font-size:15px; color:var(--t1); font-weight:600;">國際指數期貨</span>
+        </div>
+        <table class="spec-table">
+          <thead><tr><th>合約名稱</th><th>交易所</th><th>代號</th></tr></thead>
+          <tbody>
+            <tr><td>微型杜瓊斯工業平均指數</td><td>CBOT</td><td class="value">MYM</td></tr>
+            <tr><td>小型杜瓊斯工業平均指數 $5</td><td>CBOT</td><td class="value">YM</td></tr>
+            <tr><td>微型羅素 2000 指數</td><td>CME</td><td class="value">M2K</td></tr>
+            <tr><td>微型納斯達克指數</td><td>CME</td><td class="value">MNQ</td></tr>
+            <tr><td>微型標準普爾 500 指數</td><td>CME</td><td class="value">MES</td></tr>
+            <tr><td>小型標準普爾 500 指數</td><td>CME</td><td class="value">ES</td></tr>
+            <tr><td>小型納斯達克指數</td><td>CME</td><td class="value">NQ</td></tr>
+            <tr><td>小型羅素 2000 指數</td><td>CME</td><td class="value">RTY</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="cat-metal" style="margin-bottom:30px; scroll-margin-top:80px;">
+        <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
+          <span class="chip accent">Metal</span>
+          <span style="font-size:15px; color:var(--t1); font-weight:600;">金屬期貨</span>
+        </div>
+        <table class="spec-table">
+          <thead><tr><th>合約名稱</th><th>交易所</th><th>代號</th></tr></thead>
+          <tbody>
+            <tr><td>紐約期金</td><td>COMEX</td><td class="value">GC</td></tr>
+            <tr><td>迷你期金 (50oz)</td><td>COMEX</td><td class="value">QO</td></tr>
+            <tr><td>迷你期金 (10oz)</td><td>COMEX</td><td class="value">MGC</td></tr>
+            <tr><td>銅</td><td>COMEX</td><td class="value">HG</td></tr>
+            <tr><td>白銀</td><td>COMEX</td><td class="value">SI</td></tr>
+            <tr><td>迷你期銀 (2500oz)</td><td>COMEX</td><td class="value">QI</td></tr>
+            <tr><td>美國鈀金</td><td>NYMEX</td><td class="value">PA</td></tr>
+            <tr><td>美國白金</td><td>NYMEX</td><td class="value">PL</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="cat-forex" style="margin-bottom:30px; scroll-margin-top:80px;">
+        <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
+          <span class="chip accent">Forex</span>
+          <span style="font-size:15px; color:var(--t1); font-weight:600;">外匯期貨</span>
+        </div>
+        <table class="spec-table">
+          <thead><tr><th>合約名稱</th><th>交易所</th><th>代號</th></tr></thead>
+          <tbody>
+            <tr><td>澳元</td><td>CME</td><td class="value">AD</td></tr>
+            <tr><td>英鎊</td><td>CME</td><td class="value">BP</td></tr>
+            <tr><td>加元</td><td>CME</td><td class="value">CD</td></tr>
+            <tr><td>歐元</td><td>CME</td><td class="value">EC</td></tr>
+            <tr><td>日元</td><td>CME</td><td class="value">JY</td></tr>
+            <tr><td>瑞士法郎</td><td>CME</td><td class="value">SF</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="cat-energy" style="margin-bottom:30px; scroll-margin-top:80px;">
+        <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
+          <span class="chip accent">Energies</span>
+          <span style="font-size:15px; color:var(--t1); font-weight:600;">能源期貨</span>
+        </div>
+        <table class="spec-table">
+          <thead><tr><th>合約名稱</th><th>交易所</th><th>代號</th></tr></thead>
+          <tbody>
+            <tr><td>紐約期油</td><td>NYMEX</td><td class="value">CL</td></tr>
+            <tr><td>加熱用燃油</td><td>NYMEX</td><td class="value">HO</td></tr>
+            <tr><td>迷你紐約期油</td><td>NYMEX</td><td class="value">QM</td></tr>
+            <tr><td>迷你天然氣</td><td>NYMEX</td><td class="value">QG</td></tr>
+            <tr><td>天然氣</td><td>NYMEX</td><td class="value">NG</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="cat-agri" style="margin-bottom:30px; scroll-margin-top:80px;">
+        <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
+          <span class="chip accent">Agri</span>
+          <span style="font-size:15px; color:var(--t1); font-weight:600;">農產品期貨</span>
+        </div>
+        <table class="spec-table">
+          <thead><tr><th>合約名稱</th><th>交易所</th><th>代號</th></tr></thead>
+          <tbody>
+            <tr><td>黃豆油</td><td>CBOT</td><td class="value">ZL</td></tr>
+            <tr><td>玉米</td><td>CBOT</td><td class="value">C</td></tr>
+            <tr><td>大麥</td><td>CBOT</td><td class="value">O</td></tr>
+            <tr><td>黃豆</td><td>CBOT</td><td class="value">S</td></tr>
+            <tr><td>豆粉</td><td>CBOT</td><td class="value">ZM</td></tr>
+            <tr><td>小麥</td><td>CBOT</td><td class="value">W</td></tr>
+            <tr><td>迷你黃豆</td><td>CBOT</td><td class="value">YK</td></tr>
+            <tr><td>迷你玉米</td><td>CBOT</td><td class="value">YC</td></tr>
+            <tr><td>迷你小麥</td><td>CBOT</td><td class="value">YW</td></tr>
+            <tr><td>大米</td><td>CBOT</td><td class="value">ZR</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="cat-rate" style="margin-bottom:30px; scroll-margin-top:80px;">
+        <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
+          <span class="chip accent">Rate</span>
+          <span style="font-size:15px; color:var(--t1); font-weight:600;">利率期貨</span>
+        </div>
+        <table class="spec-table">
+          <thead><tr><th>合約名稱</th><th>交易所</th><th>代號</th></tr></thead>
+          <tbody>
+            <tr><td>美國 2 年債期貨</td><td>CBOT</td><td class="value">ZT</td></tr>
+            <tr><td>美國中期國庫券</td><td>CBOT</td><td class="value">ZN</td></tr>
+            <tr><td>美國長期債券</td><td>CBOT</td><td class="value">ZB</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="prose">
+        <div class="warn">
+          <strong>關於衍生品風險</strong><br>
+          儘管衍生品是完美的期貨合約風險對沖工具，但當單獨作為交易商品進行交易時，仍然存在風險，風險與保證金比例有關。CD Markets 推出的保證金規則經過多年經驗推敲，以適中的槓桿比例進行，務求投資者能夠更安全地進行交易。
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: 投資學堂 -->
+    <div class="tab-panel" id="panel-academy">
+      <div class="section-eyebrow">ACADEMY · 投資學堂</div>
+      <h2 class="section-title">金融學堂 / Financial Academy</h2>
+      <p class="section-lead">
+        正確的金融投資姿勢，金融知識是不可或缺的。為了讓投資者更全面了解金融投資，我們特意準備了一系列的金融相關知識講解。
+      </p>
+
+      <div class="card-grid cols-4" style="margin-bottom:34px;">
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <div class="spec-card-title">常見詞彙</div>
+            <div class="spec-card-tag">COMMON</div>
+          </div>
+          <div class="spec-card-desc">點差、槓桿、保證金、過夜利息、鎖倉、止損止盈、多頭空頭、滑點、流動性。</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <div class="spec-card-title">基礎概念</div>
+            <div class="spec-card-tag">BASIC</div>
+          </div>
+          <div class="spec-card-desc">現貨黃金、倫敦金、期貨合約、T+0、做市商、OTC、強制平倉、報價方式。</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <div class="spec-card-title">經濟數據</div>
+            <div class="spec-card-tag">DATA</div>
+          </div>
+          <div class="spec-card-desc">非農就業、CPI、FOMC 利率決議、GDP、PMI、美元指數、失業率。</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <div class="spec-card-title">分析指標</div>
+            <div class="spec-card-tag">ANALYSIS</div>
+          </div>
+          <div class="spec-card-desc">MA 均線、MACD、RSI、布林帶、KDJ、斐波那契、支撐阻力、K 線形態。</div>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>
+          <strong>國際貴金屬</strong>：也叫現貨黃金和倫敦金，是即期交易，指在交易成交後當天交割或數天內交割，也可以延期處理。現貨黃金為其中一種最活躍的投資商品。
+        </p>
+        <p>
+          <strong>保證金交易</strong>：投資者只需存入少量保證金，便可以進行較大金額的交易。槓桿能放大收益，同樣也會放大風險，因此合理配置倉位、設定止損是保證金交易的核心紀律。
+        </p>
+        <p>
+          <strong>大息日</strong>：根據國際銀行慣例，週三持倉過市須收/付三天的利息（包含週末），稱為大息日。詳見「開戶交易 → 有關倉息」頁面。
+        </p>
+        <div class="note">
+          投資學堂內容持續更新中。完整版正在編撰，敬請期待更系統化的金融知識資源庫。
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div id="footer-mount"></div>
+<div id="drawer-mount"></div>
+
+<script src="assets/js/components.js"></script>
+
+<script>
+(function() {
+  var tabs = document.querySelectorAll('#product-tabs .tab-btn');
+  var panels = document.querySelectorAll('.tab-panel');
+  tabs.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var key = btn.dataset.tab;
+      tabs.forEach(function(t) { t.classList.remove('is-active'); });
+      panels.forEach(function(p) { p.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      var target = document.getElementById('panel-' + key);
+      if (target) target.classList.add('is-active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+  if (location.hash) {
+    var key = location.hash.replace('#', '');
+    var btn = document.querySelector('[data-tab="' + key + '"]');
+    if (btn) btn.click();
+  }
+})();
+</script>
+
+</body>
+</html>
