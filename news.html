@@ -9,6 +9,63 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/main.css">
+<style>
+/* News 頁面專屬樣式 */
+.news-list {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+.news-list-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--line-faint);
+  align-items: center;
+  transition: background 200ms;
+}
+.news-list-row:last-child { border-bottom: none; }
+.news-list-row:hover { background: var(--bg-3); }
+.news-list-date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--t4);
+}
+.news-list-title {
+  color: var(--t1);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.news-list-row.notice .news-list-title { font-size: 14.5px; }
+
+/* 手機版 — 三欄塌成單欄 */
+@media (max-width: 767px) {
+  .news-list-row {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+    padding: 14px 16px !important;
+  }
+  .news-list-date {
+    order: 1;
+    font-size: 11px !important;
+    color: var(--t4) !important;
+    letter-spacing: 0.06em !important;
+  }
+  .news-list-title {
+    order: 2;
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+  }
+  .news-list-row .chip {
+    order: 3;
+    justify-self: start !important;
+    margin: 4px 0 0 0 !important;
+    font-size: 9.5px !important;
+  }
+}
+</style>
 </head>
 <body data-page="news">
 
@@ -39,9 +96,7 @@
       <button class="tab-btn" data-tab="notices">公司公告</button>
     </div>
 
-    <!-- ============================================================
-         Tab 1: 財經新聞
-         ============================================================ -->
+    <!-- Tab 1: 財經新聞 -->
     <div class="tab-panel is-active" id="panel-news">
       <div class="section-eyebrow">MARKET NEWS · 財經新聞</div>
       <h2 class="section-title">本日市場焦點</h2>
@@ -79,30 +134,30 @@
 
       <!-- 新聞列表 -->
       <h3 style="font-size:18px; color:var(--t1); margin:34px 0 14px;">最新資訊</h3>
-      <div style="border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--bg-2);">
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:16px 22px; border-bottom:1px solid var(--line-faint); align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 05 · 10</span>
-          <span style="color:var(--t1); font-size:14px;">美元指數失守 104 關口，非美貨幣全面反彈</span>
+      <div class="news-list">
+        <a href="#" class="news-list-row">
+          <span class="news-list-date">2026 · 05 · 10</span>
+          <span class="news-list-title">美元指數失守 104 關口，非美貨幣全面反彈</span>
           <span class="chip" style="margin:0; font-size:10.5px;">FX</span>
         </a>
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:16px 22px; border-bottom:1px solid var(--line-faint); align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 05 · 09</span>
-          <span style="color:var(--t1); font-size:14px;">中國 4 月 CPI 同比增長 0.3%，通縮壓力依然存在</span>
+        <a href="#" class="news-list-row">
+          <span class="news-list-date">2026 · 05 · 09</span>
+          <span class="news-list-title">中國 4 月 CPI 同比增長 0.3%，通縮壓力依然存在</span>
           <span class="chip" style="margin:0; font-size:10.5px;">CN</span>
         </a>
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:16px 22px; border-bottom:1px solid var(--line-faint); align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 05 · 08</span>
-          <span style="color:var(--t1); font-size:14px;">日本央行維持利率不變，日元跌至 155 整數關口</span>
+        <a href="#" class="news-list-row">
+          <span class="news-list-date">2026 · 05 · 08</span>
+          <span class="news-list-title">日本央行維持利率不變，日元跌至 155 整數關口</span>
           <span class="chip" style="margin:0; font-size:10.5px;">JP</span>
         </a>
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:16px 22px; border-bottom:1px solid var(--line-faint); align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 05 · 07</span>
-          <span style="color:var(--t1); font-size:14px;">白銀現貨突破 31 美元，工業需求疊加避險情緒推升</span>
+        <a href="#" class="news-list-row">
+          <span class="news-list-date">2026 · 05 · 07</span>
+          <span class="news-list-title">白銀現貨突破 31 美元，工業需求疊加避險情緒推升</span>
           <span class="chip up" style="margin:0; font-size:10.5px;">SILVER</span>
         </a>
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:16px 22px; align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 05 · 06</span>
-          <span style="color:var(--t1); font-size:14px;">歐元區 4 月製造業 PMI 終值 46.1，仍處於收縮區間</span>
+        <a href="#" class="news-list-row">
+          <span class="news-list-date">2026 · 05 · 06</span>
+          <span class="news-list-title">歐元區 4 月製造業 PMI 終值 46.1，仍處於收縮區間</span>
           <span class="chip" style="margin:0; font-size:10.5px;">EU</span>
         </a>
       </div>
@@ -112,9 +167,7 @@
       </div>
     </div>
 
-    <!-- ============================================================
-         Tab 2: 公司公告
-         ============================================================ -->
+    <!-- Tab 2: 公司公告 -->
     <div class="tab-panel" id="panel-notices">
       <div class="section-eyebrow">ANNOUNCEMENTS · 公司公告</div>
       <h2 class="section-title">最新公告</h2>
@@ -122,40 +175,40 @@
         本欄收錄 CD Markets 平台維護、產品上線、節假期休市與重要規則調整等官方通知。
       </p>
 
-      <div style="border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--bg-2);">
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:18px 22px; border-bottom:1px solid var(--line-faint); align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 04 · 18</span>
-          <span style="color:var(--t1); font-size:14.5px;">DeepTrade 智能交易輔助平台正式上線</span>
+      <div class="news-list">
+        <a href="#" class="news-list-row notice">
+          <span class="news-list-date">2026 · 04 · 18</span>
+          <span class="news-list-title">DeepTrade 智能交易輔助平台正式上線</span>
           <span class="chip accent" style="margin:0; font-size:10.5px;">PRODUCT</span>
         </a>
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:18px 22px; border-bottom:1px solid var(--line-faint); align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 04 · 05</span>
-          <span style="color:var(--t1); font-size:14.5px;">清明節假期交易時間調整通知</span>
+        <a href="#" class="news-list-row notice">
+          <span class="news-list-date">2026 · 04 · 05</span>
+          <span class="news-list-title">清明節假期交易時間調整通知</span>
           <span class="chip" style="margin:0; font-size:10.5px;">SCHEDULE</span>
         </a>
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:18px 22px; border-bottom:1px solid var(--line-faint); align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 03 · 22</span>
-          <span style="color:var(--t1); font-size:14.5px;">移動端 MT4 應用版本升級維護公告</span>
+        <a href="#" class="news-list-row notice">
+          <span class="news-list-date">2026 · 03 · 22</span>
+          <span class="news-list-title">移動端 MT4 應用版本升級維護公告</span>
           <span class="chip" style="margin:0; font-size:10.5px;">PLATFORM</span>
         </a>
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:18px 22px; border-bottom:1px solid var(--line-faint); align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 03 · 01</span>
-          <span style="color:var(--t1); font-size:14.5px;">2026 年第二季度有關倉息費率調整公告</span>
+        <a href="#" class="news-list-row notice">
+          <span class="news-list-date">2026 · 03 · 01</span>
+          <span class="news-list-title">2026 年第二季度有關倉息費率調整公告</span>
           <span class="chip accent" style="margin:0; font-size:10.5px;">RATE</span>
         </a>
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:18px 22px; border-bottom:1px solid var(--line-faint); align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 02 · 09</span>
-          <span style="color:var(--t1); font-size:14.5px;">農曆新年假期休市安排</span>
+        <a href="#" class="news-list-row notice">
+          <span class="news-list-date">2026 · 02 · 09</span>
+          <span class="news-list-title">農曆新年假期休市安排</span>
           <span class="chip" style="margin:0; font-size:10.5px;">SCHEDULE</span>
         </a>
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:18px 22px; border-bottom:1px solid var(--line-faint); align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 01 · 14</span>
-          <span style="color:var(--t1); font-size:14.5px;">CD Markets 完成香港海關 A 類註冊年度續期</span>
+        <a href="#" class="news-list-row notice">
+          <span class="news-list-date">2026 · 01 · 14</span>
+          <span class="news-list-title">CD Markets 完成香港海關 A 類註冊年度續期</span>
           <span class="chip up" style="margin:0; font-size:10.5px;">COMPLIANCE</span>
         </a>
-        <a href="#" style="display:grid; grid-template-columns:auto 1fr auto; gap:18px; padding:18px 22px; align-items:center; transition:background 200ms;" onmouseover="this.style.background='var(--bg-3)'" onmouseout="this.style.background='transparent'">
-          <span style="font-family:var(--font-mono); font-size:12px; color:var(--t4);">2026 · 01 · 02</span>
-          <span style="color:var(--t1); font-size:14.5px;">關於香港金銀業貿易場更名為香港黃金交易所的通告</span>
+        <a href="#" class="news-list-row notice">
+          <span class="news-list-date">2026 · 01 · 02</span>
+          <span class="news-list-title">關於香港金銀業貿易場更名為香港黃金交易所的通告</span>
           <span class="chip" style="margin:0; font-size:10.5px;">CGSE</span>
         </a>
       </div>
