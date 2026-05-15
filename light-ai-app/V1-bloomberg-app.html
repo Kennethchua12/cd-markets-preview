@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a1929">
+<title>Light Ai · APP V1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#050d18;--bg-2:#0a1929;--bg-3:#0f2438;--card:#0e1f38;--line:rgba(212,175,55,0.18);--line-soft:rgba(212,175,55,0.08);--gold-d:#a37f1e;--gold:#d4af37;--gold-l:#e8c659;--cream:#f7e7b1;--text:#f0e6c8;--text-sub:#b8a878;--text-mut:#6b5f3f;--up:#00ff85;--up-bg:rgba(0,255,133,0.1);--dn:#ff3b30;--dn-bg:rgba(255,59,48,0.1);--header-h:54px;--tabbar-h:78px;--status-h:44px}
+html,body{background:var(--bg);color:var(--text);font-family:'Inter','Noto Sans TC',sans-serif;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased}
+body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:#000}
+.device{width:100%;max-width:430px;height:100vh;max-height:932px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 60px rgba(212,175,55,0.1)}
+@media (min-width:431px){.device{height:932px;border-radius:48px;border:8px solid #1a1a1a;box-shadow:0 0 80px rgba(0,0,0,0.6),inset 0 0 0 1px rgba(212,175,55,0.1)}}
+/* Status bar */
+.statusbar{height:var(--status-h);padding:14px 28px 6px;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:var(--cream);background:var(--bg);position:relative;z-index:50;flex-shrink:0}
+.statusbar .time{font-variant-numeric:tabular-nums}
+.statusbar .right{display:flex;align-items:center;gap:6px;font-size:14px}
+.statusbar .right i{font-size:15px}
+.statusbar .battery{display:inline-flex;align-items:center;gap:2px;font-size:11px;color:var(--cream)}
+.statusbar .battery::after{content:"";display:inline-block;width:24px;height:11px;border:1px solid var(--cream);border-radius:3px;position:relative;background:linear-gradient(90deg,var(--cream) 80%,transparent 80%);margin-left:3px}
+/* Header */
+.header{height:var(--header-h);padding:0 18px;display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-bottom:1px solid var(--line);flex-shrink:0;position:relative;z-index:40}
+.header-left{display:flex;align-items:center;gap:10px}
+.logo{width:30px;height:30px;border:1px solid var(--gold);background:linear-gradient(135deg,var(--bg-3),var(--bg-2));display:grid;place-items:center;position:relative}
+.logo::before{content:"";position:absolute;inset:2px;border:1px solid var(--gold-d)}
+.logo i{color:var(--gold-l);font-size:14px;z-index:1}
+.brand-name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px;color:var(--cream);line-height:1;letter-spacing:0.02em}
+.brand-name .ai{color:var(--gold);font-style:italic}
+.brand-meta{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:0.24em;color:var(--gold-d);text-transform:uppercase;margin-top:2px}
+.header-right{display:flex;gap:4px}
+.icon-btn{width:34px;height:34px;border-radius:0;border:1px solid var(--line);background:transparent;color:var(--gold);display:grid;place-items:center;font-size:16px;position:relative}
+.icon-btn .badge{position:absolute;top:-3px;right:-3px;width:14px;height:14px;background:var(--dn);color:#fff;font-size:9px;border-radius:50%;display:grid;place-items:center;font-weight:700;border:1.5px solid var(--bg)}
+/* Content area */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--tabbar-h) + 16px)}
+.content::-webkit-scrollbar{display:none}
+.screen{display:none;animation:fadein 0.25s ease-out}
+.screen.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* ========== HOME SCREEN ========== */
+.home-greeting{padding:20px 18px 14px}
+.greeting-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.32em;color:var(--gold-d);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.greeting-eyebrow::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--up);box-shadow:0 0 6px var(--up);animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:0.3}}
+.greeting-text{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--cream);line-height:1.15}
+.greeting-text .ital{font-style:italic;color:var(--gold)}
+/* Index strip */
+.index-strip{padding:0 18px 16px;display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.index-strip::-webkit-scrollbar{display:none}
+.idx-card{flex:0 0 130px;padding:12px 14px;background:linear-gradient(180deg,var(--bg-3),var(--bg-2));border:1px solid var(--line);scroll-snap-align:start}
+.idx-card .name{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.18em;color:var(--gold);font-weight:600;margin-bottom:8px}
+.idx-card .px{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--cream);letter-spacing:-0.01em;font-variant-numeric:tabular-nums;line-height:1}
+.idx-card .ch{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;margin-top:6px}
+.idx-card .ch.up{color:var(--up)}
+.idx-card .ch.dn{color:var(--dn)}
+.idx-card .spark{height:18px;margin-top:8px}
+/* Section title */
+.sec-title{display:flex;justify-content:space-between;align-items:baseline;padding:18px 18px 12px}
+.sec-title h2{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--cream);letter-spacing:0.01em}
+.sec-title h2 .ital{font-style:italic;color:var(--gold)}
+.sec-title .more{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.16em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:4px}
+/* Daily picks card */
+.picks-hero{margin:0 18px 14px;border:1px solid var(--gold);background:linear-gradient(180deg,var(--bg-3),var(--bg-2));overflow:hidden;position:relative}
+.picks-hero::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.picks-hero-top{padding:16px 18px 12px;display:flex;justify-content:space-between;align-items:start;border-bottom:1px solid var(--line)}
+.picks-hero-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.24em;color:var(--bg);background:var(--gold);padding:4px 9px;font-weight:700;text-transform:uppercase}
+.picks-hero-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold-d);letter-spacing:0.08em}
+.picks-hero-body{padding:14px 18px 16px}
+.picks-sym{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:32px;font-weight:600;color:var(--gold-l);line-height:1;margin-bottom:6px}
+.picks-action{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:3px 8px;border:1px solid;margin-bottom:12px}
+.picks-action.long{color:var(--up);border-color:var(--up)}
+.picks-action.short{color:var(--dn);border-color:var(--dn)}
+.picks-detail{font-size:13px;line-height:1.6;color:var(--text-sub);margin-bottom:14px;font-family:'Noto Sans TC',serif}
+.picks-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:14px;border-top:1px solid var(--line)}
+.picks-metric{text-align:center}
+.picks-metric .k{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--gold-d);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:3px}
+.picks-metric .v{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--cream);font-weight:600;font-variant-numeric:tabular-nums}
+/* News list */
+.news{padding:0 18px}
+.news-item{padding:14px 0;border-bottom:1px solid var(--line-soft);display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start}
+.news-item:last-child{border-bottom:none}
+.news-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.24em;color:var(--gold);text-transform:uppercase;margin-bottom:5px;font-weight:600}
+.news-title{font-family:'Noto Sans TC',serif;font-size:14.5px;line-height:1.45;color:var(--cream);font-weight:500;margin-bottom:6px}
+.news-meta{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text-mut);letter-spacing:0.08em}
+.news-meta i{font-size:10px}
+.news-thumb{width:60px;height:60px;background:linear-gradient(135deg,var(--bg-3),var(--gold-d));display:grid;place-items:center;border:1px solid var(--line);flex-shrink:0}
+.news-thumb i{color:var(--gold-l);font-size:22px}
+/* Live broadcast */
+.live-bcast{margin:16px 18px;padding:14px 16px;border:1px solid var(--line);background:linear-gradient(135deg,rgba(255,59,48,0.05),var(--bg-3));display:flex;align-items:center;gap:12px}
+.live-bcast .live-dot{width:8px;height:8px;border-radius:50%;background:var(--dn);box-shadow:0 0 8px var(--dn);animation:pulse 1.2s infinite;flex-shrink:0}
+.live-bcast .live-info{flex:1}
+.live-bcast .live-label{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.28em;color:var(--dn);font-weight:700;text-transform:uppercase;margin-bottom:3px}
+.live-bcast .live-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--cream);font-weight:600}
+.live-bcast .live-play{width:32px;height:32px;border-radius:50%;background:var(--gold);color:var(--bg);display:grid;place-items:center;font-size:14px}
+/* ========== MARKETS SCREEN ========== */
+.markets-tabs{padding:14px 18px 12px;display:flex;gap:8px;overflow-x:auto;border-bottom:1px solid var(--line)}
+.markets-tabs::-webkit-scrollbar{display:none}
+.mkt-tab{padding:7px 14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;border:1px solid var(--line);background:transparent;color:var(--text-sub);font-weight:600;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.mkt-tab.on{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.mkt-search{padding:12px 18px;border-bottom:1px solid var(--line)}
+.mkt-search-wrap{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);background:var(--bg-3)}
+.mkt-search-wrap i{color:var(--gold);font-size:14px}
+.mkt-search-wrap input{flex:1;background:transparent;border:none;color:var(--cream);font-family:'Inter',sans-serif;font-size:13px;outline:none}
+.mkt-search-wrap input::placeholder{color:var(--text-mut)}
+.mkt-list{padding:6px 0}
+.mkt-row{padding:14px 18px;display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;border-bottom:1px solid var(--line-soft)}
+.mkt-row .star{color:var(--gold-d);font-size:14px;width:18px}
+.mkt-row .star.on{color:var(--gold)}
+.mkt-row .sym-block{display:flex;flex-direction:column;gap:2px}
+.mkt-row .sym-block .s{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--cream);letter-spacing:0.04em}
+.mkt-row .sym-block .n{font-size:10.5px;color:var(--text-mut);font-family:'Noto Sans TC',serif}
+.mkt-row .px-block{text-align:right}
+.mkt-row .px-block .p{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--cream);font-weight:600;font-variant-numeric:tabular-nums}
+.mkt-row .px-block .c{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;margin-top:2px}
+.mkt-row .px-block .c.up{color:var(--up)}
+.mkt-row .px-block .c.dn{color:var(--dn)}
+.mkt-row .pill{padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;min-width:60px;text-align:center;letter-spacing:0.04em;font-variant-numeric:tabular-nums}
+.mkt-row .pill.up{background:var(--up-bg);color:var(--up)}
+.mkt-row .pill.dn{background:var(--dn-bg);color:var(--dn)}
+/* ========== TERMINAL SCREEN ========== */
+.term-hero{padding:24px 18px 18px}
+.term-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.term-eyebrow::before,.term-eyebrow::after{content:"";flex:0 0 14px;height:1px;background:var(--gold-d)}
+.term-title{font-family:'Cormorant Garamond',serif;font-size:28px;line-height:1.15;color:var(--cream);font-weight:600;margin-bottom:8px}
+.term-title .ital{font-style:italic;color:var(--gold)}
+.term-sub{font-size:12.5px;color:var(--text-sub);line-height:1.5;font-family:'Noto Sans TC',serif}
+.term-input{margin:18px 18px;padding:16px;border:1px solid var(--line);background:var(--bg-3);position:relative}
+.term-input::before{content:"";position:absolute;top:-1px;left:-1px;width:8px;height:8px;border-top:1px solid var(--gold);border-left:1px solid var(--gold)}
+.term-input::after{content:"";position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold)}
+.term-prompt-line{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-family:'JetBrains Mono',monospace;font-size:13px}
+.term-prompt-line .p{color:var(--gold);font-weight:700}
+.term-prompt-line .v{color:var(--cream);flex:1}
+.term-prompt-line .cur{display:inline-block;width:8px;height:14px;background:var(--gold);animation:blink 1s steps(2) infinite;vertical-align:-2px;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.term-suggest{display:flex;flex-wrap:wrap;gap:6px}
+.term-suggest .pill{padding:5px 10px;border:1px solid var(--gold-d);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:0.08em;font-weight:600}
+.term-actions{margin:0 18px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.term-action{padding:18px 14px;border:1px solid var(--line);background:linear-gradient(180deg,var(--bg-3),var(--bg-2));text-align:left;position:relative}
+.term-action i{font-size:22px;color:var(--gold-l);display:block;margin-bottom:10px}
+.term-action .t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--cream);font-weight:600;margin-bottom:3px}
+.term-action .d{font-size:10.5px;color:var(--text-mut);line-height:1.4;font-family:'Noto Sans TC',serif}
+.term-history{margin:24px 18px 16px;padding-bottom:14px;border-bottom:1px solid var(--line-soft);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.24em;color:var(--gold-d);text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+.term-hist-list{padding:0 18px}
+.term-hist-row{padding:12px 0;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;border-bottom:1px solid var(--line-soft)}
+.term-hist-row .h-sym{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);font-weight:600;letter-spacing:0.08em;min-width:65px}
+.term-hist-row .h-mid{display:flex;flex-direction:column;gap:2px}
+.term-hist-row .h-mid .ti{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13.5px;color:var(--cream);font-weight:500}
+.term-hist-row .h-mid .ts{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-mut);letter-spacing:0.1em}
+.term-hist-row i.arrow{color:var(--gold);font-size:14px}
+/* ========== COPY (跟單) SCREEN ========== */
+.copy-stats{padding:18px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.copy-stat{padding:14px;border:1px solid var(--line);background:linear-gradient(180deg,var(--bg-3),var(--bg-2));position:relative}
+.copy-stat .k{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.24em;color:var(--gold-d);text-transform:uppercase;margin-bottom:6px}
+.copy-stat .v{font-family:'JetBrains Mono',monospace;font-size:22px;color:var(--cream);font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.copy-stat .v .u{font-size:13px;color:var(--gold)}
+.copy-stat .delta{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;margin-top:5px}
+.copy-stat .delta.up{color:var(--up)}
+.copy-stat .delta.dn{color:var(--dn)}
+.traders{padding:0 18px 30px}
+.trader-card{margin-bottom:14px;padding:16px;border:1px solid var(--line);background:linear-gradient(180deg,var(--bg-3),var(--bg-2));position:relative}
+.trader-card.featured{border-color:var(--gold)}
+.trader-rank{position:absolute;top:-1px;left:-1px;background:var(--gold);color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;padding:3px 8px;letter-spacing:0.16em}
+.trader-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-top:8px}
+.trader-avatar{width:46px;height:46px;border:1px solid var(--gold);background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;font-weight:700;color:var(--bg);flex-shrink:0}
+.trader-info{flex:1}
+.trader-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--cream);line-height:1.2}
+.trader-name .ital{font-style:italic;color:var(--gold)}
+.trader-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gold-d);letter-spacing:0.16em;text-transform:uppercase;margin-top:3px}
+.trader-roi{text-align:right}
+.trader-roi .pct{font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--up);font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.trader-roi .lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--gold-d);letter-spacing:0.18em;margin-top:3px;text-transform:uppercase}
+.trader-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:14px;border-top:1px solid var(--line);margin-bottom:14px}
+.trader-stat{text-align:center}
+.trader-stat .k{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--gold-d);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:3px}
+.trader-stat .v{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--cream);font-weight:600;font-variant-numeric:tabular-nums}
+.trader-cta{width:100%;padding:11px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.24em;text-transform:uppercase;font-weight:700;border:1px solid var(--gold);background:transparent;color:var(--gold);display:flex;align-items:center;justify-content:center;gap:10px}
+.trader-card.featured .trader-cta{background:var(--gold);color:var(--bg)}
+/* ========== PROFILE SCREEN ========== */
+.prof-hero{padding:24px 18px 18px;background:linear-gradient(180deg,var(--bg-3) 0%,var(--bg) 100%);border-bottom:1px solid var(--line);position:relative}
+.prof-hero::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.prof-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.prof-avatar{width:64px;height:64px;border:1px solid var(--gold);background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:28px;font-weight:700;color:var(--bg);flex-shrink:0}
+.prof-info{flex:1}
+.prof-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--cream);line-height:1}
+.prof-name .ital{font-style:italic;color:var(--gold)}
+.prof-tier{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.24em;color:var(--gold);font-weight:700;text-transform:uppercase;padding:4px 9px;border:1px solid var(--gold);margin-top:8px}
+.prof-credits{padding:14px;border:1px solid var(--gold);background:linear-gradient(135deg,rgba(212,175,55,0.05),var(--bg-2));display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.prof-credits-left .k{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.24em;color:var(--gold-d);text-transform:uppercase;margin-bottom:5px}
+.prof-credits-left .v{font-family:'JetBrains Mono',monospace;font-size:24px;color:var(--gold-l);font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.prof-credits-left .v .total{color:var(--text-mut);font-size:14px}
+.prof-credits-cta{padding:10px 14px;background:var(--gold);color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;border:none}
+.prof-menu-section{padding:18px 0 6px}
+.prof-section-title{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.32em;color:var(--gold-d);text-transform:uppercase;padding:6px 18px 8px;font-weight:600}
+.prof-menu{padding:0 18px}
+.prof-row{padding:14px 0;display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;border-bottom:1px solid var(--line-soft)}
+.prof-row .ic{width:32px;height:32px;border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);font-size:14px}
+.prof-row .label{font-family:'Noto Sans TC',serif;font-size:14px;color:var(--cream);font-weight:500}
+.prof-row .label .en{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-mut);letter-spacing:0.18em;text-transform:uppercase;margin-top:2px;font-weight:400}
+.prof-row .badge{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;background:var(--up-bg);color:var(--up);font-weight:700;letter-spacing:0.1em}
+.prof-row > i.arrow{color:var(--gold-d);font-size:14px}
+/* ========== TAB BAR ========== */
+.tabbar{height:var(--tabbar-h);background:linear-gradient(180deg,rgba(5,13,24,0.95),rgba(5,13,24,1));border-top:1px solid var(--gold);position:absolute;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 0 20px;z-index:50;backdrop-filter:blur(12px)}
+.tabbar::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.tab{background:transparent;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;color:var(--text-mut);transition:color 0.2s;position:relative;cursor:pointer}
+.tab i{font-size:21px;line-height:1}
+.tab span{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.16em;text-transform:uppercase;font-weight:600}
+.tab.active{color:var(--gold-l)}
+.tab.active i{filter:drop-shadow(0 0 6px rgba(232,198,89,0.5))}
+.tab.active::before{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:24px;height:2px;background:var(--gold)}
+/* Spark line */
+svg.spark path{fill:none;stroke-width:1.5}
+</style>
+</head>
+<body>
+<div class="device">
+<div class="statusbar"><span class="time">9:41</span><span class="right"><i class="ri-signal-tower-fill"></i><i class="ri-wifi-fill"></i><span class="battery">93</span></span></div>
+<div class="header"><div class="header-left"><div class="logo"><i class="ri-bar-chart-grouped-line"></i></div><div><div class="brand-name">Light <span class="ai">Ai</span></div><div class="brand-meta">Markets</div></div></div><div class="header-right"><button class="icon-btn"><i class="ri-search-line"></i></button><button class="icon-btn"><i class="ri-notification-3-line"></i><span class="badge">3</span></button></div></div>
+
+<div class="content">
+
+<!-- ===== HOME ===== -->
+<section class="screen active" id="screen-home">
+<div class="home-greeting"><div class="greeting-eyebrow">Live Floor · UTC+8 09:41</div><div class="greeting-text">早上好，<span class="ital">Kenneth</span></div></div>
+<div class="index-strip">
+<div class="idx-card"><div class="name">SPX 500</div><div class="px">5,847.21</div><div class="ch up">+0.31%</div><svg class="spark" viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M0,16 L15,12 L30,14 L45,8 L60,10 L75,5 L100,3" stroke="#00ff85"/></svg></div>
+<div class="idx-card"><div class="name">DOW</div><div class="px">42,381</div><div class="ch up">+0.48%</div><svg class="spark" viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M0,14 L15,16 L30,10 L45,12 L60,8 L75,6 L100,4" stroke="#00ff85"/></svg></div>
+<div class="idx-card"><div class="name">NDX</div><div class="px">20,673</div><div class="ch dn">-0.12%</div><svg class="spark" viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M0,8 L15,6 L30,10 L45,12 L60,14 L75,11 L100,13" stroke="#ff3b30"/></svg></div>
+<div class="idx-card"><div class="name">DAX</div><div class="px">19,283</div><div class="ch up">+0.21%</div><svg class="spark" viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M0,12 L15,14 L30,10 L45,8 L60,9 L75,6 L100,5" stroke="#00ff85"/></svg></div>
+</div>
+
+<div class="sec-title"><h2>今日 <span class="ital">精選</span></h2><span class="more">View All <i class="ri-arrow-right-line"></i></span></div>
+<div class="picks-hero">
+<div class="picks-hero-top"><span class="picks-hero-tag">Top Pick</span><span class="picks-hero-time">2026-05-15 · 08:00</span></div>
+<div class="picks-hero-body">
+<div class="picks-sym">XAU/USD</div>
+<div class="picks-action long">LONG · 做多</div>
+<p class="picks-detail">技術面突破 2,640 阻力，配合美元指數疲軟與避險需求升溫，黃金有望挑戰 2,680。三軸研判一致看多。</p>
+<div class="picks-metrics">
+<div class="picks-metric"><div class="k">Entry</div><div class="v">2,648.20</div></div>
+<div class="picks-metric"><div class="k">Target</div><div class="v">2,680.00</div></div>
+<div class="picks-metric"><div class="k">R:R</div><div class="v">1 : 3.2</div></div>
+</div>
+</div>
+</div>
+
+<div class="live-bcast"><span class="live-dot"></span><div class="live-info"><div class="live-label">Live Broadcast</div><div class="live-title">每週外匯展望 · with Sarah Chen</div></div><button class="live-play"><i class="ri-play-fill"></i></button></div>
+
+<div class="sec-title"><h2>市場 <span class="ital">頭條</span></h2><span class="more">All News <i class="ri-arrow-right-line"></i></span></div>
+<div class="news">
+<div class="news-item"><div><div class="news-tag">Forex · 7m</div><div class="news-title">美元指數突破 105，歐元 / 美元跌破 1.16 關鍵支撐</div><div class="news-meta"><i class="ri-time-line"></i>剛剛 · <i class="ri-eye-line"></i>2.3k</div></div><div class="news-thumb"><i class="ri-line-chart-line"></i></div></div>
+<div class="news-item"><div><div class="news-tag">Crypto · 22m</div><div class="news-title">比特幣站穩 79K 關口，機構持倉再度增加</div><div class="news-meta"><i class="ri-time-line"></i>22 min · <i class="ri-eye-line"></i>5.8k</div></div><div class="news-thumb"><i class="ri-bit-coin-line"></i></div></div>
+<div class="news-item"><div><div class="news-tag">Commodities · 1h</div><div class="news-title">黃金漲勢延續，多頭瞄準 2,680 阻力位</div><div class="news-meta"><i class="ri-time-line"></i>1 hr · <i class="ri-eye-line"></i>1.2k</div></div><div class="news-thumb"><i class="ri-medal-line"></i></div></div>
+</div>
+</section>
+
+<!-- ===== MARKETS ===== -->
+<section class="screen" id="screen-markets">
+<div class="markets-tabs"><button class="mkt-tab on">All</button><button class="mkt-tab">Forex</button><button class="mkt-tab">Crypto</button><button class="mkt-tab">Metals</button><button class="mkt-tab">Indices</button></div>
+<div class="mkt-search"><div class="mkt-search-wrap"><i class="ri-search-line"></i><input placeholder="Search symbol, name..."></div></div>
+<div class="mkt-list">
+<div class="mkt-row"><i class="ri-star-fill star on"></i><div class="sym-block"><span class="s">XAU/USD</span><span class="n">黃金 / 美元</span></div><div class="px-block"><div class="p">2,648.20</div></div><span class="pill up">+1.24%</span></div>
+<div class="mkt-row"><i class="ri-star-fill star on"></i><div class="sym-block"><span class="s">EUR/USD</span><span class="n">歐元 / 美元</span></div><div class="px-block"><div class="p">1.16253</div></div><span class="pill up">+0.42%</span></div>
+<div class="mkt-row"><i class="ri-star-line star"></i><div class="sym-block"><span class="s">GBP/USD</span><span class="n">英鎊 / 美元</span></div><div class="px-block"><div class="p">1.33274</div></div><span class="pill dn">-0.18%</span></div>
+<div class="mkt-row"><i class="ri-star-fill star on"></i><div class="sym-block"><span class="s">BTC/USD</span><span class="n">比特幣 / 美元</span></div><div class="px-block"><div class="p">79,129</div></div><span class="pill up">+0.84%</span></div>
+<div class="mkt-row"><i class="ri-star-line star"></i><div class="sym-block"><span class="s">USD/JPY</span><span class="n">美元 / 日圓</span></div><div class="px-block"><div class="p">158.71</div></div><span class="pill up">+0.04%</span></div>
+<div class="mkt-row"><i class="ri-star-line star"></i><div class="sym-block"><span class="s">XAG/USD</span><span class="n">白銀 / 美元</span></div><div class="px-block"><div class="p">30.85</div></div><span class="pill dn">-2.31%</span></div>
+<div class="mkt-row"><i class="ri-star-line star"></i><div class="sym-block"><span class="s">ETH/USD</span><span class="n">以太坊 / 美元</span></div><div class="px-block"><div class="p">2,221.05</div></div><span class="pill up">+1.62%</span></div>
+<div class="mkt-row"><i class="ri-star-line star"></i><div class="sym-block"><span class="s">AUD/USD</span><span class="n">澳元 / 美元</span></div><div class="px-block"><div class="p">0.6584</div></div><span class="pill dn">-0.31%</span></div>
+<div class="mkt-row"><i class="ri-star-line star"></i><div class="sym-block"><span class="s">SPX500</span><span class="n">標普 500 指數</span></div><div class="px-block"><div class="p">5,847.21</div></div><span class="pill up">+0.31%</span></div>
+</div>
+</section>
+
+<!-- ===== TERMINAL ===== -->
+<section class="screen" id="screen-terminal">
+<div class="term-hero">
+<div class="term-eyebrow">AI Analysis Terminal</div>
+<h2 class="term-title">智能 <span class="ital">研判</span> 終端</h2>
+<p class="term-sub">輸入品種或點選快捷指令，啟動機構級深度分析</p>
+</div>
+<div class="term-input"><div class="term-prompt-line"><span class="p">LIGHTAI ›</span><span class="v">XAU/USD<span class="cur"></span></span></div><div class="term-suggest"><span class="pill">XAU/USD</span><span class="pill">EUR/USD</span><span class="pill">BTC/USD</span><span class="pill">SPX500</span></div></div>
+<div class="term-actions">
+<button class="term-action"><i class="ri-stack-line"></i><div class="t">Deep Scan</div><div class="d">五維信號全面研判</div></button>
+<button class="term-action"><i class="ri-radar-line"></i><div class="t">Live Monitor</div><div class="d">毫秒級盤面追蹤</div></button>
+<button class="term-action"><i class="ri-shield-check-line"></i><div class="t">Risk Audit</div><div class="d">三層守門員評估</div></button>
+<button class="term-action"><i class="ri-newspaper-line"></i><div class="t">Daily Picks</div><div class="d">早晚雙刊 PDF</div></button>
+</div>
+<div class="term-history"><span>Recent Analysis</span><span><i class="ri-history-line"></i></span></div>
+<div class="term-hist-list">
+<div class="term-hist-row"><span class="h-sym">XAU/USD</span><div class="h-mid"><span class="ti">Multi-Factor <span style="font-style:italic">Scan</span></span><span class="ts">2026-05-15 · 08:00 · 信號清晰度 92</span></div><i class="ri-arrow-right-s-line arrow"></i></div>
+<div class="term-hist-row"><span class="h-sym">EUR/USD</span><div class="h-mid"><span class="ti">Trend <span style="font-style:italic">Reversal</span></span><span class="ts">2026-05-14 · 18:00 · R:R 1 : 2.4</span></div><i class="ri-arrow-right-s-line arrow"></i></div>
+<div class="term-hist-row"><span class="h-sym">BTC/USD</span><div class="h-mid"><span class="ti">Momentum <span style="font-style:italic">Break</span></span><span class="ts">2026-05-14 · 08:00 · Long Setup</span></div><i class="ri-arrow-right-s-line arrow"></i></div>
+</div>
+</section>
+
+<!-- ===== COPY (跟單) ===== -->
+<section class="screen" id="screen-copy">
+<div class="copy-stats">
+<div class="copy-stat"><div class="k">My Following</div><div class="v">3<span class="u"> / 5</span></div><div class="delta up">+ 2 active</div></div>
+<div class="copy-stat"><div class="k">30D ROI</div><div class="v">+18.4<span class="u">%</span></div><div class="delta up">▲ vs S&P 14.2%</div></div>
+<div class="copy-stat"><div class="k">Total PnL</div><div class="v">$2,840</div><div class="delta up">+ $312 today</div></div>
+<div class="copy-stat"><div class="k">Win Rate</div><div class="v">72<span class="u">%</span></div><div class="delta up">▲ 4% MoM</div></div>
+</div>
+<div class="sec-title"><h2>頂尖 <span class="ital">跟單師</span></h2><span class="more">Leaderboard <i class="ri-arrow-right-line"></i></span></div>
+<div class="traders">
+<div class="trader-card featured">
+<span class="trader-rank">#1 TOP</span>
+<div class="trader-top"><div class="trader-avatar">S</div><div class="trader-info"><div class="trader-name">Sarah <span class="ital">Chen</span></div><div class="trader-meta">Quantitative · HK</div></div><div class="trader-roi"><div class="pct">+24.8%</div><div class="lbl">30D ROI</div></div></div>
+<div class="trader-stats"><div class="trader-stat"><div class="k">Win Rate</div><div class="v">81%</div></div><div class="trader-stat"><div class="k">Trades</div><div class="v">142</div></div><div class="trader-stat"><div class="k">Followers</div><div class="v">2.3K</div></div></div>
+<button class="trader-cta"><span>Copy Strategy</span><i class="ri-arrow-right-line"></i></button>
+</div>
+<div class="trader-card">
+<span class="trader-rank">#2</span>
+<div class="trader-top"><div class="trader-avatar">M</div><div class="trader-info"><div class="trader-name">Marcus <span class="ital">Wei</span></div><div class="trader-meta">Macro Strategy · SG</div></div><div class="trader-roi"><div class="pct">+19.3%</div><div class="lbl">30D ROI</div></div></div>
+<div class="trader-stats"><div class="trader-stat"><div class="k">Win Rate</div><div class="v">74%</div></div><div class="trader-stat"><div class="k">Trades</div><div class="v">98</div></div><div class="trader-stat"><div class="k">Followers</div><div class="v">1.8K</div></div></div>
+<button class="trader-cta"><span>View Profile</span><i class="ri-arrow-right-line"></i></button>
+</div>
+<div class="trader-card">
+<span class="trader-rank">#3</span>
+<div class="trader-top"><div class="trader-avatar">E</div><div class="trader-info"><div class="trader-name">Elena <span class="ital">Rossi</span></div><div class="trader-meta">Crypto Specialist · DUB</div></div><div class="trader-roi"><div class="pct">+16.7%</div><div class="lbl">30D ROI</div></div></div>
+<div class="trader-stats"><div class="trader-stat"><div class="k">Win Rate</div><div class="v">69%</div></div><div class="trader-stat"><div class="k">Trades</div><div class="v">203</div></div><div class="trader-stat"><div class="k">Followers</div><div class="v">1.4K</div></div></div>
+<button class="trader-cta"><span>View Profile</span><i class="ri-arrow-right-line"></i></button>
+</div>
+</div>
+</section>
+
+<!-- ===== PROFILE ===== -->
+<section class="screen" id="screen-profile">
+<div class="prof-hero">
+<div class="prof-top"><div class="prof-avatar">K</div><div class="prof-info"><div class="prof-name"><span class="ital">Kenneth</span></div><div class="prof-tier"><i class="ri-vip-crown-fill"></i>Professional · Tier II</div></div></div>
+<div class="prof-credits"><div class="prof-credits-left"><div class="k">算力配額</div><div class="v">1,840<span class="total"> / 2,000</span></div></div><button class="prof-credits-cta">Top Up</button></div>
+</div>
+<div class="prof-section-title">Account</div>
+<div class="prof-menu">
+<div class="prof-row"><div class="ic"><i class="ri-history-line"></i></div><div class="label">分析歷史<span class="en">Analysis History</span></div><span class="badge">142</span><i class="ri-arrow-right-s-line arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="ri-bookmark-line"></i></div><div class="label">收藏研判<span class="en">Saved Picks</span></div><span></span><i class="ri-arrow-right-s-line arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="ri-file-pdf-2-line"></i></div><div class="label">PDF 下載<span class="en">PDF Downloads</span></div><span></span><i class="ri-arrow-right-s-line arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="ri-vip-diamond-line"></i></div><div class="label">升級方案<span class="en">Upgrade Plan</span></div><span class="badge">Whale</span><i class="ri-arrow-right-s-line arrow"></i></div>
+</div>
+<div class="prof-section-title">Settings</div>
+<div class="prof-menu">
+<div class="prof-row"><div class="ic"><i class="ri-notification-3-line"></i></div><div class="label">通知<span class="en">Notifications</span></div><span></span><i class="ri-arrow-right-s-line arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="ri-shield-keyhole-line"></i></div><div class="label">安全<span class="en">Security</span></div><span></span><i class="ri-arrow-right-s-line arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="ri-customer-service-2-line"></i></div><div class="label">客服<span class="en">Support</span></div><span></span><i class="ri-arrow-right-s-line arrow"></i></div>
+<div class="prof-row"><div class="ic"><i class="ri-information-line"></i></div><div class="label">關於<span class="en">About</span></div><span></span><i class="ri-arrow-right-s-line arrow"></i></div>
+</div>
+</section>
+
+</div>
+
+<!-- ===== TAB BAR ===== -->
+<nav class="tabbar">
+<button class="tab active" data-tab="home"><i class="ri-line-chart-line"></i><span>Home</span></button>
+<button class="tab" data-tab="markets"><i class="ri-bar-chart-2-line"></i><span>Markets</span></button>
+<button class="tab" data-tab="terminal"><i class="ri-radar-line"></i><span>Terminal</span></button>
+<button class="tab" data-tab="copy"><i class="ri-user-star-line"></i><span>Copy</span></button>
+<button class="tab" data-tab="profile"><i class="ri-user-3-line"></i><span>Me</span></button>
+</nav>
+</div>
+<script>
+document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{const id=t.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');document.querySelector('.content').scrollTop=0})});
+function tick(){const d=new Date(Date.now()+(8*60-new Date().getTimezoneOffset())*60000);document.querySelector('.statusbar .time').textContent=d.toISOString().substr(11,5)}
+tick();setInterval(tick,30000);
+</script>
+</body>
+</html>
