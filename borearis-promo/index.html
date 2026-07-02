@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Borearis 博瑞斯 — 全球市場，一顆星球的視野</title>
+<meta name="description" content="Borearis 博瑞斯：AI 驅動的金融研判終端。港美股、外匯與加密市場的即時脈搏，盡在一顆星球之上。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+<script src="assets/globe/d3.v7.min.js" defer></script>
+<script src="assets/globe/topojson-client.min.js" defer></script>
+<style>
+:root{
+  --night:#070b16;
+  --panel:#0a0e1a;
+  --lav:#8aa4ff;
+  --mint:#5cd9b8;
+  --up:#2ee6a8;
+  --down:#ff5c7a;
+  --ink:#eaf0ff;
+  --mist:rgba(232,238,255,.66);
+  --faint:rgba(232,238,255,.38);
+  --line:rgba(138,164,255,.14);
+  --glass:rgba(14,20,38,.55);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--night);color:var(--ink);font-family:'Noto Sans TC','Space Grotesk',sans-serif;font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(138,164,255,.35)}
+.serif{font-family:'Noto Serif TC',serif}
+.mono{font-family:'JetBrains Mono',monospace}
+.glass{position:relative;background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:16px;overflow:hidden;box-shadow:0 16px 44px rgba(2,6,18,.5),inset 0 1px 0 rgba(255,255,255,.05)}
+.glass::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1.2px;pointer-events:none;background:linear-gradient(165deg,rgba(138,164,255,.5),rgba(138,164,255,.07) 32%,rgba(92,217,184,.05) 62%,rgba(92,217,184,.45));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+
+nav{position:fixed;top:14px;left:0;right:0;z-index:60;display:flex;justify-content:center;padding:0 14px}
+.nav-pill{display:flex;align-items:center;gap:20px;padding:9px 12px 9px 18px;border-radius:999px;max-width:100%}
+.nav-pill.glass{border-radius:999px}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand svg{filter:drop-shadow(0 0 8px rgba(138,164,255,.55));flex:none}
+.brand b{font-family:'Space Grotesk';font-weight:700;letter-spacing:.13em;font-size:14px}
+.brand span{font-size:11.5px;color:var(--faint);letter-spacing:.26em}
+.nav-links{display:flex;gap:2px}
+.nav-links a{color:var(--mist);text-decoration:none;font-size:13px;padding:7px 12px;border-radius:999px;transition:.25s}
+.nav-links a:hover{color:var(--ink);background:rgba(138,164,255,.12)}
+.nav-cta{display:flex;align-items:center;gap:6px;background:linear-gradient(120deg,var(--lav),var(--mint));color:#081020;font-weight:700;font-size:13px;padding:8px 16px;border-radius:999px;text-decoration:none;white-space:nowrap;transition:.3s;box-shadow:0 0 20px rgba(138,164,255,.32)}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 0 32px rgba(92,217,184,.5)}
+.nav-cta svg,.nav-cta i{width:14px;height:14px}
+@media(max-width:760px){.nav-links{display:none}.brand span{display:none}}
+
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow:hidden;padding:110px 22px 0}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.24em;color:var(--mist);padding:8px 16px;border-radius:999px;margin-bottom:30px}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 10px var(--up);animation:pulse 2s infinite;flex:none}
+@keyframes pulse{50%{opacity:.35}}
+h1{font-family:'Noto Serif TC',serif;font-weight:900;font-size:clamp(38px,7vw,88px);line-height:1.18;letter-spacing:.02em;max-width:960px;position:relative;z-index:5}
+h1 .grad{background:linear-gradient(115deg,var(--lav) 8%,#c3cfff 42%,var(--mint) 92%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 24px rgba(138,164,255,.28))}
+.hero-sub{margin-top:22px;max-width:600px;color:var(--mist);font-size:clamp(14px,1.5vw,17.5px);line-height:2;position:relative;z-index:5}
+.hero-ctas{margin-top:38px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;position:relative;z-index:5}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:14px 30px;border-radius:999px;font-size:14.5px;font-weight:700;text-decoration:none;transition:transform .18s,box-shadow .3s}
+.btn-primary{background:linear-gradient(120deg,var(--lav),var(--mint));color:#081020;box-shadow:0 0 28px rgba(138,164,255,.38)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(92,217,184,.52)}
+.btn-ghost{color:var(--ink)}
+.btn-ghost.glass{border-radius:999px}
+.btn svg,.btn i{width:16px;height:16px}
+
+/* ── 半球沉底 + 大氣輝光 ── */
+.globe-stage{position:relative;width:min(1080px,140vw);margin-top:26px;flex:none;pointer-events:none}
+.globe-clip{position:relative;width:100%;padding-top:58%;overflow:hidden}
+#globeCanvas{position:absolute;top:0;left:50%;transform:translateX(-50%);width:min(1080px,140vw);height:auto;display:block}
+.globe-halo{position:absolute;left:50%;top:6%;transform:translateX(-50%);width:92%;aspect-ratio:1;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 50% 42%,rgba(138,164,255,.20) 38%,rgba(138,164,255,.10) 52%,rgba(92,217,184,.05) 62%,transparent 72%);filter:blur(6px)}
+.hero-fade{position:absolute;left:0;right:0;bottom:0;height:190px;background:linear-gradient(to bottom,transparent,var(--night) 82%);pointer-events:none;z-index:6}
+@media(max-width:640px){
+  .hero{padding-top:96px}
+  .globe-stage{margin-top:14px}
+  .hero-ctas .btn{padding:13px 24px;font-size:14px}
+}
+
+/* ── 跑馬燈 ── */
+.tape{position:relative;z-index:7;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(8,12,26,.62);backdrop-filter:blur(10px);overflow:hidden;padding:12px 0;margin-top:-1px}
+.tape-track{display:flex;gap:48px;width:max-content;animation:tape 40s linear infinite}
+.tape:hover .tape-track{animation-play-state:paused}
+@keyframes tape{to{transform:translateX(-50%)}}
+.q{display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono';font-size:12.5px;white-space:nowrap}
+.q .sym{color:var(--faint);letter-spacing:.05em}
+.q .px{color:var(--ink);font-weight:600}
+.q .chg{display:flex;align-items:center;gap:3px;font-weight:600}
+.q .chg svg,.q .chg i{width:12px;height:12px}
+.up-c{color:var(--up)}.down-c{color:var(--down)}
+
+section{position:relative;z-index:2}
+.wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+.sec-head{text-align:center;padding:96px 0 46px}
+.sec-eyebrow{font-size:11.5px;letter-spacing:.38em;color:var(--mint);margin-bottom:16px}
+.sec-head h2{font-family:'Noto Serif TC';font-weight:700;font-size:clamp(27px,4vw,44px);letter-spacing:.03em}
+.sec-head p{margin-top:14px;color:var(--mist);font-size:15px;line-height:1.9}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media(max-width:640px){.sec-head{padding:72px 0 36px}}
+
+/* ── 行情卡 ── */
+.qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-bottom:14px}
+@media(max-width:980px){.qgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:430px){.qgrid{grid-template-columns:1fr}}
+.qcard{padding:20px 18px 14px;border-radius:16px}
+.qcard .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.qcard .name{font-size:13.5px;color:var(--mist)}
+.qcard .code{font-family:'JetBrains Mono';font-size:10.5px;color:var(--faint);letter-spacing:.06em}
+.qcard .price{margin-top:10px;font-family:'JetBrains Mono';font-weight:600;font-size:clamp(20px,2.2vw,24px)}
+.qcard .delta{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-family:'JetBrains Mono';font-size:12px;font-weight:600}
+.qcard .delta svg,.qcard .delta i{width:12px;height:12px}
+.qcard canvas{display:block;width:100%;height:52px;margin-top:12px}
+.src-note{text-align:center;color:var(--faint);font-size:11.5px;letter-spacing:.08em;padding-bottom:8px}
+
+/* ── 三引擎卡 ── */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding-bottom:12px}
+@media(max-width:880px){.cards{grid-template-columns:1fr}}
+.card{padding:30px 26px}
+.card .ic{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;background:rgba(138,164,255,.1);border:1px solid rgba(138,164,255,.24)}
+.card .ic svg,.card .ic i{width:22px;height:22px;color:var(--mint)}
+.card h3{font-family:'Noto Serif TC';font-weight:700;font-size:20px;letter-spacing:.04em;margin-bottom:12px}
+.card p{color:var(--mist);font-size:14px;line-height:2}
+.card .tag{margin-top:18px;display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono';font-size:11px;letter-spacing:.13em;color:var(--lav)}
+.card .tag svg,.card .tag i{width:12px;height:12px}
+
+/* ── 覆蓋帶 + CTA + 頁尾 ── */
+.coverage{display:flex;justify-content:center;gap:clamp(18px,4vw,44px);flex-wrap:wrap;padding:12px 22px 0}
+.cv{text-align:center}
+.cv .n{font-family:'Space Grotesk';font-weight:700;font-size:clamp(26px,3.4vw,40px);background:linear-gradient(115deg,#c9d4ff,var(--mint));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cv .l{margin-top:6px;color:var(--mist);font-size:12.5px;letter-spacing:.1em}
+.final{padding:110px 0 84px;text-align:center}
+.final h2{font-family:'Noto Serif TC';font-weight:900;font-size:clamp(30px,5vw,58px);letter-spacing:.03em;line-height:1.45}
+.final p{margin:20px auto 38px;color:var(--mist);max-width:500px;font-size:15px;line-height:2;padding:0 22px}
+footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:28px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;color:var(--faint);font-size:12px}
+footer .links{display:flex;gap:18px}
+footer a{color:var(--faint);text-decoration:none;transition:.25s}
+footer a:hover{color:var(--ink)}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .tape-track{animation:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-pill glass">
+    <a class="brand" href="#top">
+      <svg width="24" height="24" viewBox="0 0 26 26" fill="none">
+        <path d="M4 20 C7 8, 10 6, 13 13 C16 20, 19 18, 22 5" stroke="url(#bg1)" stroke-width="2.4" stroke-linecap="round"/>
+        <defs><linearGradient id="bg1" x1="0" y1="0" x2="26" y2="26">
+          <stop stop-color="#8aa4ff"/><stop offset="1" stop-color="#5cd9b8"/>
+        </linearGradient></defs>
+      </svg>
+      <b>BOREARIS</b><span>博瑞斯</span>
+    </a>
+    <div class="nav-links">
+      <a href="#markets">市場脈搏</a>
+      <a href="#engine">研判引擎</a>
+      <a href="#coverage">全球覆蓋</a>
+    </div>
+    <a class="nav-cta" href="https://app.borearis.com" target="_blank" rel="noopener">進入 App <i data-lucide="arrow-up-right"></i></a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="eyebrow glass"><span class="dot"></span>GLOBAL MARKETS · LIVE</div>
+  <h1>全球市場，<br><span class="grad">一顆星球</span>的視野。</h1>
+  <p class="hero-sub">港美股、外匯、加密貨幣——Borearis 博瑞斯以三重 AI 研判引擎，把散落在十二個時區的行情訊號，收束在你的掌心。</p>
+  <div class="hero-ctas">
+    <a class="btn btn-primary" href="https://app.borearis.com" target="_blank" rel="noopener">免費開始研判 <i data-lucide="radar"></i></a>
+    <a class="btn btn-ghost glass" href="#markets">看看市場脈搏 <i data-lucide="chevron-down"></i></a>
+  </div>
+  <div class="globe-stage" aria-hidden="true">
+    <div class="globe-halo"></div>
+    <div class="globe-clip">
+      <canvas id="globeCanvas" width="1400" height="1400"></canvas>
+    </div>
+  </div>
+  <div class="hero-fade"></div>
+</header>
+
+<div class="tape" aria-label="即時報價跑馬燈">
+  <div class="tape-track" id="tapeTrack"></div>
+</div>
+
+<section id="markets">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-eyebrow">MARKET PULSE · 市場脈搏</div>
+      <h2>十二個時區的心跳，同一塊螢幕。</h2>
+      <p>恒指、比特幣、黃金、歐元——跨資產同屏監測，綠漲紅跌，一眼分明。</p>
+    </div>
+    <div class="qgrid" id="qgrid"></div>
+    <div class="src-note reveal">展示頁為模擬行情 · App 內接入即時數據源</div>
+  </div>
+</section>
+
+<section id="engine">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-eyebrow">TRIPLE ENGINE · 三重研判引擎</div>
+      <h2>三道極光，各司其職。</h2>
+    </div>
+    <div class="cards">
+      <div class="card glass reveal">
+        <div class="ic"><i data-lucide="brain-circuit"></i></div>
+        <h3>研判引擎</h3>
+        <p>三重 AI 交叉驗證每一筆訊號：趨勢結構、動能背離與波動情境同時過檢，共識成立才會抵達你的螢幕。</p>
+        <div class="tag"><i data-lucide="check-check"></i>CONSENSUS FIRST</div>
+      </div>
+      <div class="card glass reveal">
+        <div class="ic"><i data-lucide="waves"></i></div>
+        <h3>鯨蹤追蹤</h3>
+        <p>盯住港股大戶持倉異動與南向資金流——巨鯨轉身時海面先起浪，我們在浪抵達之前把座標交給你。</p>
+        <div class="tag"><i data-lucide="crosshair"></i>WHALE RADAR</div>
+      </div>
+      <div class="card glass reveal">
+        <div class="ic"><i data-lucide="newspaper"></i></div>
+        <h3>事件共識</h3>
+        <p>新聞中心多引擎解讀全球財經事件，把議題熱度折算成多空共識分數，在標題發酵前先讀懂方向。</p>
+        <div class="tag"><i data-lucide="signal"></i>EVENT SCORING</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="coverage">
+  <div class="sec-head reveal" style="padding-bottom:30px">
+    <div class="sec-eyebrow">COVERAGE · 全球覆蓋</div>
+    <h2>星球上每一個亮起的信標。</h2>
+  </div>
+  <div class="coverage reveal">
+    <div class="cv"><div class="n">10+</div><div class="l">全球交易所節點</div></div>
+    <div class="cv"><div class="n">4</div><div class="l">大資產類別同屏</div></div>
+    <div class="cv"><div class="n">24/7</div><div class="l">加密市場不間斷</div></div>
+    <div class="cv"><div class="n">UTC+8</div><div class="l">亞太時區優先</div></div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="reveal">
+    <h2>下一個訊號，<br><span class="serif" style="background:linear-gradient(115deg,var(--lav),var(--mint));-webkit-background-clip:text;background-clip:text;color:transparent">別再錯過。</span></h2>
+    <p>免費開始，隨時升級。你的第一份 AI 研判報告，距離你只有一個按鈕。</p>
+    <a class="btn btn-primary" href="https://app.borearis.com" target="_blank" rel="noopener">立即進入 Borearis <i data-lucide="arrow-right"></i></a>
+  </div>
+</section>
+
+<footer>
+  <span class="mono" style="letter-spacing:.12em">BOREARIS · 博瑞斯</span>
+  <div class="links">
+    <a href="#markets">市場脈搏</a>
+    <a href="#engine">研判引擎</a>
+    <a href="mailto:dpo@borearis.com">聯絡我們</a>
+  </div>
+  <span>© 2026 Borearis. 本頁為品牌展示，行情為模擬數據，不構成投資建議。</span>
+</footer>
+
+<script>
+/* ════════ 1. Borearis 星球（D3 正射投影・雙 ink・半球沉底） ════════ */
+window.addEventListener('load',function(){
+  (function initGlobe(){
+    if(typeof d3==='undefined'||typeof topojson==='undefined'){setTimeout(initGlobe,200);return;}
+    var cv=document.getElementById('globeCanvas');if(!cv)return;
+    var ctx=cv.getContext('2d');
+    var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var isMobile=matchMedia('(max-width: 640px)').matches;
+    var W=1400,CX=700,CY=700,R=560,S=W/200;
+    ctx.lineJoin='round';ctx.lineCap='round';
+
+    /* 雙 ink：地理層薰衣草、數據層薄荷 */
+    function inkGeo(a){return 'rgba(138,164,255,'+a+')';}
+    function inkData(a){return 'rgba(92,217,184,'+a+')';}
+
+    var proj=d3.geoOrthographic().scale(R).translate([CX,CY]).clipAngle(90).rotate([-100,-14,0]).precision(.3);
+    var path=d3.geoPath(proj,ctx);
+    var gMinor=d3.geoGraticule().step([10,10])();
+    var land=null,borders=null;
+
+    /* 金融信標：一級＝目標市場，二級＝全球主場 */
+    var beacons=[
+      {lon:114.17,lat:22.30,t:1},{lon:103.85,lat:1.29,t:1},
+      {lon:121.56,lat:25.03,t:1},{lon:101.69,lat:3.14,t:1},
+      {lon:139.69,lat:35.69,t:2},{lon:121.47,lat:31.23,t:2},
+      {lon:-0.13,lat:51.51,t:2},{lon:-74.01,lat:40.71,t:2},
+      {lon:8.68,lat:50.11,t:2},{lon:151.21,lat:-33.87,t:2}
+    ].map(function(b){b.phase=Math.random()*Math.PI*2;return b;});
+
+    var packets=[],MAXP=isMobile?8:14;
+    function spawn(){
+      if(Math.random()<.5){
+        packets.push({lon:Math.round((Math.random()*360-180)/10)*10,lat:-80+Math.random()*8,dLon:0,dLat:50+Math.random()*32,life:0,max:2+Math.random()*1.3});
+      }else{
+        packets.push({lon:Math.random()*360-180,lat:Math.round((Math.random()*140-70)/10)*10,dLon:60+Math.random()*42,dLat:0,life:0,max:1.8+Math.random()*1.2});
+      }
+    }
+    for(var i=0;i<MAXP;i++)spawn();
+
+    function visible(lon,lat){
+      var d2r=Math.PI/180,rr=proj.rotate();
+      var rl=rr[0]*d2r,rp=rr[1]*d2r;
+      var x=Math.cos(lat*d2r)*Math.cos(lon*d2r),y=Math.cos(lat*d2r)*Math.sin(lon*d2r),z=Math.sin(lat*d2r);
+      var xr=x*Math.cos(rl)+y*Math.sin(rl);
+      return xr*Math.cos(rp)+z*Math.sin(rp)>.02;
+    }
+    function toXY(lon,lat){return visible(lon,lat)?(proj([lon,lat])||null):null;}
+
+    function drawAtmo(){
+      var g=ctx.createRadialGradient(CX,CY,R*.92,CX,CY,R*1.16);
+      g.addColorStop(0,'rgba(138,164,255,0)');
+      g.addColorStop(.55,'rgba(138,164,255,.16)');
+      g.addColorStop(.8,'rgba(122,150,255,.07)');
+      g.addColorStop(1,'rgba(138,164,255,0)');
+      ctx.beginPath();ctx.arc(CX,CY,R*1.16,0,Math.PI*2);
+      ctx.fillStyle=g;ctx.fill();
+    }
+    function drawGeo(){
+      ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);
+      ctx.fillStyle=inkGeo(.045);ctx.fill();
+      ctx.beginPath();path(gMinor);
+      ctx.lineWidth=.4*S;ctx.strokeStyle=inkGeo(.12);ctx.stroke();
+      if(land){
+        ctx.beginPath();path(land);ctx.fillStyle=inkGeo(.15);ctx.fill();
+        ctx.beginPath();path(land);ctx.lineWidth=.65*S;ctx.strokeStyle=inkGeo(.8);ctx.stroke();
+      }
+      if(borders){
+        ctx.beginPath();path(borders);
+        ctx.lineWidth=.45*S;ctx.strokeStyle=inkGeo(.4);ctx.stroke();
+      }
+      ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);
+      ctx.lineWidth=.8*S;ctx.strokeStyle=inkGeo(.85);ctx.stroke();
+    }
+    function drawData(dt,now){
+      for(var i=packets.length-1;i>=0;i--){
+        var p=packets[i];
+        p.life+=dt;p.lon+=p.dLon*dt;p.lat+=p.dLat*dt;
+        if(p.lat>82||p.life>p.max){packets.splice(i,1);continue;}
+        var N=14,tail=.42,pts=[];
+        for(var k=0;k<N;k++){
+          var t=k/(N-1)*tail;
+          var pt=toXY(p.lon-p.dLon*t,p.lat-p.dLat*t);
+          if(pt)pts.push({pt:pt,k:k});
+        }
+        if(pts.length<2)continue;
+        for(var k2=0;k2<pts.length-1;k2++){
+          var a=pts[k2].pt,b=pts[k2+1].pt,f=1-pts[k2].k/N;
+          ctx.strokeStyle=inkData(.7*f);
+          ctx.lineWidth=(f+.3)*S*.9;
+          ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();
+        }
+        var h=pts[0].pt;
+        ctx.beginPath();ctx.arc(h[0],h[1],1.3*S,0,Math.PI*2);
+        ctx.fillStyle='#fff';ctx.fill();
+      }
+      while(packets.length<MAXP)spawn();
+      for(var bi=0;bi<beacons.length;bi++){
+        var bc=beacons[bi],pt2=toXY(bc.lon,bc.lat);
+        if(!pt2)continue;
+        var tier1=bc.t===1;
+        var tt=((now*.55)+bc.phase/(Math.PI*2))%1;
+        ctx.beginPath();ctx.arc(pt2[0],pt2[1],(tier1?1.4:1.0)*S,0,Math.PI*2);
+        ctx.fillStyle='#fff';ctx.fill();
+        ctx.beginPath();ctx.arc(pt2[0],pt2[1],(tier1?2.8:2.0)*S,0,Math.PI*2);
+        ctx.lineWidth=.5*S;ctx.strokeStyle=inkData(tier1?.7:.45);ctx.stroke();
+        var rr2=(2+tt*(tier1?11:7))*S;
+        ctx.beginPath();ctx.arc(pt2[0],pt2[1],rr2,0,Math.PI*2);
+        ctx.strokeStyle=inkData((1-tt)*(tier1?.65:.4));ctx.lineWidth=.6*S;ctx.stroke();
+      }
+    }
+    var t0=performance.now(),last=t0,SPEED=9;
+    function frame(now){
+      if(!document.hidden){
+        var dt=Math.min(.05,(now-last)/1000);last=now;
+        proj.rotate([-100+((now-t0)/1000*SPEED)%360,-14,0]);
+        ctx.clearRect(0,0,W,W);
+        drawAtmo();drawGeo();drawData(dt,now/1000);
+      }
+      if(!reduced)requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+    fetch('assets/globe/land-110m.json').then(function(r){return r.json();})
+      .then(function(t){land=topojson.feature(t,t.objects.land);});
+    fetch('assets/globe/countries-110m.json').then(function(r){return r.json();})
+      .then(function(t){borders=topojson.mesh(t,t.objects.countries,function(a,b){return a!==b;});});
+  })();
+});
+
+/* ════════ 2. 行情數據源（可插拔：進伺服器後切 api.borearis.com） ════════ */
+function makeRNG(seed){var s=seed>>>0;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+var FEED=[
+  {name:'恒生指數',code:'HSI',seed:2833,base:24310,vol:120,dec:0},
+  {name:'比特幣',code:'BTC/USD',seed:9102,base:112400,vol:820,dec:0},
+  {name:'黃金',code:'XAU/USD',seed:7741,base:3345,vol:11,dec:2},
+  {name:'歐元',code:'EUR/USD',seed:5510,base:1.1712,vol:.0024,dec:4}
+];
+FEED.forEach(function(f){
+  var rnd=makeRNG(f.seed),px=f.base,mom=0;f.hist=[];
+  for(var i=0;i<44;i++){
+    if(rnd()<.1)mom=(rnd()-.5)*f.vol*.9;
+    mom*=.96;px+=mom+(rnd()-.5)*f.vol*.5;f.hist.push(px);
+  }
+  f.px=px;f.rnd=rnd;f.mom=mom;
+});
+function fmt(v,d){return v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});}
+
+/* ════════ 3. 跑馬燈 ════════ */
+(function(){
+  var extra=[
+    {code:'USD/JPY',px:157.42,chg:.31,dec:2},{code:'ETH/USD',px:5120.5,chg:-1.12,dec:1},
+    {code:'NAS100',px:22890,chg:.44,dec:0},{code:'00700.HK',px:498.6,chg:.86,dec:2},
+    {code:'WTI',px:71.35,chg:-.62,dec:2},{code:'GBP/USD',px:1.3418,chg:.18,dec:4}
+  ];
+  var items=FEED.map(function(f){
+    var chg=(f.px-f.hist[0])/f.hist[0]*100;
+    return {code:f.code,px:f.px,chg:chg,dec:f.dec};
+  }).concat(extra);
+  function html(it){
+    var up=it.chg>=0,cls=up?'up-c':'down-c',ar=up?'trending-up':'trending-down';
+    return '<div class="q"><span class="sym">'+it.code+'</span><span class="px">'+fmt(it.px,it.dec)+'</span><span class="chg '+cls+'"><i data-lucide="'+ar+'"></i>'+(up?'+':'')+it.chg.toFixed(2)+'%</span></div>';
+  }
+  var half=items.map(html).join('');
+  document.getElementById('tapeTrack').innerHTML=half+half;
+})();
+
+/* ════════ 4. 行情卡（迷你走勢＋即時跳動） ════════ */
+(function(){
+  var grid=document.getElementById('qgrid');
+  FEED.forEach(function(f,i){
+    var el=document.createElement('div');
+    el.className='qcard glass reveal';
+    el.innerHTML='<div class="top"><span class="name">'+f.name+'</span><span class="code">'+f.code+'</span></div>'+
+      '<div class="price" id="qp'+i+'">--</div>'+
+      '<span class="delta" id="qd'+i+'"></span>'+
+      '<canvas id="qc'+i+'" width="600" height="120"></canvas>';
+    grid.appendChild(el);
+  });
+  function drawSpark(f,i){
+    var cv=document.getElementById('qc'+i),ctx=cv.getContext('2d');
+    var W=600,H=120,P=8;
+    ctx.clearRect(0,0,W,H);
+    var hi=Math.max.apply(null,f.hist),lo=Math.min.apply(null,f.hist),span=(hi-lo)||1;
+    var up=f.hist[f.hist.length-1]>=f.hist[0];
+    var col=up?'#2ee6a8':'#ff5c7a';
+    var X=function(k){return P+k/(f.hist.length-1)*(W-2*P);};
+    var Y=function(v){return P+(1-(v-lo)/span)*(H-2*P);};
+    var g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,up?'rgba(46,230,168,.22)':'rgba(255,92,122,.22)');
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath();ctx.moveTo(X(0),H);
+    f.hist.forEach(function(v,k){ctx.lineTo(X(k),Y(v));});
+    ctx.lineTo(X(f.hist.length-1),H);ctx.closePath();
+    ctx.fillStyle=g;ctx.fill();
+    ctx.beginPath();
+    f.hist.forEach(function(v,k){k?ctx.lineTo(X(k),Y(v)):ctx.moveTo(X(k),Y(v));});
+    ctx.strokeStyle=col;ctx.lineWidth=2.2;ctx.lineJoin='round';ctx.stroke();
+    var lx=X(f.hist.length-1),ly=Y(f.hist[f.hist.length-1]);
+    ctx.beginPath();ctx.arc(lx,ly,3.4,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  }
+  function paint(i){
+    var f=FEED[i];
+    var chg=(f.px-f.hist[0])/f.hist[0]*100,up=chg>=0;
+    document.getElementById('qp'+i).textContent=fmt(f.px,f.dec);
+    var d=document.getElementById('qd'+i);
+    d.className='delta '+(up?'up-c':'down-c');
+    d.innerHTML='<i data-lucide="'+(up?'trending-up':'trending-down')+'"></i>'+(up?'+':'')+chg.toFixed(2)+'%';
+    drawSpark(f,i);
+  }
+  FEED.forEach(function(f,i){paint(i);});
+  if(window.lucide)lucide.createIcons();
+  setInterval(function(){
+    if(document.hidden)return;
+    FEED.forEach(function(f,i){
+      if(f.rnd()<.1)f.mom=(f.rnd()-.5)*f.vol*.9;
+      f.mom*=.96;f.px+=f.mom+(f.rnd()-.5)*f.vol*.4;
+      f.hist.push(f.px);if(f.hist.length>44)f.hist.shift();
+      paint(i);
+    });
+    if(window.lucide)lucide.createIcons();
+  },1400);
+})();
+
+/* ════════ 5. 滾動顯現 ════════ */
+var io=new IntersectionObserver(function(es){es.forEach(function(e){
+  if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+});},{threshold:.14});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+/* ════════ 6. Lucide 圖標 ════════ */
+window.addEventListener('load',function(){if(window.lucide)lucide.createIcons();});
+</script>
+</body>
+</html>
